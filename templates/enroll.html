@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}Enroll — ARGUS{% endblock %}
+{% block content %}
+<section class="page-head" data-reveal>
+  <p class="eyebrow">enrollment wizard</p>
+  <h1>Build a biometric template.</h1>
+  <p class="lead">Four steps: account, face capture, clean typing rounds, save. The passphrase is
+    both your knowledge factor and the keystroke phrase.</p>
+  <div class="modtag-row" aria-hidden="true">
+    <span class="mono modtag">PF-00 · KNOWLEDGE</span>
+    <span class="mono modtag">FS-01 · FACE SCAN</span>
+    <span class="mono modtag">KD-02 · RHYTHM</span>
+    <span class="mono modtag">FS-09 · FUSION</span>
+  </div>
+</section>
+
+<ol class="stepper" id="stepper" aria-hidden="true" data-reveal data-delay="1">
+  <li data-step="1" class="active"><span>1</span> Account</li>
+  <li data-step="2"><span>2</span> Face</li>
+  <li data-step="3"><span>3</span> Typing</li>
+  <li data-step="4"><span>4</span> Save</li>
+</ol>
+
+<!-- STEP 1: account -->
+<section id="step-account" class="card step" data-reveal data-delay="2">
+  <h2><span class="stepno">1</span> Account</h2>
+  <label for="in-username">Username
+    <input id="in-username" autocomplete="off" placeholder="e.g. patel.rad" spellcheck="false">
+  </label>
+  <label for="in-password">Passphrase <span class="soft">(typed phrase = password = keystroke phrase)</span>
+    <input id="in-password" type="password" value="{{ passphrase }}" autocomplete="new-password">
+  </label>
+  <label for="in-password2">Confirm passphrase
+    <input id="in-password2" type="password" autocomplete="new-password">
+    <span class="hint">Lab users should share the demo passphrase <code>{{ passphrase }}</code>
+      so impostor attempts pass the knowledge factor.</span>
+  </label>
+  <p id="account-status" class="form-error" role="alert" hidden></p>
+  <button id="btn-account" class="btn primary">Start face capture <span class="icon-orb" aria-hidden="true">→</span></button>
+</section>
+
+<!-- STEP 2: face -->
+<section id="step-face" class="card step" hidden>
+  <h2><span class="stepno">2</span> Face capture — <span id="face-count">0</span>/{{ n_frames }} frames kept</h2>
+  <div class="cam-wrap" id="cam-frame">
+    <span class="hud-corner tl" aria-hidden="true"></span>
+    <span class="hud-corner tr" aria-hidden="true"></span>
+    <span class="hud-corner bl" aria-hidden="true"></span>
+    <span class="hud-corner br" aria-hidden="true"></span>
+    <span class="scan-band" aria-hidden="true"></span>
+    <video id="face-video" width="480" height="360" autoplay playsinline muted></video>
+    <p class="cam-overlay" id="cam-overlay">camera off</p>
+  </div>
+  <div class="hud-line cam-meta">
+    <span class="mono">FS-01 · FACE CAPTURE</span>
+    <span class="mono" id="face-progress">0/{{ n_frames }}</span>
+  </div>
+  <div class="cap-meter"><i id="face-meter"></i></div>
+  <p class="hint">Center your face, light from the front; vary pose slightly between frames
+    (a little left/right, change distance) for a robust template.</p>
+  <button id="btn-face-record" class="btn">Start capturing</button>
+  <button id="btn-face-done" class="btn primary" disabled>Done — next: typing <span class="icon-orb" aria-hidden="true">→</span></button>
+</section>
+
+<!-- STEP 3: typing -->
+<section id="step-typing" class="card step" hidden>
+  <h2><span class="stepno">3</span> Typing rounds — <span id="kt-count">0</span>/{{ n_typing_rounds }} clean rounds</h2>
+  <p class="hint">Retype <code id="kt-phrase">{{ passphrase }}</code> exactly. No backspace, no paste,
+    no holding keys — an edited round is discarded and must be retyped.</p>
+  <div class="hud-block">
+    <div class="hud-line">
+      <span class="mono">KD-02 · RHYTHM CAPTURE</span>
+      <span class="mono" id="ks-count">0 CH</span>
+    </div>
+    <div class="pulse-strip idle" id="ks-pulse"></div>
+    <div class="hud-line">
+      <span class="hint" id="ks-stat">awaiting keystrokes</span>
+    </div>
+  </div>
+  <label for="in-typing">Round <span id="kt-round">1</span>
+    <input id="in-typing" type="password" autocomplete="off" placeholder="type the passphrase here">
+  </label>
+  <label class="inline"><input type="checkbox" id="show-typing" checked> show passphrase while typing</label>
+  <button id="btn-record-round" class="btn">Record round</button>
+  <p id="round-status" class="hint" aria-live="polite"></p>
+</section>
+
+<!-- STEP 4: finalize -->
+<section id="step-done" class="card step" hidden>
+  <h2><span class="stepno">4</span> Finish</h2>
+  <p class="hint">Face frames and typing rounds are buffered. Saving embeds the face crops
+    (Facenet512) and builds the scaled-Manhattan rhythm model.</p>
+  <button id="btn-enroll-submit" class="btn primary wide">Save user biometrics <span class="icon-orb" aria-hidden="true">↗</span></button>
+  <p id="enroll-status" class="hint" aria-live="polite"></p>
+</section>
+{% endblock %}
+{% block extra_js %}
+<script type="application/json" id="bio-config">{{ {
+  "nFrames": n_frames, "nRounds": n_typing_rounds, "minLen": min_len } | tojson }}</script>
+<script src="{{ url_for('static', filename='js/camera.js') }}"></script>
+<script src="{{ url_for('static', filename='js/hud.js') }}"></script>
+<script src="{{ url_for('static', filename='js/keystroke.js') }}"></script>
+<script src="{{ url_for('static', filename='js/enroll.js') }}"></script>
+{% endblock %}

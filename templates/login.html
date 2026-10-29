@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block title %}Login — ARGUS{% endblock %}
+{% block content %}
+{% if mode == 'eval' %}
+<section class="page-head" data-reveal>
+  <p class="eyebrow">evaluation mode</p>
+  <h1>Labeled login attempt.</h1>
+  <p class="lead">Evaluation mode logs every attempt with ground truth. Choose
+    <strong>who is operating</strong> (the real person at the keyboard) and the target username.
+    Same-person attempts count as genuine; anyone-else attempts as impostor — all users share the
+    demo passphrase <code>{{ passphrase }}</code>.</p>
+</section>
+{% else %}
+<section class="page-head" data-reveal>
+  <p class="eyebrow">secure gate</p>
+  <h1>Face. Rhythm. <span class="amp">&amp;</span> passphrase.</h1>
+  <p class="lead">ARGUS fuses three factors into one verdict: the knowledge factor you type,
+    the face the camera sees, and the rhythm only your hands know.</p>
+  <div class="modtag-row" aria-hidden="true">
+    <span class="mono modtag">PF-00 · KNOWLEDGE</span>
+    <span class="mono modtag">FS-01 · FACE SCAN</span>
+    <span class="mono modtag">KD-02 · RHYTHM</span>
+    <span class="mono modtag">FS-09 · FUSION</span>
+  </div>
+</section>
+{% endif %}
+
+<div class="grid form-cam">
+  <article class="card" data-reveal data-delay="1">
+    <div class="card-head">
+      <h2>Auth request</h2>
+      <span class="mono hud-chip" id="hud-session">SCN ······</span>
+    </div>
+    <form id="login-form" novalidate>
+      {% if mode == 'eval' %}
+      <label for="in-operator">You are <span class="soft">(operator, ground truth)</span>
+        <select id="in-operator">
+          <option value="">— select the actual person —</option>
+          {% for u in users %}<option value="{{ u }}">{{ u }}</option>{% endfor %}
+        </select>
+      </label>
+      {% endif %}
+      <label for="in-username">Logging in as
+        <input id="in-username" autocomplete="off" placeholder="username" spellcheck="false">
+      </label>
+      <label for="in-password">Passphrase <span class="soft">(your typing rhythm is measured)</span>
+        <input id="in-password" type="password" autocomplete="current-password"
+               placeholder="type without edits, pauses or holding keys">
+      </label>
+
+      <div class="hud-block">
+        <div class="hud-line">
+          <span class="mono">KD-02 · RHYTHM CAPTURE</span>
+          <span class="mono" id="ks-count">0 CH</span>
+        </div>
+        <div class="pulse-strip idle" id="ks-pulse"></div>
+        <div class="hud-line">
+          <span class="hint" id="ks-stat">awaiting keystrokes</span>
+        </div>
+      </div>
+
+      <button id="btn-login" class="btn primary wide" type="submit">Verify — face + typing
+        <span class="icon-orb" aria-hidden="true">↗</span></button>
+      <p id="login-status" class="hint" aria-live="polite"></p>
+    </form>
+  </article>
+
+  <article class="card cam-card" data-reveal data-delay="2">
+    <div class="card-head">
+      <h2>Optical sensor</h2>
+      <span class="mono hud-chip" id="cam-state">OFFLINE</span>
+    </div>
+    <div class="cam-center">
+      <div class="cam-wrap">
+        <span class="hud-corner tl" aria-hidden="true"></span>
+        <span class="hud-corner tr" aria-hidden="true"></span>
+        <span class="hud-corner bl" aria-hidden="true"></span>
+        <span class="hud-corner br" aria-hidden="true"></span>
+        <span class="scan-band" aria-hidden="true"></span>
+        <video id="face-video" width="480" height="360" autoplay playsinline muted></video>
+        <p class="cam-overlay" id="cam-overlay">camera off</p>
+      </div>
+    </div>
+    <div class="hud-line cam-meta">
+      <span class="mono">FS-01 · FACE CAPTURE</span>
+      <span class="mono" id="face-progress">0/{{ n_frames }}</span>
+    </div>
+    <div class="cap-meter"><i id="face-meter"></i></div>
+    <div class="cam-row">
+      <span class="hint" id="face-count">0 frames in buffer</span>
+      <button id="btn-cam" class="btn sm">Enable camera</button>
+    </div>
+  </article>
+</div>
+
+<section id="verdict" class="card verdict" hidden aria-live="polite">
+  <p class="eyebrow">verification pipeline</p>
+  <div class="console" id="verdict-console"></div>
+  <p class="stamp" id="stamp"></p>
+  <p class="v-elapsed mono" id="v-elapsed"></p>
+  <div id="scores-rows"></div>
+</section>
+{% endblock %}
+{% block extra_js %}
+<script type="application/json" id="bio-config">{{ {
+  "nFrames": n_frames, "mode": mode } | tojson }}</script>
+<script src="{{ url_for('static', filename='js/camera.js') }}"></script>
+<script src="{{ url_for('static', filename='js/hud.js') }}"></script>
+<script src="{{ url_for('static', filename='js/keystroke.js') }}"></script>
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+{% endblock %}

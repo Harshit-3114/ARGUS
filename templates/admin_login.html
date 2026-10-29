@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050505">
+  <title>Admin sign-in — ARGUS</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/favicon.svg') }}" type="image/svg+xml">
+  <link rel="preload" href="{{ url_for('static', filename='fonts/space-grotesk-var.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/plus-jakarta-sans-var.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="admin-gate">
+  <main class="gate" data-reveal>
+    <article class="card gate-card">
+      <p class="eyebrow">restricted area</p>
+      <h1>Admin sign-in</h1>
+      <p class="hint">Laboratory administration of users, attempt log and fusion settings.</p>
+      {% if error %}<p class="form-error" role="alert">{{ error }}</p>{% endif %}
+      <form method="post" action="/admin/login">
+        <label for="pin">Admin PIN</label>
+        <input id="pin" name="pin" type="password" inputmode="numeric"
+               autocomplete="current-password" required autofocus>
+        <button class="btn primary wide" type="submit">Unlock dashboard <span class="icon-orb" aria-hidden="true">↗</span></button>
+      </form>
+      <p class="hint small">Default PIN lives in <code>config.py</code> as <code>ADMIN_PIN</code>
+        (override via the <code>ARGUS_ADMIN_PIN</code> environment variable).
+        Change it before employing this system in an open lab.</p>
+      <a class="hint" href="/">← back to public pages</a>
+    </article>
+  </main>
+  <script src="{{ url_for('static', filename='js/motion.js') }}" defer></script>
+</body>
+</html>

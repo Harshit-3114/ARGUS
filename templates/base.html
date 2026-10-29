@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050505">
+  <title>{% block title %}ARGUS{% endblock %}</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/favicon.svg') }}" type="image/svg+xml">
+  <link rel="preload" href="{{ url_for('static', filename='fonts/space-grotesk-var.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/plus-jakarta-sans-var.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/jetbrains-mono-var.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="topbar">
+    <nav class="navpill" aria-label="Main">
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">◍</span> ARGUS</a>
+      <div class="navlinks">
+        <a href="/" {% if request.path == '/' %}aria-current="page"{% endif %}>Dashboard</a>
+        <a href="/enroll" {% if request.path == '/enroll' %}aria-current="page"{% endif %}>Enroll</a>
+        <a href="/login" {% if request.path == '/login' %}aria-current="page"{% endif %}>Login</a>
+        <a href="/evaluation" {% if request.path == '/evaluation' %}aria-current="page"{% endif %}>Evaluation</a>
+      </div>
+      <a class="topbar-side" href="/admin">Admin</a>
+    </nav>
+  </header>
+  <main id="main">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <span>ARGUS &middot; face recognition (Facenet512) + keystroke rhythm &middot; score-level fusion &middot; local lab tool</span>
+  </footer>
+  <script src="{{ url_for('static', filename='js/motion.js') }}" defer></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

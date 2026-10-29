@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — ARGUS{% endblock %}
+{% block content %}
+<section class="page-head" data-reveal>
+  <p class="eyebrow">multimodal · local lab</p>
+  <h1>Identity, verified by<br>face <span class="amp">&amp;</span> rhythm.</h1>
+  <p class="lead">Two modalities decide every login: <strong>face</strong> (physiological) and
+    <strong>typing rhythm</strong> (behavioral). Scores are normalized and combined with a weighted sum —
+    a photo defeats nothing about typing; a stolen passphrase defeats nothing about the face.</p>
+  <div class="modtag-row" aria-hidden="true">
+    <span class="mono modtag">PF-00 · KNOWLEDGE</span>
+    <span class="mono modtag">FS-01 · FACE SCAN</span>
+    <span class="mono modtag">KD-02 · RHYTHM</span>
+    <span class="mono modtag">FS-09 · FUSION</span>
+  </div>
+</section>
+
+<section class="kpi-row" data-reveal data-delay="1">
+  <article class="kpi" data-reveal data-delay="2"><span class="kpi-num">{{ users|length }}</span><span class="kpi-label">Enrolled users</span></article>
+  <article class="kpi" data-reveal data-delay="3"><span class="kpi-num">{{ summary.total }}</span><span class="kpi-label">Total attempts</span></article>
+  <article class="kpi" data-reveal data-delay="4"><span class="kpi-num">{{ summary.genuine }} <em>/</em> {{ summary.impostor }}</span>
+    <span class="kpi-label">Labeled genuine / impostor</span></article>
+</section>
+
+<div class="grid">
+  <article class="card" data-reveal>
+    <div class="card-head"><h2>Workflow</h2></div>
+    <ol class="steps">
+      <li><a href="/enroll">Enroll</a> — capture {{ n_frames }} face frames + {{ n_rounds }} clean typing
+        rounds of the passphrase (<code>{{ passphrase }}</code>; lab users share it so impostors
+        “know the password” and must be caught by biometrics).</li>
+      <li><a href="/login?mode=eval">Collect labeled attempts</a> — operators log in as themselves
+        (genuine) and as each other (impostor).</li>
+      <li><a href="/evaluation">Evaluate</a> — FAR / FRR / EER per modality and fused, ROC curves,
+        recommended operating threshold.</li>
+      <li><a href="/login">Log in</a> — the decision needs <em>both</em> modalities.</li>
+    </ol>
+    <a class="btn primary sm" href="/enroll">Enroll a new user <span class="icon-orb" aria-hidden="true">↗</span></a>
+  </article>
+
+  <article class="card" data-reveal data-delay="1">
+    <div class="card-head">
+      <h2>Enrolled users</h2>
+      <a class="btn sm ghost" href="/enroll">Enroll new</a>
+    </div>
+    {% if users %}
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>user</th><th class="num">face frames</th><th class="num">typing rounds</th><th></th></tr></thead>
+        <tbody>
+        {% for u in users %}
+          <tr>
+            <td><code>{{ u.username }}</code></td>
+            <td class="num">{{ counts[loop.index0].face }}</td>
+            <td class="num">{{ counts[loop.index0].keystroke }}</td>
+            <td class="row-action"><button class="btn sm danger-outline del-user"
+                 data-name="{{ u.username }}">delete</button></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">Deleting a user requires the admin PIN (dashboard admin area).</p>
+    {% else %}
+    <div class="empty">
+      <p class="empty-title">No users enrolled yet</p>
+      <p class="hint">Start with the <a href="/enroll">enrollment wizard</a>: it captures face frames
+        and typing rhythm, then stores the templates locally.</p>
+    </div>
+    {% endif %}
+  </article>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
+{% endblock %}

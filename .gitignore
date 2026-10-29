@@ -1,0 +1,30 @@
+# --- project runtime (never publish) ---
+.venv/
+data/
+static/generated/
+_scratch.py
+
+# --- python cruft ---
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- secrets / env ---
+.env
+.env.*
+
+# deepface model weights live in ~/.deepface; ignore if ever parked in-project
+.deepface/
+
+# --- editor / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+
+# --- impeccable live-mode config (machine-local consent file) ---
+.impeccable/live/
