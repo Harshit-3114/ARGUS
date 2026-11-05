@@ -1,26 +1,27 @@
-"""Keystroke dynamics engine.
+"""Keystroke dynamics engine with typo tolerance.
 
 The browser records, for every typed character, a {key, down, up} event pair
-(timestamps in ms). From a correctly-typed phrase we build a feature vector:
+(timestamps in ms). A round is reconstructed with an edit-buffer simulation:
+backspaces pop the last committed character, so a natural typo-and-correct
+cycle still yields a clean feature sample of the final text.
 
-  holds   : key hold times (key-up - key-down) per character position
+Features per character position of the surviving text:
+  holds   : key hold times (key-up - key-down)
   lats    : digraph latencies (key-down_{i+1} - key-down_i)
 
-The behavioral model per user is a "scaled Manhattan filter" — a simpler and
-far more data-hungry-friendly classifier alternative that still counts as a
-trained statistical model: for each feature position we store the mean and
-standard deviation learned from the enrollment samples, then score a probe by
+The behavioral model per user is a "scaled Manhattan filter" - a simple,
+data-hungry-friendly statistical model: for each feature position we store
+the mean and standard deviation learned from enrollment samples, then score
+a probe by
 
     d(x) = mean_i |x_i - mu_i| / max(sigma_i, floor_i)
     sim  = 1 / (1 + d)        in [0, 1]
 
-Low distance (probe closely matches the enrolled rhythm) -> high similarity.
-
 Integrity rules for a usable sample:
-  * no backspaces / edits (the browser flags them; server rejects),
-  * typed text must equal the expected phrase,
+  * final text must equal the expected phrase (characters deleted by
+    edits never reach the buffer, and corrections are allowed),
   * no key held > MAX_HOLD_MS (keystroke auto-repeat leaks into hold times),
-  * every digraph latency >= MIN_LATENCY_MS.
+  * every digraph latency within [MIN_LATENCY_MS, MAX_LATENCY_MS].
 """
 import numpy as np
 
@@ -45,15 +46,17 @@ def sample_from_record(events, phrase: str):
     The clock belongs to the client, so every number here is treated as
     hostile input: it must be a finite number and satisfy physical
     plausibility bounds before it can become a biometric sample.
+
+    Edit-buffer reconstruction: Backspace events pop the last committed
+    character (and its timings) from the buffer, so a typo that is corrected
+    does not discard the round. Only the surviving keystrokes are scored.
     """
-    if any(ev.get("key") == "Backspace" for ev in events):
-        raise KeystrokeError("edits (backspace) are not allowed - retype cleanly")
     if not events:
         raise KeystrokeError("no keystrokes recorded")
-    if any(ev.get("up") is None for ev in events):
-        raise KeystrokeError("unfinished keystrokes (key held down?)")
     for ev in events:
         for f in ("down", "up"):
+            if f not in ev or ev[f] is None:
+                continue          # null up is tolerated: the event may be edited away
             try:
                 value = float(ev[f])
                 if not np.isfinite(value) or value < 0:
@@ -63,21 +66,38 @@ def sample_from_record(events, phrase: str):
                 raise KeystrokeError(
                     "keystroke timestamp invalid or not a finite number") from exc
 
-    char_events = [ev for ev in events if len(ev["key"]) == 1]
-    typed = "".join(ev["key"] for ev in char_events)
+    # ---- edit-buffer simulation -------------------------------------------
+    buffer = []                   # surviving {key, down, up} char events
+    for ev in events:
+        key = ev.get("key", "")
+        if key == "Backspace":
+            if buffer:
+                buffer.pop()
+        elif len(key) == 1:
+            buffer.append(ev)
+
+    typed = "".join(ev["key"] for ev in buffer)
     if typed != phrase:
         raise KeystrokeError(f"typed text does not match the expected phrase "
-                             f"(typed {len(typed)} chars vs {len(phrase)} expected)")
-    holds = [ev["up"] - ev["down"] for ev in char_events]
-    downs = [ev["down"] for ev in char_events]
+                             f"(final text is {len(typed)} chars, "
+                             f"phrase is {len(phrase)})")
+
+    # ---- feature extraction from surviving keystrokes ----------------------
+    holds, downs = [], []
+    for ev in buffer:
+        if ev.get("up") is None:
+            raise KeystrokeError("a key was left held (keystroke repeat?)")
+        hold = ev["up"] - ev["down"]
+        if hold > MAX_HOLD_MS:
+            raise KeystrokeError(
+                f"a key was held longer than {MAX_HOLD_MS} ms "
+                f"(typing pace must be natural, not pressed)")
+        if hold < MIN_HOLD_MS:
+            raise KeystrokeError("physically impossible key hold time")
+        holds.append(hold)
+        downs.append(ev["down"])
+
     lats = [downs[i + 1] - downs[i] for i in range(len(downs) - 1)]
-    if not char_events:
-        raise KeystrokeError("no typed characters in the round")
-    if any(h > MAX_HOLD_MS for h in holds):
-        raise KeystrokeError(f"a key was held longer than {MAX_HOLD_MS} ms "
-                             f"(typing pace must be natural, not pressed)")
-    if any(h < MIN_HOLD_MS for h in holds):
-        raise KeystrokeError("physically impossible key hold time")
     if any(l < MIN_LATENCY_MS for l in lats):
         raise KeystrokeError("impossible digraph latency (keystroke repeat?)")
     if any(l > MAX_LATENCY_MS for l in lats):
@@ -139,7 +159,10 @@ class KeystrokeModel:
 
 
 def check_enrollment(samples):
-    """Parse + validate enrollment rounds, return list of clean samples."""
+    """Parse + validate enrollment rounds, return list of clean samples.
+    Each client round may carry a `phase` tag ('A' dwell, 'B' flight,
+    'C' correction); it rides along as metadata on the parsed sample and is
+    stored alongside the features. All phases feed one shared rhythm model."""
     if len(samples) < ENROLL_KS_SAMPLES:
         raise KeystrokeError(
             f"need {ENROLL_KS_SAMPLES} clean typing rounds, got {len(samples)}")
@@ -150,4 +173,5 @@ def check_enrollment(samples):
             raise KeystrokeError(
                 f"round {i}: phrase shorter than {KS_MIN_PASSWORD_LEN} chars", i)
         parsed.append(sample_from_record(rec.get("events", []), phrase))
+        parsed[-1]["phase"] = rec.get("phase") if rec.get("phase") in ("A", "B", "C") else "A"
     return parsed

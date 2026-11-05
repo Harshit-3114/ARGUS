@@ -30,6 +30,27 @@ def synth_sample(base_hold, base_lat, hold_sd=0.0, lat_sd=0.0):
         synth_events(base_hold, base_lat, hold_sd, lat_sd), PHRASE)
 
 
+def synth_typo(base_hold, base_lat, at: int = 8):
+    """Browser-style events for PHRASE with one mid-phrase typo that is fixed:
+    the prefix is typed clean, char `at` comes out wrong, is backspaced away,
+    and the suffix is re-typed. The final text equals PHRASE."""
+    events, down = [], 0.0
+
+    def add(ch, lat=base_lat, hold=base_hold):
+        nonlocal down
+        down += lat
+        events.append({"key": ch, "down": down, "up": down + hold})
+
+    for ch in PHRASE[:at]:
+        add(ch)
+    add("x")                                    # the typo
+    down += 45.0
+    events.append({"key": "Backspace", "down": down, "up": down + 60.0})
+    for ch in PHRASE[at:]:
+        add(ch)
+    return events
+
+
 def main():
     print("== keystroke feature extraction ==")
     base = synth_sample(85, 130, 0, 0)
@@ -41,8 +62,6 @@ def main():
 
     print("== integrity rules ==")
     for bad, desc in [
-        ([{"key": "b", "down": 1.0, "up": 2.0},
-          {"key": "Backspace", "down": 3.0, "up": 4.0}], "backspace"),
         (synth_events(85, 130, 0, 0)[:-1], "short text"),
         (synth_events(500, 130, 0, 0), "key held too long"),
         ([{"key": ch, "down": i * 10.0, "up": None} for i, ch in enumerate(PHRASE)],
@@ -53,6 +72,47 @@ def main():
             raise SystemExit(f"FAIL: {desc} round was accepted")
         except ks.KeystrokeError:
             print(f"  rejected {desc}: ok")
+
+    print("== typo tolerance (edit-buffer reconstruction) ==")
+    clean = synth_sample(85, 130, 0, 0)
+
+    # 1) a mid-phrase typo fixed with backspace still yields a full sample
+    corrected = ks.sample_from_record(synth_typo(85, 130, at=8), PHRASE)
+    assert len(corrected["holds"]) == len(PHRASE)
+    assert len(corrected["lats"]) == len(PHRASE) - 1
+    print(f"  typo corrected at pos 8: holds {len(corrected['holds'])}/"
+          f"{len(PHRASE)}, lats {len(corrected['lats'])}/{len(PHRASE) - 1}  ok")
+
+    # 2) corrected rounds are dimension-compatible with clean rounds — one
+    #    shared model scores both (login uses enrolled dims)
+    mix = ([synth_sample(85, 130, 18.0, 30.0) for _ in range(4)] +
+           [ks.sample_from_record(synth_typo(85, 130, at=i), PHRASE)
+            for i in (3, 5, 8, 10)])
+    model_mix = ks.KeystrokeModel.from_samples(mix)
+    model_mix.validate_len(clean)
+    print(f"  mixed clean/corrected model built, dim={model_mix.dim}  ok")
+
+    # 3) garbage typed, fully backspaced away, then the phrase typed clean
+    events, down = [], 0.0
+    for ch in "junkx":
+        down += 120.0
+        events.append({"key": ch, "down": down, "up": down + 85.0})
+    for _ in range(5):
+        down += 60.0
+        events.append({"key": "Backspace", "down": down, "up": down + 50.0})
+    for ch in PHRASE:
+        down += 130.0
+        events.append({"key": ch, "down": down, "up": down + 85.0})
+    recovered = ks.sample_from_record(events, PHRASE)
+    assert len(recovered["holds"]) == len(PHRASE)
+    print("  junk cleared with backspace, phrase re-typed: ok")
+
+    # 4) an UNcorrected typo still rejects the round
+    try:
+        ks.sample_from_record(synth_typo(85, 130, at=8)[:-1], PHRASE)
+        raise SystemExit("FAIL: uncorrected typo was accepted")
+    except ks.KeystrokeError:
+        print("  rejected uncorrected typo: ok")
 
     print("== keystroke model: genuine vs impostor separation ==")
     # user A rhythm: fast/regular; user B rhythm: slow/irregular
@@ -79,6 +139,8 @@ def main():
     print(f"  face cos .75 -> norm {n:.3f}; fused={f:.3f} -> {d}  ok")
 
     print("== evaluation: synthetic FAR/FRR/EER ==")
+    erng = np.random.default_rng(7)   # section-local stream: upstream section
+                                      # additions must not perturb these asserts
 
     def make_rows(genuine, impostor):
         rows = [{"operator": "u", "claimed": "u", "face_cos": v * 2 - 1,
@@ -92,8 +154,8 @@ def main():
         return rows
 
     # Case A: perfectly separated scores -> EER ~ 0 is the CORRECT result
-    genuine = np.clip(rng.normal(0.80, 0.035, size=40), 0.01, 0.99)
-    impostor = np.clip(rng.normal(0.40, 0.045, size=40), 0.01, 0.99)
+    genuine = np.clip(erng.normal(0.80, 0.035, size=40), 0.01, 0.99)
+    impostor = np.clip(erng.normal(0.40, 0.045, size=40), 0.01, 0.99)
     report = evaluation.compute(make_rows(genuine, impostor), cfg_threshold=0.55)
     fused = report["modalities"]["fused"]
     assert fused["ok"]
@@ -107,8 +169,8 @@ def main():
           f"n_impostor {fused['n_impostor']})  ok")
 
     # Case B: overlapping scores -> EER must sit inside the overlap band
-    genuine = np.clip(rng.normal(0.72, 0.06, size=60), 0.01, 0.99)
-    impostor = np.clip(rng.normal(0.55, 0.10, size=60), 0.01, 0.99)
+    genuine = np.clip(erng.normal(0.72, 0.06, size=60), 0.01, 0.99)
+    impostor = np.clip(erng.normal(0.55, 0.10, size=60), 0.01, 0.99)
     report = evaluation.compute(make_rows(genuine, impostor), cfg_threshold=0.55)
     fused = report["modalities"]["fused"]
     assert 0.70 < fused["auc"] < 0.96, f"FAIL: AUC odd on overlapping data: {fused['auc']}"

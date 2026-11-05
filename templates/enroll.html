@@ -4,8 +4,9 @@
 <section class="page-head" data-reveal>
   <p class="eyebrow">enrollment wizard</p>
   <h1>Build a biometric template.</h1>
-  <p class="lead">Four steps: account, face capture, clean typing rounds, save. The passphrase is
-    both your knowledge factor and the keystroke phrase.</p>
+  <p class="lead">Four steps: account, face capture, phased typing rounds, save. The passphrase is
+    both your knowledge factor and the keystroke phrase; each phase profiles a different
+    characteristic of how you type, and typos are recoverable.</p>
   <div class="modtag-row" aria-hidden="true">
     <span class="mono modtag">PF-00 · KNOWLEDGE</span>
     <span class="mono modtag">FS-01 · FACE SCAN</span>
@@ -49,15 +50,18 @@
     <span class="hud-corner br" aria-hidden="true"></span>
     <span class="scan-band" aria-hidden="true"></span>
     <video id="face-video" width="480" height="360" autoplay playsinline muted></video>
-    <p class="cam-overlay" id="cam-overlay">camera off</p>
+    <p class="cam-overlay" id="cam-overlay">camera off — enabling automatically…</p>
   </div>
   <div class="hud-line cam-meta">
     <span class="mono">FS-01 · FACE CAPTURE</span>
+    <span class="mono" id="cam-status">camera off</span>
     <span class="mono" id="face-progress">0/{{ n_frames }}</span>
   </div>
   <div class="cap-meter"><i id="face-meter"></i></div>
-  <p class="hint">Center your face, light from the front; vary pose slightly between frames
-    (a little left/right, change distance) for a robust template.</p>
+  <p class="hint">The camera turns on when this step opens. If it doesn't, press
+    <strong>Enable camera</strong> and allow the browser permission prompt. Center your face,
+    light from the front and vary pose slightly between frames for a robust template.</p>
+  <button id="btn-cam-enable" class="btn">Enable camera</button>
   <button id="btn-face-record" class="btn">Start capturing</button>
   <button id="btn-face-done" class="btn primary" disabled>Done — next: typing <span class="icon-orb" aria-hidden="true">→</span></button>
 </section>
@@ -65,8 +69,14 @@
 <!-- STEP 3: typing -->
 <section id="step-typing" class="card step" hidden>
   <h2><span class="stepno">3</span> Typing rounds — <span id="kt-count">0</span>/{{ n_typing_rounds }} clean rounds</h2>
-  <p class="hint">Retype <code id="kt-phrase">{{ passphrase }}</code> exactly. No backspace, no paste,
-    no holding keys — an edited round is discarded and must be retyped.</p>
+  <div class="hud-line phase-line">
+    <span class="mono" id="typing-phase">Phase A · Dwell &amp; Hold</span>
+    <span class="hint" id="phase-hint">phrase timing — natural pace, accurate to the phrase</span>
+  </div>
+  <p class="hint">Retype <code id="kt-phrase">{{ passphrase }}</code> each round. A typo is not
+    the end of the round: backspace and fix it — only the final text is scored, and the correction
+    itself stays part of the rhythm sample. No paste, no holding keys. The round records
+    automatically the instant the full phrase is typed.</p>
   <div class="hud-block">
     <div class="hud-line">
       <span class="mono">KD-02 · RHYTHM CAPTURE</span>

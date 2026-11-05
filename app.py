@@ -316,7 +316,8 @@ def api_enroll():
     for emb in embeddings:
         db.add_face_embedding(uid, emb)
     for s in clean:
-        db.add_keystroke_sample(uid, phrase_fingerprint, s["holds"], s["lats"])
+        db.add_keystroke_sample(uid, phrase_fingerprint, s["holds"], s["lats"],
+                                s.get("phase", "A"))
 
     user_dir = FACE_DIR / username
     user_dir.mkdir(parents=True, exist_ok=True)

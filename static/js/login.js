@@ -62,7 +62,7 @@
     $("ks-count").textContent = `${v.value.length} CH`;
     const stat = $("ks-stat");
     if (recorder.hasBackspace()) {
-      stat.textContent = "EDITS DETECTED — retype cleanly";
+      stat.textContent = "corrections in progress — final text is what counts";
       stat.classList.add("bad-text");
     } else {
       stat.textContent = v.value.length ? "capturing rhythm…" : "awaiting keystrokes";
@@ -276,10 +276,6 @@
     if (!payload.password) { status.textContent = "type the passphrase"; return; }
     if (CFG.mode === "eval" && !payload.operator) {
       status.textContent = "evaluation mode: select who is operating";
-      return;
-    }
-    if (recorder.hasBackspace()) {
-      status.textContent = "your typing contained edits — retype the passphrase cleanly";
       return;
     }
     status.textContent = "";

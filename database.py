@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS face_templates (
 CREATE TABLE IF NOT EXISTS keystroke_samples (
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     phrase  TEXT NOT NULL,
+    phase   TEXT NOT NULL,            -- 'A' (Dwell), 'B' (Flight), 'C' (Correction)
     holds   TEXT NOT NULL,            -- JSON list: per-char key hold times (ms)
     lats    TEXT NOT NULL,            -- JSON list: key-down -> key-down latencies (ms)
     created REAL NOT NULL
@@ -63,6 +64,14 @@ def init_db() -> None:
     with connect() as conn:
         conn.execute("PRAGMA journal_mode = WAL")
         conn.executescript(_SCHEMA)
+        # migration: dbs created before the phased-typing release lack the
+        # `phase` column; add it in place (NULL-able -> 'A' default keeps old
+        # rows loadable into the single shared rhythm model).
+        cols = {r["name"] for r in
+                conn.execute("PRAGMA table_info(keystroke_samples)").fetchall()}
+        if "phase" not in cols:
+            conn.execute("ALTER TABLE keystroke_samples "
+                         "ADD COLUMN phase TEXT NOT NULL DEFAULT 'A'")
 
 
 # ---------------------------------------------------------------------------
@@ -136,12 +145,14 @@ def get_face_gallery(name: str):
         return [json.loads(r["embedding"]) for r in rows]
 
 
-def add_keystroke_sample(user_id: int, phrase: str, holds, lats) -> None:
+def add_keystroke_sample(user_id: int, phrase: str, holds, lats,
+                         phase: str = "A") -> None:
     with connect() as conn:
         conn.execute(
-            "INSERT INTO keystroke_samples (user_id, phrase, holds, lats, created) "
-            "VALUES (?, ?, ?, ?, ?)",
-            (user_id, phrase, json.dumps(holds), json.dumps(lats), time.time()),
+            "INSERT INTO keystroke_samples (user_id, phrase, phase, holds, "
+            "lats, created) VALUES (?, ?, ?, ?, ?, ?)",
+            (user_id, phrase, phase, json.dumps(holds), json.dumps(lats),
+             time.time()),
         )
 
 

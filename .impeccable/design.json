@@ -1,45 +1,45 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-29T04:05:00Z",
+  "generatedAt": "2026-11-05T14:30:00Z",
   "title": "Design System: ARGUS",
   "extensions": {
     "colorMeta": {
-      "signal-mint": { "role": "primary", "displayName": "Signal Mint", "canonical": "#34d399", "tonalRamp": ["#0d2f21", "#14563b", "#1d7a52", "#26a06a", "#34d399", "#7ce8bf", "#b5f2d9", "#e7fcf2"] },
-      "signal-mint-wash": { "role": "primary", "displayName": "Signal Mint Wash", "canonical": "rgba(52, 211, 153, 0.12)", "tonalRamp": ["rgba(52,211,153,0.04)", "rgba(52,211,153,0.08)", "rgba(52,211,153,0.12)", "rgba(52,211,153,0.18)", "rgba(52,211,153,0.26)", "rgba(52,211,153,0.36)", "rgba(52,211,153,0.5)", "rgba(52,211,153,0.7)"] },
-      "scanner-cyan": { "role": "secondary", "displayName": "Scanner Cyan", "canonical": "#22d3ee", "tonalRamp": ["#06272e", "#084a57", "#0a6e80", "#0d92aa", "#22d3ee", "#7cebf7", "#b6f5fb", "#e8fdfe"] },
-      "optic-bright": { "role": "secondary", "displayName": "Bright Optic", "canonical": "#5eead4", "tonalRamp": ["#0a2e2b", "#0f4741", "#146157", "#1a7d70", "#5eead4", "#8df0e2", "#c0f7ee", "#e8fdf9"] },
-      "optic-deep": { "role": "secondary", "displayName": "Optic Deep", "canonical": "#0e9488", "tonalRamp": ["#04211f", "#073b37", "#0a544f", "#0e9488", "#14b3a6", "#5eead4", "#a7f3e3", "#e2fbf5"] },
-      "caution-amber": { "role": "tertiary", "displayName": "Caution Amber", "canonical": "#fbbf24", "tonalRamp": ["#2e2106", "#5a400a", "#87600e", "#b48012", "#fbbf24", "#fcd34d", "#fde68a", "#fef3c7"] },
-      "caution-wash": { "role": "tertiary", "displayName": "Caution Wash", "canonical": "rgba(251, 191, 36, 0.12)", "tonalRamp": ["rgba(251,191,36,0.04)", "rgba(251,191,36,0.08)", "rgba(251,191,36,0.12)", "rgba(251,191,36,0.18)", "rgba(251,191,36,0.26)", "rgba(251,191,36,0.36)", "rgba(251,191,36,0.5)", "rgba(251,191,36,0.7)"] },
-      "danger-ember": { "role": "tertiary", "displayName": "Danger Ember", "canonical": "#f87171", "tonalRamp": ["#2b0d0d", "#571b1b", "#822828", "#ad3636", "#f87171", "#fba5a5", "#fdd0d0", "#feeaea"] },
-      "danger-wash": { "role": "tertiary", "displayName": "Danger Wash", "canonical": "rgba(248, 113, 113, 0.12)", "tonalRamp": ["rgba(248,113,113,0.04)", "rgba(248,113,113,0.08)", "rgba(248,113,113,0.12)", "rgba(248,113,113,0.18)", "rgba(248,113,113,0.26)", "rgba(248,113,113,0.36)", "rgba(248,113,113,0.5)", "rgba(248,113,113,0.7)"] },
-      "void": { "role": "neutral", "displayName": "Void", "canonical": "#050505", "tonalRamp": ["#000000", "#050505", "#0a0c11", "#12141a", "#1c2027", "#2a3038", "#3a414b", "#4f5864"] },
-      "core": { "role": "neutral", "displayName": "Core Panel", "canonical": "#0a0c11", "tonalRamp": ["#07080b", "#0a0c11", "#0b0e14", "#11141a", "#181c23", "#21262e", "#2c333c", "#3a424d"] },
-      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#eef2f7", "tonalRamp": ["#12141a", "#20242a", "#31363f", "#454c56", "#5d6672", "#8b96a5", "#c3cbd7", "#eef2f7"] },
-      "ink-soft": { "role": "neutral", "displayName": "Ink Soft", "canonical": "#c3cbd7", "tonalRamp": ["#171b21", "#23272f", "#2f3540", "#3d454f", "#525b66", "#8b96a5", "#c3cbd7", "#f2f5f9"] },
-      "ink-muted": { "role": "neutral", "displayName": "Ink Muted", "canonical": "#8b96a5", "tonalRamp": ["#181c22", "#242930", "#313842", "#404853", "#566069", "#8b96a5", "#aab3bf", "#d3dae2"] },
-      "hairline": { "role": "neutral", "displayName": "Hairline", "canonical": "rgba(255, 255, 255, 0.08)", "tonalRamp": ["rgba(255,255,255,0.03)", "rgba(255,255,255,0.05)", "rgba(255,255,255,0.08)", "rgba(255,255,255,0.11)", "rgba(255,255,255,0.15)", "rgba(255,255,255,0.22)", "rgba(255,255,255,0.32)", "rgba(255,255,255,0.45)"] },
-      "hairline-strong": { "role": "neutral", "displayName": "Hairline Strong", "canonical": "rgba(255, 255, 255, 0.14)", "tonalRamp": ["rgba(255,255,255,0.05)", "rgba(255,255,255,0.08)", "rgba(255,255,255,0.14)", "rgba(255,255,255,0.20)", "rgba(255,255,255,0.28)", "rgba(255,255,255,0.38)", "rgba(255,255,255,0.52)", "rgba(255,255,255,0.70)"] },
-      "glass-fill": { "role": "neutral", "displayName": "Glass Fill", "canonical": "rgba(255, 255, 255, 0.045)", "tonalRamp": ["rgba(255,255,255,0.02)", "rgba(255,255,255,0.032)", "rgba(255,255,255,0.045)", "rgba(255,255,255,0.06)", "rgba(255,255,255,0.08)", "rgba(255,255,255,0.11)", "rgba(255,255,255,0.15)", "rgba(255,255,255,0.22)"] },
-      "signal-mint-deep": { "role": "primary", "displayName": "Signal Mint Deep", "canonical": "#0ea87e", "purpose": "Primary action gradient start (135deg to scanner-cyan-deep); flat press-end stand-in.", "tonalRamp": ["#062b1e", "#0a422f", "#0e5c41", "#0c7a5a", "#0ea87e", "#2fc796", "#8ceccc", "#cbf7e8"] },
-      "scanner-cyan-deep": { "role": "secondary", "displayName": "Scanner Cyan Deep", "canonical": "#0891b2", "purpose": "Primary action gradient end; the cyan family's deep register.", "tonalRamp": ["#052730", "#073a47", "#095060", "#0b6c80", "#0891b2", "#22d3ee", "#8ceef9", "#c9f8fd"] },
-      "code-mint": { "role": "secondary", "displayName": "Code Mint", "canonical": "#86e8cb", "purpose": "Inline code literal pills — bright mint end of the optic family.", "tonalRamp": ["#0a2d24", "#0f4536", "#145c48", "#1d7d63", "#86e8cb", "#aef0dc", "#cdf6ea", "#e6fcf5"] },
-      "ambient-violet": { "role": "ambient", "displayName": "Ambient Violet", "canonical": "rgba(139, 92, 246, 0.15)", "purpose": "Violet corner of the fixed background mesh glow — page light-work only, never a UI accent.", "tonalRamp": ["rgba(139,92,246,0.03)", "rgba(139,92,246,0.08)", "rgba(139,92,246,0.15)", "rgba(139,92,246,0.22)", "rgba(139,92,246,0.32)", "rgba(139,92,246,0.45)", "rgba(139,92,246,0.62)", "rgba(139,92,246,0.8)"] }
+      "paper": { "role": "neutral", "displayName": "Paper", "canonical": "#f4f5f2", "tonalRamp": ["#e8ebe3", "#f4f5f2", "#fafbf9", "#fcfdfc", "#ffffff"] },
+      "core": { "role": "neutral", "displayName": "Core Panel", "canonical": "#ffffff", "tonalRamp": ["#fcfdfc", "#ffffff", "#fafbf9", "#f4f5f2", "#e8ebe3"] },
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#14181d", "tonalRamp": ["#0a0c0e", "#14181d", "#1e242b", "#2d353e", "#3d4751"] },
+      "ink-soft": { "role": "neutral", "displayName": "Ink Soft", "canonical": "#333b44", "tonalRamp": ["#1f242b", "#333b44", "#4a5460", "#626f7d", "#7b8999"] },
+      "ink-muted": { "role": "neutral", "displayName": "Ink Muted", "canonical": "#64707d", "tonalRamp": ["#3a434d", "#64707d", "#7d8a99", "#97a5b4", "#b1bec9"] },
+      "hairline": { "role": "neutral", "displayName": "Hairline", "canonical": "rgba(20, 24, 29, 0.09)", "tonalRamp": ["rgba(20,24,29,0.03)", "rgba(20,24,29,0.05)", "rgba(20,24,29,0.09)", "rgba(20,24,29,0.13)", "rgba(20,24,29,0.18)"] },
+      "hairline-strong": { "role": "neutral", "displayName": "Hairline Strong", "canonical": "rgba(20, 24, 29, 0.16)", "tonalRamp": ["rgba(20,24,29,0.06)", "rgba(20,24,29,0.10)", "rgba(20,24,29,0.16)", "rgba(20,24,29,0.22)", "rgba(20,24,29,0.30)"] },
+      "shell-fill": { "role": "neutral", "displayName": "Shell Fill", "canonical": "rgba(20, 24, 29, 0.035)", "tonalRamp": ["rgba(20,24,29,0.01)", "rgba(20,24,29,0.02)", "rgba(20,24,29,0.035)", "rgba(20,24,29,0.05)", "rgba(20,24,29,0.07)"] },
+      "signal-mint": { "role": "primary", "displayName": "Signal Mint", "canonical": "#0da271", "tonalRamp": ["#042a1c", "#07412a", "#0b5a39", "#0da271", "#1cd68a", "#5feaa3", "#a2f2c9", "#d8fbe7"] },
+      "signal-mint-wash": { "role": "primary", "displayName": "Signal Mint Wash", "canonical": "rgba(12, 151, 106, 0.10)", "tonalRamp": ["rgba(12,151,106,0.03)", "rgba(12,151,106,0.06)", "rgba(12,151,106,0.10)", "rgba(12,151,106,0.15)", "rgba(12,151,106,0.22)"] },
+      "scanner-cyan": { "role": "secondary", "displayName": "Scanner Cyan", "canonical": "#0e7490", "tonalRamp": ["#041d25", "#07303b", "#0a4552", "#0e7490", "#14a0c4", "#5cd6ed", "#a6eaf7", "#d5f7fc"] },
+      "optic-bright": { "role": "secondary", "displayName": "Bright Optic", "canonical": "#0e8f7c", "tonalRamp": ["#032520", "#053a32", "#084f45", "#0e8f7c", "#14b8a0", "#5edfc6", "#a6efe4", "#d5f7f2"] },
+      "optic-deep": { "role": "secondary", "displayName": "Optic Deep", "canonical": "#0b7565", "tonalRamp": ["#031d1a", "#052e28", "#083e36", "#0b7565", "#0ea87e", "#34d399", "#86e8cb", "#cbf7e8"] },
+      "caution-amber": { "role": "tertiary", "displayName": "Caution Amber", "canonical": "#b54708", "tonalRamp": ["#2b0e02", "#551c04", "#842a06", "#b54708", "#e35d0a", "#f58a34", "#fac081", "#fddcbb"] },
+      "caution-wash": { "role": "tertiary", "displayName": "Caution Wash", "canonical": "rgba(181, 71, 8, 0.10)", "tonalRamp": ["rgba(181,71,8,0.03)", "rgba(181,71,8,0.06)", "rgba(181,71,8,0.10)", "rgba(181,71,8,0.15)", "rgba(181,71,8,0.22)"] },
+      "danger-ember": { "role": "tertiary", "displayName": "Danger Ember", "canonical": "#d92d20", "tonalRamp": ["#2e0908", "#5b110f", "#8d1a15", "#d92d20", "#e7584e", "#f0847b", "#f8b6b0", "#fce5e4"] },
+      "danger-wash": { "role": "tertiary", "displayName": "Danger Wash", "canonical": "rgba(217, 45, 32, 0.09)", "tonalRamp": ["rgba(217,45,32,0.03)", "rgba(217,45,32,0.05)", "rgba(217,45,32,0.09)", "rgba(217,45,32,0.14)", "rgba(217,45,32,0.20)"] },
+      "signal-mint-deep": { "role": "primary", "displayName": "Signal Mint Deep", "canonical": "#0b9370", "purpose": "Primary action gradient start (135deg to scanner-cyan-deep); flat press-end stand-in.", "tonalRamp": ["#04261c", "#063a2a", "#094e38", "#0b9370", "#0ea87e", "#2fc796", "#8ceccc", "#cbf7e8"] },
+      "scanner-cyan-deep": { "role": "secondary", "displayName": "Scanner Cyan Deep", "canonical": "#0c7f9c", "purpose": "Primary action gradient end; the cyan family's deep register.", "tonalRamp": ["#041e26", "#062d39", "#093e4d", "#0c7f9c", "#0e91b2", "#22d3ee", "#8ceef9", "#c9f8fd"] },
+      "code-jade": { "role": "secondary", "displayName": "Code Jade", "canonical": "#0b7565", "purpose": "Inline code literal pills — deep jade end of the optic family.", "tonalRamp": ["#031d1a", "#052e28", "#083e36", "#0b7565", "#0ea87e", "#34d399", "#86e8cb", "#cbf7e8"] },
+      "ambient-violet": { "role": "ambient", "displayName": "Ambient Violet", "canonical": "rgba(139, 92, 246, 0.10)", "purpose": "Violet corner of the fixed background mesh glow — page light-work only, never a UI accent.", "tonalRamp": ["rgba(139,92,246,0.02)", "rgba(139,92,246,0.05)", "rgba(139,92,246,0.10)", "rgba(139,92,246,0.15)", "rgba(139,92,246,0.22)"] }
     },
     "typographyMeta": {
       "display": { "displayName": "Display", "purpose": "Page h1, verdict banner frame, KPI numerals (30px variant)." },
       "title": { "displayName": "Title", "purpose": "Card h2 and the nav brand line." },
       "body": { "displayName": "Body", "purpose": "All UI prose; leads capped near 66ch." },
       "label": { "displayName": "Label", "purpose": "KPI labels, table headers — tracked uppercase micro-labels." },
-      "mono": { "displayName": "Console", "purpose": "Machine channels only: module codes, HUD lines, status chips, stamps' meta." }
+      "mono": { "displayName": "Console", "purpose": "Machine channels only: module codes, HUD lines, status chips, phase labels, stamps' meta." }
     },
     "shadows": [
-      { "name": "ambient-seat", "value": "0 20px 60px -30px rgba(0, 0, 0, 0.7)", "purpose": "Default seat under card shells and KPI tiles." },
-      { "name": "pop-lift", "value": "0 30px 90px -40px rgba(0, 0, 0, 0.9)", "purpose": "Foreground chrome only — toasts and the nav island." },
-      { "name": "press-pool", "value": "0 10px 34px -12px rgba(13, 168, 126, 0.55)", "purpose": "Primary button's own colored pool; pairs with inset lip rgba(255,255,255,0.25)." },
-      { "name": "live-ring", "value": "0 0 0 1px rgba(94, 234, 212, 0.35), 0 8px 40px -12px rgba(34, 211, 238, 0.25)", "purpose": "The glow token — sensor-live and focus moments only (Live-Earns-Glow Rule)." },
-      { "name": "verdict-glow", "value": "0 0 50px -18px rgba(52, 211, 153, 0.55)", "purpose": "ACCEPT banner; ember variant rgba(248,113,113,0.45) for REJECT." },
-      { "name": "inset-machining", "value": "inset 0 1px 1px rgba(255, 255, 255, 0.07), inset 0 -1px 0 rgba(0, 0, 0, 0.4)", "purpose": "Inner core lip of the double bezel — depth without light." }
+      { "name": "ambient-seat", "value": "0 1px 2px rgba(20, 24, 29, 0.05), 0 18px 44px -24px rgba(20, 24, 29, 0.22)", "purpose": "Default seat under card shells and KPI tiles." },
+      { "name": "pop-lift", "value": "0 24px 70px -28px rgba(20, 24, 29, 0.35)", "purpose": "Foreground chrome only — toasts and the nav island." },
+      { "name": "press-pool", "value": "0 10px 30px -12px rgba(11, 147, 112, 0.55)", "purpose": "Primary button's own colored pool; pairs with inset lip rgba(255,255,255,0.28)." },
+      { "name": "live-ring", "value": "0 0 0 1px rgba(13, 148, 136, 0.35), 0 10px 34px -14px rgba(14, 116, 144, 0.35)", "purpose": "The ring token — sensor-live and focus moments only (Live-Earns-Color Rule)." },
+      { "name": "verdict-seat", "value": "0 12px 34px -18px rgba(12, 151, 106, 0.5)", "purpose": "ACCEPT banner; ember variant rgba(217,45,32,0.45) for REJECT." },
+      { "name": "inset-lip", "value": "inset 0 1px 0 rgba(255, 255, 255, 0.85), inset 0 -1px 0 rgba(20, 24, 29, 0.05)", "purpose": "Inner core lip of the double bezel — depth without light." }
     ],
     "motion": [
       { "name": "ease-standard", "value": "cubic-bezier(0.32, 0.72, 0, 1)", "purpose": "Default UI easing (--ease, paired with --speed 420ms)." },
@@ -63,7 +63,7 @@
       "refersTo": "button-primary",
       "description": "Pill CTA with mint-to-cyan gradient, inset lip, and a nested trailing icon orb.",
       "html": "<button class=\"ds-btn-primary\">Verify — face + typing <span class=\"ds-orb\" aria-hidden=\"true\">↗</span></button>",
-      "css": ".ds-btn-primary { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 11px 20px; border: none; border-radius: 999px; background: linear-gradient(135deg, #0ea87e 0%, #0891b2 100%); color: var(--signal-mint-contrast, #04110d); font: 600 13.5px \"Plus Jakarta Sans\", system-ui, sans-serif; letter-spacing: 0.01em; cursor: pointer; box-shadow: var(--press-pool, 0 10px 34px -12px rgba(13, 168, 126, 0.55)), inset 0 1px 0 rgba(255, 255, 255, 0.25); transition: transform 380ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)), filter 380ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)); } .ds-btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); } .ds-btn-primary:active { transform: translateY(0) scale(0.97); } .ds-btn-primary:focus-visible { outline: 2px solid var(--optic-bright, #5eead4); outline-offset: 3px; } .ds-btn-primary:disabled { opacity: 0.4; transform: none; box-shadow: none; cursor: default; } .ds-orb { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; margin-right: -8px; border-radius: 50%; background: rgba(0, 0, 0, 0.22); font-size: 13px; transition: transform 380ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)); } .ds-btn-primary:hover .ds-orb { transform: translate(3px, -2px) scale(1.06); }"
+      "css": ".ds-btn-primary { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 11px 20px; border: none; border-radius: 999px; background: linear-gradient(135deg, #0b9370 0%, #0c7f9c 100%); color: #ffffff; font: 600 13.5px \"Plus Jakarta Sans\", system-ui, sans-serif; letter-spacing: 0.01em; cursor: pointer; box-shadow: 0 10px 30px -12px rgba(11, 147, 112, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.28); transition: transform 380ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)), filter 380ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)); } .ds-btn-primary:hover { filter: brightness(1.06); transform: translateY(-1px); } .ds-btn-primary:active { transform: translateY(0) scale(0.97); } .ds-btn-primary:focus-visible { outline: 2px solid var(--optic-bright, #0e8f7c); outline-offset: 3px; } .ds-btn-primary:disabled { opacity: 0.4; transform: none; box-shadow: none; cursor: default; } .ds-orb { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; margin-right: -8px; border-radius: 50%; background: rgba(255, 255, 255, 0.22); font-size: 13px; transition: transform 380ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)); } .ds-btn-primary:hover .ds-orb { transform: translate(3px, -2px) scale(1.06); }"
     },
     {
       "name": "Ghost Button",
@@ -71,78 +71,83 @@
       "refersTo": "button-ghost",
       "description": "Hairline-glass pill for secondary actions and table row commands.",
       "html": "<button class=\"ds-btn-ghost\">Enroll new</button>",
-      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px; border: 1px solid var(--hairline, rgba(255, 255, 255, 0.08)); border-radius: 999px; background: transparent; color: var(--ink, #eef2f7); font: 600 12.5px \"Plus Jakarta Sans\", system-ui, sans-serif; cursor: pointer; transition: background 320ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)), border-color 320ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)); } .ds-btn-ghost:hover { background: rgba(255, 255, 255, 0.06); border-color: var(--hairline-strong, rgba(255, 255, 255, 0.14)); } .ds-btn-ghost:active { transform: translateY(0) scale(0.97); } .ds-btn-ghost:focus-visible { outline: 2px solid var(--optic-bright, #5eead4); outline-offset: 3px; }"
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px; border: 1px solid var(--hairline, rgba(20, 24, 29, 0.09)); border-radius: 999px; background: transparent; color: var(--ink, #14181d); font: 600 12.5px \"Plus Jakarta Sans\", system-ui, sans-serif; cursor: pointer; transition: background 320ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)), border-color 320ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)); } .ds-btn-ghost:hover { background: rgba(20, 24, 29, 0.04); border-color: var(--hairline-strong, rgba(20, 24, 29, 0.16)); } .ds-btn-ghost:active { transform: translateY(0) scale(0.97); } .ds-btn-ghost:focus-visible { outline: 2px solid var(--optic-bright, #0e8f7c); outline-offset: 3px; }"
     },
     {
       "name": "Pill Input",
       "kind": "input",
       "refersTo": "input-pill",
-      "description": "Glass pill field with the scanner-cyan focus halo.",
+      "description": "White pill field with the deep-mint focus halo.",
       "html": "<input class=\"ds-input\" placeholder=\"username\" autocomplete=\"off\" spellcheck=\"false\">",
-      "css": ".ds-input { display: block; width: 100%; max-width: var(--input-max, 460px); padding: 11px 18px; border: 1px solid var(--hairline, rgba(255, 255, 255, 0.08)); border-radius: 999px; font: 400 14px \"Plus Jakarta Sans\", system-ui, sans-serif; color: var(--ink, #eef2f7); background: rgba(255, 255, 255, 0.04); transition: border-color 300ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)), box-shadow 300ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)), background 300ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)); } .ds-input::placeholder { color: rgba(139, 150, 165, 0.6); } .ds-input:focus { border-color: rgba(94, 234, 212, 0.5); outline: none; box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.12), 0 0 24px -6px rgba(34, 211, 238, 0.35); background: rgba(255, 255, 255, 0.06); }"
+      "css": ".ds-input { display: block; width: 100%; max-width: var(--input-max, 460px); padding: 11px 18px; border: 1px solid var(--hairline-strong, rgba(20, 24, 29, 0.16)); border-radius: 999px; font: 400 14px \"Plus Jakarta Sans\", system-ui, sans-serif; color: var(--ink, #14181d); background: #ffffff; transition: border-color 300ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)), box-shadow 300ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)), background 300ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)); } .ds-input::placeholder { color: rgba(100, 112, 125, 0.65); } .ds-input:focus { border-color: rgba(13, 148, 136, 0.55); outline: none; box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.13); background: #ffffff; }"
     },
     {
       "name": "Console Card",
       "kind": "card",
       "refersTo": "card-shell",
-      "description": "The double-bezel signature: glass shell around a concentric darker core with an inset lip.",
+      "description": "The double-bezel signature: pale shell around a concentric porcelain core with an inset lip.",
       "html": "<article class=\"ds-card\"><h2 class=\"ds-card-title\">Auth request</h2><p class=\"ds-card-body\">Glass shell, machined core. Inner radius equals outer radius minus bezel inset, always concentric.</p></article>",
-      "css": ".ds-card { position: relative; isolation: isolate; padding: 18px 22px 20px; border: 1px solid var(--hairline, rgba(255, 255, 255, 0.08)); border-radius: 30px; background: linear-gradient(155deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015)); box-shadow: var(--ambient-seat, 0 20px 60px -30px rgba(0, 0, 0, 0.7)); max-width: 560px; } .ds-card::before { content: \"\"; position: absolute; inset: 18px 22px 20px; z-index: -1; background: linear-gradient(180deg, #0b0e14 0%, #08090d 100%); border-radius: calc(30px - 20px); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.07), inset 0 -1px 0 rgba(0, 0, 0, 0.4); } .ds-card-title { margin: 0 0 10px; font: 600 15.5px \"Space Grotesk\", \"Plus Jakarta Sans\", sans-serif; letter-spacing: 0.01em; color: var(--ink, #eef2f7); } .ds-card-body { margin: 0; font: 400 14px/1.65 \"Plus Jakarta Sans\", system-ui, sans-serif; color: var(--ink-soft, #c3cbd7); }"
+      "css": ".ds-card { position: relative; isolation: isolate; padding: 18px 22px 20px; border: 1px solid var(--hairline, rgba(20, 24, 29, 0.09)); border-radius: 30px; background: linear-gradient(155deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.66)); box-shadow: 0 1px 2px rgba(20, 24, 29, 0.05), 0 18px 44px -24px rgba(20, 24, 29, 0.22); max-width: 560px; } .ds-card::before { content: \"\"; position: absolute; inset: 18px 22px 20px; z-index: -1; background: linear-gradient(180deg, #ffffff 0%, #fcfdfc 100%); border-radius: calc(30px - 20px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), inset 0 -1px 0 rgba(20, 24, 29, 0.05); } .ds-card-title { margin: 0 0 10px; font: 600 15.5px \"Space Grotesk\", \"Plus Jakarta Sans\", sans-serif; letter-spacing: 0.01em; color: var(--ink, #14181d); } .ds-card-body { margin: 0; font: 400 14px/1.65 \"Plus Jakarta Sans\", system-ui, sans-serif; color: var(--ink-soft, #333b44); }"
     },
     {
       "name": "Status Chip",
       "kind": "chip",
       "refersTo": "chip-status",
-      "description": "Console-voice status pill; the live state earns the blinking dot and mint glow.",
+      "description": "Console-voice status pill; the live state earns the blinking dot and deep-mint glow.",
       "html": "<span class=\"ds-chip\">SCN ······</span> <span class=\"ds-chip ds-chip-live\">LIVE</span>",
-      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px; border: 1px solid var(--hairline, rgba(255, 255, 255, 0.08)); border-radius: 999px; background: rgba(255, 255, 255, 0.04); color: var(--ink-muted, #8b96a5); font: 500 10px \"JetBrains Mono\", ui-monospace, monospace; letter-spacing: 0.16em; text-transform: uppercase; font-variant-numeric: tabular-nums; transition: color 300ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)), border-color 300ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)), background 300ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)); } .ds-chip::before { content: \"\"; width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.5; } .ds-chip-live { color: var(--signal-mint, #34d399); border-color: rgba(52, 211, 153, 0.35); background: rgba(52, 211, 153, 0.08); box-shadow: 0 0 18px -6px rgba(52, 211, 153, 0.6); } .ds-chip-live::before { opacity: 1; animation: ds-chip-blink 1.6s cubic-bezier(0.6, 0, 0.2, 1) infinite; } @keyframes ds-chip-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }"
+      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px; border: 1px solid var(--hairline, rgba(20, 24, 29, 0.09)); border-radius: 999px; background: rgba(20, 24, 29, 0.035); color: var(--ink-muted, #64707d); font: 500 10px \"JetBrains Mono\", ui-monospace, monospace; letter-spacing: 0.16em; text-transform: uppercase; font-variant-numeric: tabular-nums; transition: color 300ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)), border-color 300ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)), background 300ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)); } .ds-chip::before { content: \"\"; width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.5; } .ds-chip-live { color: var(--optic-deep, #0b7565); border-color: rgba(12, 151, 106, 0.35); background: rgba(12, 151, 106, 0.08); box-shadow: 0 0 18px -6px rgba(13, 148, 136, 0.4); } .ds-chip-live::before { opacity: 1; animation: ds-chip-blink 1.6s cubic-bezier(0.6, 0, 0.2, 1) infinite; } @keyframes ds-chip-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }"
     },
     {
       "name": "Toast",
       "kind": "custom",
       "refersTo": "toast",
-      "description": "Glass pill notice; enters and leaves bottom-right via the same edge.",
+      "description": "Porcelain pill notice; enters and leaves bottom-right via the same edge.",
       "html": "<div class=\"ds-toast ds-toast-good\">Fusion settings saved</div>",
-      "css": ".ds-toast { box-sizing: border-box; max-width: 340px; padding: 12px 20px; border: 1px solid var(--hairline, rgba(255, 255, 255, 0.08)); border-radius: 999px; background: rgba(12, 14, 18, 0.85); color: var(--ink, #eef2f7); font: 500 13px \"Plus Jakarta Sans\", system-ui, sans-serif; box-shadow: var(--pop-lift, 0 30px 90px -40px rgba(0, 0, 0, 0.9)); animation: ds-toast-in 480ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)); transition: opacity 240ms var(--ease-io, cubic-bezier(0.6, 0, 0.2, 1)), transform 240ms var(--ease-io, cubic-bezier(0.6, 0, 0.2, 1)); } .ds-toast.ds-toast-good { border-color: rgba(52, 211, 153, 0.35); } .ds-toast.ds-toast-bad { border-color: rgba(248, 113, 113, 0.35); } .ds-toast.ds-toast-out { opacity: 0; transform: translateY(10px) scale(0.97); } @keyframes ds-toast-in { from { opacity: 0; transform: translateY(12px) scale(0.96); } to { opacity: 1; transform: none; } }"
+      "css": ".ds-toast { box-sizing: border-box; max-width: 340px; padding: 12px 20px; border: 1px solid var(--hairline, rgba(20, 24, 29, 0.09)); border-radius: 999px; background: rgba(255, 255, 255, 0.92); color: var(--ink, #14181d); font: 500 13px \"Plus Jakarta Sans\", system-ui, sans-serif; box-shadow: 0 24px 70px -28px rgba(20, 24, 29, 0.35); animation: ds-toast-in 480ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)); transition: opacity 240ms var(--ease-io, cubic-bezier(0.6, 0, 0.2, 1)), transform 240ms var(--ease-io, cubic-bezier(0.6, 0, 0.2, 1)); } .ds-toast.ds-toast-good { border-color: rgba(12, 151, 106, 0.4); } .ds-toast.ds-toast-bad { border-color: rgba(217, 45, 32, 0.4); } .ds-toast.ds-toast-out { opacity: 0; transform: translateY(10px) scale(0.97); } @keyframes ds-toast-in { from { opacity: 0; transform: translateY(12px) scale(0.96); } to { opacity: 1; transform: none; } }"
     },
     {
       "name": "Verdict Banner",
       "kind": "custom",
       "refersTo": "verdict-accept",
-      "description": "The decision surface — accept and reject states with their earned glow.",
+      "description": "The decision surface — accept and reject states with their earned seat.",
       "html": "<p class=\"ds-verdict ds-verdict-accept\">ACCESS GRANTED</p><p class=\"ds-verdict ds-verdict-reject\">ACCESS DENIED</p>",
-      "css": ".ds-verdict { display: flex; align-items: center; gap: 12px; font: 650 clamp(19px, 2.4vw, 23px) \"Space Grotesk\", \"Plus Jakarta Sans\", sans-serif; letter-spacing: -0.02em; padding: 16px 20px; border-radius: 22px; margin: 0 0 12px; } .ds-verdict-accept { background: var(--signal-mint-wash, rgba(52, 211, 153, 0.12)); color: var(--signal-mint, #34d399); border: 1px solid rgba(52, 211, 153, 0.3); box-shadow: 0 0 50px -18px rgba(52, 211, 153, 0.55); } .ds-verdict-reject { background: var(--danger-wash, rgba(248, 113, 113, 0.12)); color: var(--danger-ember, #f87171); border: 1px solid rgba(248, 113, 113, 0.3); box-shadow: 0 0 50px -18px rgba(248, 113, 113, 0.45); }"
+      "css": ".ds-verdict { display: flex; align-items: center; gap: 12px; font: 650 clamp(19px, 2.4vw, 23px) \"Space Grotesk\", \"Plus Jakarta Sans\", sans-serif; letter-spacing: -0.02em; padding: 16px 20px; border-radius: 22px; margin: 0 0 12px; } .ds-verdict-accept { background: var(--signal-mint-wash, rgba(12, 151, 106, 0.10)); color: #067a52; border: 1px solid rgba(12, 151, 106, 0.32); box-shadow: 0 12px 34px -18px rgba(12, 151, 106, 0.5); } .ds-verdict-reject { background: var(--danger-wash, rgba(217, 45, 32, 0.09)); color: var(--danger-ember, #d92d20); border: 1px solid rgba(217, 45, 32, 0.32); box-shadow: 0 12px 34px -18px rgba(217, 45, 32, 0.45); }"
     }
   ],
   "narrative": {
-    "northStar": "The Watchman's Console",
-    "overview": "ARGUS renders the hundred-eyed watchman at his instrument: a near-black void where glass panels float in real depth and every optically live element acquires colored light. The console is an Operate surface, so craft concentrates in precision furniture: hairline joints, machined radii, tabular numerals, a dedicated console voice for machine channels. The rare theatrical moment — the verification pipeline with its scan sweep, staged module rows and verdict stamp — is a committed product ritual, not decoration; the numbers it displays are always the live pipeline's actual output. Theatrical motion is spent exactly and only there.",
+    "northStar": "The Watchman's Console — in daylight",
+    "overview": "ARGUS renders the hundred-eyed watchman at his instrument. This revision moves that instrument into daylight: warm paper (#f4f5f2) instead of a void, deep graphite ink instead of glowing white, and porcelain panels — white cores seated inside a pale shell — instead of black glass in the dark. The console is an Operate surface, so craft concentrates in precision furniture: hairline joints, machined radii, tabular numerals, a dedicated console voice for machine channels. The rare theatrical moment — the verification pipeline with its scan sweep, staged module rows and verdict stamp — survives the re-skin; it is a committed product ritual, not decoration; the numbers it displays are always the live pipeline's actual output. Theatrical motion is spent exactly and only there.",
     "keyCharacteristics": [
-      "OLED void with fixed light-work: faint emerald/violet/cyan mesh glow behind content, self-hosted grain at 3.5% opacity.",
-      "Glass panels in honest depth — 1px white hairlines mark joints; large soft ambient shadows lift cards off the void; blur is reserved to fixed chrome.",
-      "Optic accents (Signal Mint #34d399 accept, Scanner Cyan #22d3ee live optics) are earned by state — never decoration.",
+      "Daylight surface: faint emerald/violet/cyan mesh (10–13% alpha) on warm paper, self-hosted grain at 2.8% opacity.",
+      "Porcelain panels in honest depth — 1px ink hairlines mark joints; soft ambient shadows lift cards off the paper; blur is reserved to fixed chrome (nav pill, toasts) where it frosts a moving scene behind it.",
+      "Optic accents (Signal Mint #0da271 accept, Scanner Cyan #0e7490 live optics) are earned by state — never decoration.",
       "Machine channels speak the console voice — JetBrains Mono 10–10.5px tracked caps.",
-      "Double-bezel machining: every card is a glass shell around an inset darker core, radii strictly concentric."
+      "Double-bezel machining survives the re-skin: every card is a pale shell around an inset porcelain core, radii strictly concentric.",
+      "Camera has an on-switch: the Face step auto-starts the sensor and always shows an explicit Enable camera control plus a live/blocked state chip.",
+      "Typing is phased and forgiving: the rhythm step names the phase (A · dwell, B · flight, C · correction) in the HUD line, and a typo corrected with backspace no longer voids the round — the correction stays inside the sample as behavior."
     ],
     "rules": [
-      { "name": "The Live-Earns-Glow Rule", "body": "Box glows and colored shadows attach only to live or decision states — running sensor chips, focus, the verdict. At rest, cards stay seated on ambient shadow alone.", "section": "colors" },
-      { "name": "The Numeral-Only Gradient Rule", "body": "A brand gradient may paint type in exactly one place — dashboard KPI numerals. Prose and headings never wear it.", "section": "colors" },
+      { "name": "The Live-Earns-Color Rule", "body": "Colored shadows, rings and tints attach only to live or decision states — running sensor chips, focus, the verdict, the phase chip. At rest, cards stay seated on ambient shadow alone.", "section": "colors" },
+      { "name": "The Numeral-Only Gradient Rule", "body": "A brand gradient may paint type in exactly one place — dashboard KPI numerals (background-clip: text). Prose and headings never wear it.", "section": "colors" },
+      { "name": "The Multiply-Not-Screen Rule", "body": "The scan band over the camera feed blends multiply (a bright band would erase the feed under screen). A screen-blended light effect only ever belongs on a dark surface.", "section": "colors" },
       { "name": "The Console Column Rule", "body": "JetBrains Mono belongs to machine channels — codes, measurements, machine state. Body prose never borrows mono as a technicality costume.", "section": "typography" },
-      { "name": "The Layered Glass Rule", "body": "Blur belongs to fixed chrome (nav, toasts) where it dims a live scene behind it; scrolling content never carries backdrop-filter. Depth is shadow + hairline + inset — never a darker offset drop-shadow costume.", "section": "elevation" },
+      { "name": "The Porcelain Rule", "body": "Blur belongs to fixed chrome (nav, toasts) where it frosts a live scene behind it; scrolling content never carries backdrop-filter. Depth is shadow + hairline + inset lip — never a darker, offset \"drop shadow\" costume, and never a hard black shadow on paper.", "section": "elevation" },
       { "name": "The Double-Bezel Rule", "body": "Machining is concentric or it is wrong: inner radius = outer radius − bezel inset. A card's core never out-corners its shell.", "section": "components" }
     ],
     "dos": [
       "Do animate transform, opacity and bounded filter only; use --ease cubic-bezier(0.32,0.72,0,1) for UI, --ease-io for sweeps.",
-      "Do keep borders rgba(255,255,255,0.08) hairlines and data numerals tabular-nums.",
+      "Do keep borders rgba(20,24,29,0.09) hairlines and data numerals tabular-nums.",
       "Do self-host every asset — the CSP is default-src 'self' with no inline style/script; page config rides the #bio-config JSON block.",
       "Do stagger sibling entrances 90–450ms via data-delay steps through the motion.js observer; state entrances land 240–400ms.",
-      "Do treat reduced-motion as global: the stylesheet collapses all animation/transition to 0.01ms and neutralizes reveals."
+      "Do treat reduced-motion as global: the stylesheet collapses all animation/transition to 0.01ms and neutralizes reveals.",
+      "Do give every sensor a visible on-switch and a state chip — the camera says camera on / camera off, the phase says which trait it is measuring."
     ],
     "donts": [
-      "Don't put a glow or colored shadow on anything that isn't live, focus, or a verdict (The Live-Earns-Glow Rule).",
+      "Don't put a colored shadow or ring on anything that isn't live, focus, or a verdict (The Live-Earns-Color Rule).",
       "Don't use backdrop-blur on scrolling content; fixed chrome only.",
       "Don't animate width/height/top/left — bars fill with scaleX, strips with scaleY.",
       "Don't introduce a third accent or paint free-floating gradients on gaps; mint and cyan are state-earned, ≤ ~10% of any screen combined.",
+      "Don't use mix-blend-mode: screen on a light surface (The Multiply-Not-Screen Rule).",
       "Don't hard-code raster font links, inline styles, or inline scripts; mono is for console voice, never for prose."
     ]
   }
