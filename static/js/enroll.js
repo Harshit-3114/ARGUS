@@ -39,8 +39,14 @@
     const next = $(sectionId);
     next.hidden = false;
     next.classList.add("enter");   // panelIn entrance; self-removes on animationend
-    next.addEventListener("animationend",
-      () => next.classList.remove("enter"), { once: true });
+    // only the step's own animation may clear the class - its children animate
+    // too, and their animationend would otherwise cut the entrance short
+    const onStepEnd = (e) => {
+      if (e.target !== next) return;
+      next.classList.remove("enter");
+      next.removeEventListener("animationend", onStepEnd);
+    };
+    next.addEventListener("animationend", onStepEnd);
     const stepNo = { "step-account": 1, "step-face": 2, "step-typing": 3, "step-done": 4 };
     document.querySelectorAll("#stepper li").forEach((li) => {
       const n = Number(li.dataset.step);
@@ -65,27 +71,37 @@
   function buildSlots() {
     const wrap = $("face-slots");
     wrap.innerHTML = "";
-    for (let i = 0; i < CFG.nFrames; i++) wrap.appendChild(document.createElement("i"));
+    for (let i = 0; i < CFG.nFrames; i++) {
+      const slot = document.createElement("i");
+      slot.style.animationDelay = (i * 30) + "ms";   // stagger as they fill
+      wrap.appendChild(slot);
+    }
+  }
+
+  /* the button label cross-fades rather than snapping between two words */
+  function setCamButton(on) {
+    const label = $("btn-cam-label");
+    const icon = $("btn-cam-icon");
+    const text = on ? "Turn camera off" : "Turn on camera";
+    if (!label || label.textContent === text) return;
+    label.style.opacity = "0";
+    setTimeout(() => {
+      label.textContent = text;
+      if (icon) icon.setAttribute("href", on ? "#i-camera-off" : "#i-camera");
+      label.style.opacity = "1";
+    }, 160);
   }
 
   function cameraOn() {
-    $("cam-off").hidden = true;
-    $("cam-live").hidden = false;
     $("cam-panel").classList.add("live");
     $("cam-status-text").textContent = "Camera on";
-    $("btn-cam-enable").innerHTML =
-      '<svg class="icon-orb" aria-hidden="true" width="20" height="20">' +
-      '<use href="#i-camera-off"></use></svg> Turn camera off';
+    setCamButton(true);
   }
 
   function cameraOff() {
-    $("cam-live").hidden = true;
-    $("cam-off").hidden = false;
     $("cam-panel").classList.remove("live");
     $("cam-status-text").textContent = "Camera off";
-    $("btn-cam-enable").innerHTML =
-      '<svg class="icon-orb" aria-hidden="true" width="20" height="20">' +
-      '<use href="#i-camera"></use></svg> Turn on camera';
+    setCamButton(false);
   }
 
   async function startCamera() {
@@ -97,6 +113,8 @@
       await window.BioCam.start($("face-video"),
         { intervalMs: 550, maxFrames: CFG.nFrames });
       cameraOn();
+      // the button is now the "turn camera off" control - it must stay usable
+      btn.disabled = false;
       $("cam-overlay").textContent = "Camera on — look straight ahead";
       poll = setInterval(() => {
         const n = Math.min(window.BioCam.count(), CFG.nFrames);
@@ -123,7 +141,7 @@
   }
 
   $("btn-cam-enable").addEventListener("click", async () => {
-    if (!$("cam-live").hidden) {
+    if ($("cam-panel").classList.contains("live")) {
       clearInterval(poll);
       window.BioCam.stop();
       cameraOff();

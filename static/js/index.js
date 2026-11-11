@@ -48,7 +48,7 @@
     techToggle.addEventListener("click", () => {
       const open = techToggle.getAttribute("aria-expanded") === "true";
       techToggle.setAttribute("aria-expanded", String(!open));
-      detail.hidden = open;
+      detail.classList.toggle("open", !open);
     });
   }
 })();

@@ -194,9 +194,10 @@ helpful colleague would say it. Banned in visible copy: *physiological*,
 disclosure, where the reader asked for them.
 
 **The No-Dead-End Rule.** A screen may never present a sensor that is off
-without a visible, labelled control that turns it on — in the panel itself, not
-in a corner. The camera area always shows either a live feed or an instruction
-and a button; never a grey rectangle.
+without a visible, labelled control that turns it on — and that control must
+never grey itself out, hide below the fold, or be swallowed by the element it
+sits in. The camera toggle lives in the card header beside the state chip, so
+it is always on screen and always live.
 
 **The Reassurance Rule.** Wherever a camera or a keyboard is involved, the page
 states that the data stays on the machine ("Everything runs on this computer.
@@ -316,15 +317,20 @@ snippets live in `.impeccable/design.json`.
 
 ### The camera panel
 
-The single most important component. It is a large 24px rectangle that is in
-exactly one of two states:
+The single most important component. The panel is a large 24px rectangle that
+is in exactly one of two states, and the two states **cross-fade in place**
+(240ms) rather than one vanishing and the other popping in somewhere else:
 
-- **Waiting:** dashed 2px border, pale teal wash, a drawn oval face guide, the
-  line *"Look at the camera to switch it on."* and a large **Turn on camera**
-  button inside the panel.
-- **Live:** solid hairline, the video fills the panel, teal corner brackets, and
-  a calm overlay reading *"Camera on — look straight ahead"*. A state chip in
-  the card header reads **Camera on** with a breathing dot.
+- **Waiting:** a dashed 2px frame over a pale teal wash, a drawn oval face
+  guide, and the line *"Look at the camera to switch it on."*
+- **Live:** the dashed frame fades out, the video fills the panel, teal corner
+  brackets appear, and a calm overlay reads *"Camera on — look straight ahead"*.
+
+The **toggle always lives in the card header**, beside the state chip
+(**Camera on** / **Camera off**, with the breathing dot) — never inside the
+panel, never below the fold, and never disabled: a control that greys itself
+out after it has worked is a dead end. Its label cross-fades over 160ms as it
+changes between *Turn on camera* and *Turn camera off*.
 
 The same panel is used on sign-in and on set-up; on set-up it also shows ten
 photo slots that fill as frames arrive, plus a plain progress line ("6 of 10

@@ -69,6 +69,12 @@
       `Show me the technical numbers` +
       `<svg class="icon-orb" aria-hidden="true" width="18" height="18">` +
       `<use href="#i-chevron"></use></svg></button>`;
+    const collapse = document.createElement("div");
+    collapse.className = "tech-collapse";
+    const inner = document.createElement("div");
+    inner.className = "tech-collapse-inner";
+    collapse.appendChild(inner);
+    tech.appendChild(collapse);
     const table = document.createElement("table");
     table.innerHTML =
       "<thead><tr><th>check</th><th>real person</th><th>someone else</th>" +
@@ -92,7 +98,7 @@
       }
       tbody.appendChild(tr);
     });
-    tech.appendChild(table);
+    inner.appendChild(table);
     out.appendChild(tech);
 
     let note = null;
@@ -102,7 +108,7 @@
       note.innerHTML =
         `Recommended cut-off for the combined check: <code>${fused.eer_thr}</code> ` +
         `(θ* = the cut-off configured right now).`;
-      tech.appendChild(note);
+      inner.appendChild(note);
     }
 
     if (charts) {
@@ -128,10 +134,7 @@
     toggle.addEventListener("click", () => {
       const open = toggle.getAttribute("aria-expanded") === "true";
       toggle.setAttribute("aria-expanded", String(!open));
-      table.hidden = open;
-      if (note) note.hidden = open;
+      collapse.classList.toggle("open", !open);
     });
-    table.hidden = true;
-    if (note) note.hidden = true;
   }
 })();

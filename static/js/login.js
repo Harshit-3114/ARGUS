@@ -19,33 +19,49 @@
   /* ---------------- camera panel ---------------- */
   let meterTimer = null;
 
+  /* the button label cross-fades rather than snapping between two words */
+  function setCamButton(on) {
+    const label = $("btn-cam-label");
+    const icon = $("btn-cam-icon");
+    const text = on ? "Turn camera off" : "Turn on camera";
+    if (!label || label.textContent === text) return;
+    label.style.opacity = "0";
+    setTimeout(() => {
+      label.textContent = text;
+      if (icon) icon.setAttribute("href", on ? "#i-camera-off" : "#i-camera");
+      label.style.opacity = "1";
+    }, 160);
+  }
+
   function cameraOn() {
-    $("cam-off").hidden = true;
-    $("cam-live").hidden = false;
     $("cam-panel").classList.add("live");
     $("cam-state-text").textContent = "Camera on";
-    $("btn-cam").innerHTML =
-      '<svg class="icon-orb" aria-hidden="true" width="20" height="20">' +
-      '<use href="#i-camera-off"></use></svg> Turn camera off';
+    setCamButton(true);
   }
 
   function cameraOff() {
-    $("cam-live").hidden = true;
-    $("cam-off").hidden = false;
     $("cam-panel").classList.remove("live");
     $("cam-state-text").textContent = "Camera off";
-    $("btn-cam").innerHTML =
-      '<svg class="icon-orb" aria-hidden="true" width="20" height="20">' +
-      '<use href="#i-camera"></use></svg> Turn on camera';
+    setCamButton(false);
   }
 
+  /* The camera asks permission by itself, so the page never sits on a dead
+   * grey box; the button stays for the second tap browsers ask for.
+   * Started straight away (the script is at the end of the body, so the DOM
+   * is ready) — binding this to `load` could switch the camera back on after
+   * the user had already turned it off. */
+  let camStarting = false;
   async function startCamera() {
+    if (camStarting) return;
+    camStarting = true;
     const btn = $("btn-cam");
     btn.disabled = true;
     try {
       await window.BioCam.start($("face-video"),
         { intervalMs: 400, maxFrames: CFG.nFrames });
       cameraOn();
+      // the button is now the "turn camera off" control - it must stay usable
+      btn.disabled = false;
       $("cam-overlay").textContent = "Camera on — look straight ahead";
       meterTimer = setInterval(() => {
         const n = window.BioCam.count();
@@ -60,11 +76,13 @@
       $("login-status").textContent =
         "We couldn't switch the camera on — that's fine, you can try again. " +
         "If your browser asked permission, choose Allow. (" + err.name + ")";
+    } finally {
+      camStarting = false;
     }
   }
 
   $("btn-cam").addEventListener("click", async () => {
-    if (!$("cam-live").hidden) {
+    if ($("cam-panel").classList.contains("live")) {
       /* second click switches the camera back off — the preview is the
        * user's to control, always. */
       clearInterval(meterTimer);
@@ -75,9 +93,7 @@
     await startCamera();
   });
 
-  /* the camera asks permission by itself, so the page never sits on a
-   * dead grey box; the button stays for the second tap browsers ask for */
-  window.addEventListener("load", () => { startCamera(); });
+  startCamera();
 
   /* ---------------- live typing rhythm ---------------- */
   const recorder = window.KsCapture.attach($("in-password"));
@@ -201,7 +217,14 @@
     // un-hide with a 300ms panelIn entrance (class self-removes on animationend)
     v.hidden = false;
     v.classList.add("enter");
-    v.addEventListener("animationend", () => v.classList.remove("enter"), { once: true });
+    // only the verdict's own animation may clear the class - the rows animate
+    // too, and their animationend would otherwise cut the entrance short
+    const onVerdictEnd = (e) => {
+      if (e.target !== v) return;
+      v.classList.remove("enter");
+      v.removeEventListener("animationend", onVerdictEnd);
+    };
+    v.addEventListener("animationend", onVerdictEnd);
     const consoleEl = $("verdict-console");
     consoleEl.innerHTML = "";
     $("scores-rows").innerHTML = "";

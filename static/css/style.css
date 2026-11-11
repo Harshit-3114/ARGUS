@@ -271,6 +271,7 @@ main#main { padding-bottom: 48px; }
 }
 .card > * { position: relative; }
 .card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+.card-head > div:first-child { flex: 1 1 auto; min-width: 0; }
 .card-head h2 { margin: 0; }
 .card-head p { color: var(--slate); margin: 4px 0 0; font-size: 16px; }
 
@@ -430,23 +431,53 @@ label.inline input { width: auto; max-width: none; min-height: 0; margin: 0; acc
 /* ---------------- camera area (friendly) ---------------- */
 .camera-panel {
   position: relative;
-  display: grid; place-items: center;
+  display: flex; flex-direction: column; align-items: center; gap: 18px;
   min-height: 320px;
   padding: 26px;
   border-radius: var(--r-card);
-  border: 2px dashed var(--line-2);
+  border: 2px solid var(--line);
   background:
     radial-gradient(circle at 50% 42%, rgba(15, 157, 140, 0.07), transparent 62%),
     var(--teal-wash-2);
   text-align: center;
+  transition: background 240ms var(--ease), padding 240ms var(--ease),
+              border-color 240ms var(--ease);
 }
-/* once the feed is live the dashed "waiting for you" frame goes away */
-.camera-panel.live {
-  border-style: solid;
-  border-color: var(--line);
-  background: var(--surface);
-  padding: 10px;
+/* the dashed "waiting for you" frame is its own layer, so it can fade out
+   instead of snapping the moment the feed arrives */
+.camera-panel::before {
+  content: "";
+  position: absolute; inset: -2px;
+  border: 2px dashed var(--line-2);
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 240ms var(--ease);
 }
+.camera-panel.live { background: var(--surface); padding: 10px; }
+.camera-panel.live::before { opacity: 0; }
+
+/* both camera states share one grid cell, so they cross-fade in place
+   instead of one vanishing and the other popping in somewhere else */
+.cam-stage { display: grid; width: 100%; place-items: center; position: relative; }
+.cam-stage > * {
+  grid-area: 1 / 1;
+  width: 100%;
+  transition: opacity 240ms var(--ease), transform 240ms var(--ease),
+              visibility 240ms var(--ease);
+}
+.cam-inner { opacity: 1; transform: none; visibility: visible; }
+.cam-stage > .cam-wrap { opacity: 0; transform: scale(0.97); visibility: hidden; }
+.camera-panel.live .cam-inner { opacity: 0; transform: scale(0.97); visibility: hidden; }
+.camera-panel.live .cam-stage > .cam-wrap { opacity: 1; transform: none; visibility: visible; }
+/* the toggle lives in the card header beside the status chip, so it is
+   always on screen - never pushed below the fold by a tall preview */
+.head-actions {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  justify-content: flex-end; flex: 0 0 auto;
+}
+.cam-toggle { min-height: 44px; padding: 10px 18px; font-size: 15px; }
+
 .camera-panel .cam-inner { display: grid; justify-items: center; gap: 12px; }
 .camera-panel h3 { font-size: 20px; }
 .camera-panel p { color: var(--slate); font-size: 16px; max-width: 34ch; margin: 0; }
@@ -458,9 +489,18 @@ label.inline input { width: auto; max-width: none; min-height: 0; margin: 0; acc
   color: rgba(15, 157, 140, 0.55);
 }
 .camera-guide svg { width: 58px; height: 58px; }
+/* the camera toggle sits outside the swapped states, so it is always there */
+.btn-label { transition: opacity 160ms var(--ease); }
+/* Icons are decoration: they must never intercept a click meant for the
+   control they sit in - an SVG <use> shadow tree swallows the event and the
+   button never fires. */
+.btn svg, .icon-orb, .btn-label, .status-chip svg, .eyebrow svg,
+.reassure svg, .tip-list svg, .foot-note svg {
+  pointer-events: none;
+}
 .camera-wrap { position: relative; overflow: hidden; border-radius: var(--r-card); }
 .camera-wrap video {
-  display: block; width: 100%; max-width: 480px; aspect-ratio: 4 / 3;
+  display: block; width: 100%; max-width: 400px; aspect-ratio: 4 / 3;
   object-fit: cover; background: #e6e3da; transform: scaleX(-1);
 }
 .cam-overlay {
@@ -492,6 +532,11 @@ label.inline input { width: auto; max-width: none; min-height: 0; margin: 0; acc
 .slots i.filled {
   border-style: solid; border-color: rgba(15, 157, 140, 0.35);
   background: linear-gradient(150deg, rgba(15, 157, 140, 0.2), rgba(14, 116, 144, 0.16));
+  animation: slotIn 240ms var(--ease);
+}
+@keyframes slotIn {
+  from { opacity: 0; transform: scale(0.9); border-color: var(--line-2); }
+  to { opacity: 1; transform: none; border-color: rgba(15, 157, 140, 0.35); }
 }
 
 /* friendly tips */
@@ -632,9 +677,19 @@ label.inline input { width: auto; max-width: none; min-height: 0; margin: 0; acc
   color: var(--teal-deep);
   font-family: "Atkinson Hyperlegible Next", sans-serif;
   font-size: 16px; font-weight: 700; cursor: pointer;
+  transition: transform 160ms var(--ease), color 240ms var(--ease);
 }
 .tech-toggle svg { transition: transform 240ms var(--ease); }
 .tech-toggle[aria-expanded="true"] svg { transform: rotate(90deg); }
+.tech-toggle:active { transform: scale(0.97); }
+/* the content unfolds rather than popping into place */
+.tech-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 240ms var(--ease);
+}
+.tech-collapse.open { grid-template-rows: 1fr; }
+.tech-collapse > .tech-collapse-inner { overflow: hidden; min-height: 0; }
 .tech-detail { margin-top: 16px; }
 .tech-detail[hidden] { display: none; }
 
@@ -949,7 +1004,13 @@ tbody tr:hover { background: rgba(27, 27, 31, 0.03); }
 /* ---------------- state-change entrances ---------------- */
 @keyframes panelIn { from { opacity: 0; transform: translateY(12px); } }
 @keyframes rowIn { from { opacity: 0; transform: translateY(5px); } }
+@keyframes riseIn { from { opacity: 0; transform: translateY(8px); } }
 .step.enter { animation: panelIn 400ms var(--ease); }
+/* the completion step is a rare, one-off moment: its parts arrive in order */
+#step-done.enter > * { animation: riseIn 480ms var(--ease) backwards; }
+#step-done.enter > *:nth-child(1) { animation-delay: 0ms; }
+#step-done.enter > *:nth-child(2) { animation-delay: 80ms; }
+#step-done.enter > *:nth-child(3) { animation-delay: 160ms; }
 .verdict.enter, .flash-in { animation: panelIn 300ms var(--ease); }
 .c-row, .score-row { animation: rowIn 240ms var(--ease); }
 

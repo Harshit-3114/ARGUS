@@ -44,20 +44,22 @@
       Show me the technical numbers
       <svg class="icon-orb" aria-hidden="true" width="18" height="18"><use href="#i-chevron"/></svg>
     </button>
-    <div class="tech-detail" id="tech-detail" hidden>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Measurement</th><th>What it means</th></tr></thead>
-          <tbody>
-            <tr><td>False Accept Rate</td><td>how often someone else was let in</td></tr>
-            <tr><td>False Reject Rate</td><td>how often the real person was turned away</td></tr>
-            <tr><td>Equal Error Rate</td><td>the point where both mistakes are equally likely</td></tr>
-            <tr><td>AUC</td><td>how well the check separates the two, from 0.5 (coin flip) to 1 (perfect)</td></tr>
-          </tbody>
-        </table>
+    <div class="tech-collapse" id="tech-detail">
+      <div class="tech-collapse-inner">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Measurement</th><th>What it means</th></tr></thead>
+            <tbody>
+              <tr><td>False Accept Rate</td><td>how often someone else was let in</td></tr>
+              <tr><td>False Reject Rate</td><td>how often the real person was turned away</td></tr>
+              <tr><td>Equal Error Rate</td><td>the point where both mistakes are equally likely</td></tr>
+              <tr><td>AUC</td><td>how well the check separates the two, from 0.5 (coin flip) to 1 (perfect)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hint">The full numbers, charts and per-attempt log live in the
+          <a href="/evaluation">results page</a>.</p>
       </div>
-      <p class="hint">The full numbers, charts and per-attempt log live in the
-        <a href="/evaluation">results page</a>.</p>
     </div>
     <div class="btn-row">
       <a class="btn primary" href="/enroll">Set up an account</a>
