@@ -166,6 +166,19 @@ Modify `SUGGESTED_PASSPHRASE` / `DECISION_THRESHOLD` / fusion weights in
 
 ## Design notes
 
+- **Designed for someone who has never used a biometric.** The person setting
+  up an account may not know what a biometric is and may be nervous about the
+  camera, so: warm paper instead of a dark instrument panel, one friendly teal
+  accent, 56px controls, sentence-case labels in Atkinson Hyperlegible Next, and
+  every instruction written as a helpful colleague would say it. The operator's
+  console keeps the exact vocabulary (module codes, thresholds, FAR/FRR/EER)
+  because there it is the subject matter — and none of it leaks into the
+  novice-facing pages, where the technical numbers sit behind a
+  *"Show me the technical numbers"* disclosure.
+- **No dead ends.** The camera switches itself on when a step opens, and the
+  button that turns it on (or off) is always visible inside the panel, not
+  hidden in a corner. If something fails, the message says what to do next
+  rather than printing an exception name.
 - **Keystroke capture in the browser** (not `pynput`): a server-side keylogger would
   capture every keystroke on the machine and can't tell which window you typed in.
   The web UI records per-character `keydown`/`keyup` timing — the same features

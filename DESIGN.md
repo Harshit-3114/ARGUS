@@ -1,112 +1,116 @@
 ---
 name: ARGUS
-description: Multimodal biometric login gate — face and typing rhythm fused inside a watchman's console, rendered in daylight.
+description: Multimodal biometric login gate — designed so someone who has never used a biometric can set it up and sign in.
 colors:
-  paper: "#f4f5f2"
-  core: "#ffffff"
-  ink: "#14181d"
-  ink-soft: "#333b44"
-  ink-muted: "#64707d"
-  hairline: "rgba(20, 24, 29, 0.09)"
-  hairline-strong: "rgba(20, 24, 29, 0.16)"
-  shell-fill: "rgba(20, 24, 29, 0.035)"
-  signal-mint: "#0da271"
-  signal-mint-wash: "rgba(12, 151, 106, 0.10)"
-  scanner-cyan: "#0e7490"
-  optic-bright: "#0e8f7c"
-  optic-deep: "#0b7565"
-  danger-ember: "#d92d20"
-  danger-wash: "rgba(217, 45, 32, 0.09)"
-  caution-amber: "#b54708"
-  caution-wash: "rgba(181, 71, 8, 0.10)"
-  signal-mint-deep: "#0b9370"
-  scanner-cyan-deep: "#0c7f9c"
-  code-jade: "#0b7565"
-  ambient-violet: "rgba(139, 92, 246, 0.10)"
+  paper: "#fffdf9"
+  surface: "#ffffff"
+  ink: "#1b1b1f"
+  ink-2: "#4a4f5a"
+  slate: "#5a5f6b"
+  hairline: "#e8e4dc"
+  hairline-strong: "#d8d3c9"
+  teal: "#0f9d8c"
+  teal-deep: "#0b7c6e"
+  teal-wash: "#e4f6f3"
+  clay: "#b45309"
+  clay-wash: "#faf0e4"
+  rose: "#c0392b"
+  rose-wash: "#fbebe9"
 typography:
   display:
-    fontFamily: "Space Grotesk, Plus Jakarta Sans, sans-serif"
-    fontSize: "clamp(28px, 4.6vw, 44px)"
+    fontFamily: "Outfit, DM Sans, sans-serif"
+    fontSize: "clamp(30px, 3.6vw, 38px)"
     fontWeight: 600
-    lineHeight: 1.06
-    letterSpacing: "-0.035em"
+    lineHeight: 1.14
+    letterSpacing: "-0.025em"
   title:
-    fontFamily: "Space Grotesk, Plus Jakarta Sans, sans-serif"
-    fontSize: "15.5px"
+    fontFamily: "Outfit, DM Sans, sans-serif"
+    fontSize: "19px"
     fontWeight: 600
     lineHeight: 1.3
-    letterSpacing: "0.01em"
+    letterSpacing: "-0.01em"
   body:
-    fontFamily: "Plus Jakarta Sans, Segoe UI, system-ui, sans-serif"
-    fontSize: "15px"
+    fontFamily: "DM Sans, Segoe UI, system-ui, sans-serif"
+    fontSize: "17px"
     fontWeight: 400
-    lineHeight: 1.65
+    lineHeight: 1.6
     letterSpacing: "normal"
   label:
-    fontFamily: "Plus Jakarta Sans, system-ui, sans-serif"
-    fontSize: "10.5px"
-    fontWeight: 600
-    letterSpacing: "0.16em"
+    fontFamily: "Atkinson Hyperlegible Next, DM Sans, sans-serif"
+    fontSize: "17px"
+    fontWeight: 700
+    lineHeight: 1.4
+    letterSpacing: "0"
+  helper:
+    fontFamily: "DM Sans, system-ui, sans-serif"
+    fontSize: "15px"
+    fontWeight: 400
+    lineHeight: 1.45
   mono:
     fontFamily: "JetBrains Mono, ui-monospace, Consolas, monospace"
-    fontSize: "10.5px"
+    fontSize: "13px"
     fontWeight: 500
-    letterSpacing: "0.16em"
+    lineHeight: 1.5
 rounded:
-  outer: "30px"
-  lg: "22px"
-  md: "16px"
+  card: "24px"
+  panel: "20px"
+  button: "20px"
+  input: "16px"
   sm: "12px"
   xs: "8px"
   nav-row: "14px"
   pill: "999px"
 components:
   button-primary:
-    backgroundColor: "{colors.signal-mint-deep}"
+    backgroundColor: "{colors.teal}"
     textColor: "#ffffff"
-    rounded: "{rounded.pill}"
-    padding: "11px 20px"
+    rounded: "{rounded.button}"
+    padding: "14px 26px"
+    minHeight: "56px"
   button-ghost:
-    backgroundColor: "transparent"
+    backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.pill}"
-    padding: "11px 20px"
+    rounded: "{rounded.button}"
+    padding: "14px 26px"
+    minHeight: "56px"
   button-danger:
-    backgroundColor: "{colors.danger-wash}"
-    textColor: "{colors.danger-ember}"
-    rounded: "{rounded.pill}"
-    padding: "11px 20px"
+    backgroundColor: "{colors.rose-wash}"
+    textColor: "{colors.rose}"
+    rounded: "{rounded.button}"
+    padding: "14px 26px"
+    minHeight: "56px"
   input-pill:
-    backgroundColor: "#ffffff"
+    backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.pill}"
-    padding: "11px 18px"
+    rounded: "{rounded.input}"
+    padding: "14px 20px"
+    minHeight: "56px"
     width: "460px"
   card-shell:
-    backgroundColor: "{colors.shell-fill}"
+    backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.outer}"
-    padding: "18px 22px 20px"
+    rounded: "{rounded.card}"
+    padding: "24px 26px 26px"
   chip-status:
-    backgroundColor: "{colors.shell-fill}"
-    textColor: "{colors.ink-muted}"
+    backgroundColor: "{colors.teal-wash}"
+    textColor: "{colors.teal-deep}"
     rounded: "{rounded.pill}"
-    padding: "5px 12px"
+    padding: "8px 16px"
   toast:
-    backgroundColor: "rgba(255, 255, 255, 0.92)"
+    backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
     rounded: "{rounded.pill}"
-    padding: "12px 20px"
+    padding: "14px 22px"
   verdict-accept:
-    backgroundColor: "{colors.signal-mint-wash}"
-    textColor: "#067a52"
-    rounded: "{rounded.lg}"
-    padding: "16px 20px"
+    backgroundColor: "{colors.teal-wash}"
+    textColor: "{colors.teal-deep}"
+    rounded: "{rounded.card}"
+    padding: "20px 24px"
   verdict-reject:
-    backgroundColor: "{colors.danger-wash}"
-    textColor: "{colors.danger-ember}"
-    rounded: "{rounded.lg}"
-    padding: "16px 20px"
+    backgroundColor: "{colors.rose-wash}"
+    textColor: "{colors.rose}"
+    rounded: "{rounded.card}"
+    padding: "20px 24px"
 ---
 
 # Design System: ARGUS
@@ -115,300 +119,272 @@ components:
 
 **Creative North Star: "The Watchman's Console — in daylight"**
 
-ARGUS renders the hundred-eyed watchman at his instrument. This revision moves
-that instrument into daylight: warm paper (`paper #f4f5f2`) instead of a void,
-deep graphite ink instead of glowing white, and *porcelain* panels — white
-cores seated inside a pale shell — instead of black glass in the dark. The
-console is an *Operate* surface: the operator enrolls classmates, judges logins
-and reads eval numbers — so craft concentrates in precision furniture: hairline
-joints, machined radii, tabular numerals, a dedicated console voice for machine
-channels. The rare theatrical moment (the verification pipeline: scan sweep,
-staged module rows, verdict stamp) survives the re-skin — it is a committed
-product ritual, not decoration; the numbers it displays are always the live
-pipeline's actual output. Theatrical motion is spent exactly and only there.
+ARGUS is a login gate that checks a person's face *and* their typing rhythm. That
+fact alone sets the design problem: the person setting it up may not know what a
+biometric is, may be on a borrowed laptop, and may be nervous about a camera
+pointed at them. So the console is built as a **welcoming desk**, not an
+instrument panel — warm paper, one friendly teal accent, plain words, generous
+controls, and the reassurance (repeated where it matters) that photos, typing
+samples and logs never leave the machine.
 
-**Key Characteristics:**
+**Key characteristics:**
 
-- Daylight surface: a faint emerald/violet/cyan *mesh* (10–13% alpha) sits on
-  warm paper, with self-hosted grain at 2.8% opacity.
-- Porcelain panels in honest depth — 1px ink hairlines mark joints; soft
-  ambient shadows lift cards off the paper; blur is reserved to *fixed* chrome
-  (nav pill, toasts) where it frosts a moving scene behind it.
-- Optic accents (Signal Mint `#0da271` for activation/accept, Scanner Cyan
-  `#0e7490` for live optics) are earned by state — never decoration.
-- Machine channels (module codes, HUD lines, chips, stamps) speak the console
-  voice — JetBrains Mono at 10–10.5px, tracked caps.
-- Double-bezel machining survives the re-skin: every card is a pale shell
-  around an inset porcelain core, radii strictly concentric.
+- **Warm, not clinical.** Cream paper (#fffdf9) rather than white, one soft
+  teal accent, hairline borders instead of hard edges.
+- **Plain language everywhere.** Nothing a person must read says *physiological*,
+  *modality*, *dwell*, *clean rounds*, *cosine similarity* or *FAR*. The
+  technical vocabulary lives behind a link ("Show me the technical numbers").
+- **Big, forgiving controls.** 56px buttons and inputs, sentence-case labels in
+  a low-vision typeface, helper text under every field that says what will
+  happen — not what is forbidden.
+- **No dead ends.** If the camera is off there is always a visible button to
+  turn it on; if a step cannot continue, the page says why and what to do.
+- **Machine channels stay technical.** Module codes and identifiers live in
+  monospace at 13px, in the places where an operator actually wants them.
 
 ### What this revision changed
 
-- **The world inverted.** Dark OLED void → warm paper + porcelain cores. The
-  accent hues were re-tuned for daylight contrast (deeper mint/cyan) rather
-  than flipped to pale pastels.
-- **Camera has an on-switch.** The Face step auto-starts the sensor and always
-  shows an explicit **Enable camera** control plus a live/blocked state chip.
-- **Typing is phased and forgiving.** The rhythm step names the phase
-  (A · dwell, B · flight, C · correction) in the HUD line, and a typo corrected
-  with backspace no longer voids the round — the correction stays inside the
-  sample as behavior.
+The previous version was a dark, instrument-like console: OLED black, 10px
+uppercase mono labels, module codes as the primary way to name things, and a
+camera panel that could sit dead and grey with no way to wake it. This revision
+keeps the product truth and replaces the visual world and the voice.
 
 ## Colors
 
-The palette is one trust hue (mint), one optics hue (cyan), two verdict
-satellites (amber, ember) and a neutral ladder that is *ink-on-paper — grays
-are never independent; secondary text tints from the ink family or the surface
-hue.
+One trust hue, one accent, two verdict satellites, and a warm neutral ladder.
+Grays are never independent — secondary text tints from the ink family.
 
 ### Primary
 
-- **Signal Mint** (`#0da271`, wash `rgba(12,151,106,0.10)`): accept verdict,
-  active nav/stepper states, live "good" chips, meter fills.
-  This is trust earned — the gate said yes.
+- **Friendly Teal** (`#0f9d8c`, wash `#e4f6f3`): the single accent. Primary
+  buttons, the active step, progress, success. Earned by state — it marks
+  "this worked", never decoration.
 
 ### Secondary
 
-- **Scanner Cyan** (`#0e7490`): the optics color — camera brackets, FS-code
-  text, phase chip, pulse bars. It marks *light entering a sensor*.
-- **Bright Optic** (`#0e8f7c`): links, focus outline, foreground accent where
-  mint would read as acceptance.
-- **Code Jade** (`#0b7565`): inline code literal pills — the deep jade end of
-  the optic family (8px pill, tabular numerals).
+- **Deep Teal** (`#0b7c6e`): text-grade teal for links, the eyebrow, and any
+  teal text on paper — light enough to brighten a panel, dark enough to read.
+- **Quiet Teal** (`#0e8f7c`): the focus ring and the "runs on this computer"
+  chip.
 
 ### Tertiary
 
-- **Optic Deep** (`#0b7565`): the text-grade register of the optic family —
-  phase labels, eyebrow text, nav active state.
-- **Caution Amber** (`#b54708`, wash `rgba(181,71,8,0.10)`): pending/bypass
-  states, the `tag` (θ operating point).
-- **Danger Ember** (`#d92d20`, wash `rgba(217,45,32,0.09)`): REJECT, delete,
-  knowledge-gate fault, rate-limited notices.
+- **Gentle Clay** (`#b45309`, wash `#faf0e4`): warnings and pending states.
+  Softer than amber so it never shouts.
+- **Calm Rose** (`#c0392b`, wash `#fbebe9`): errors and "turned away". A
+  softened red — the product should never alarm a first-time user.
 
 ### Neutral
 
-- **Paper** (`#f4f5f2`): the world; page background (mesh sits atop it).
-- **Core Panel** (`#ffffff`, gradient `#ffffff→#fcfdfc`): the inner card body —
-  a porcelain panel inside each shell.
-- **Ink** (`#14181d`): primary text, display type.
-- **Ink Soft** (`#333b44`): secondary text, row names.
-- **Ink Muted** (`#64707d`): labels, hints, HUD meta text — minimum contrast for
-  small caps on paper.
-- **Hairline** (`rgba(20,24,29,0.09)` / strong `0.16`): *the only border color
-  in the system* — tables, inputs, cards, chips, dividers.
-- **Shell Fill** (`rgba(20,24,29,0.035)`): resting fill of pills, shells,
-  hover washes.
+- **Warm Paper** (`#fffdf9`): the world; page background.
+- **Clean Surface** (`#ffffff`): cards, panels, inputs.
+- **Deep Ink** (`#1b1b1f`): primary text (never pure black).
+- **Ink Soft** (`#4a4f5a`) and **Soft Slate** (`#5a5f6b`): secondary text and
+  helper text.
+- **Whisper Line** (`#e8e4dc`) and **Whisper Line Strong** (`#d8d3c9`): the only
+  border colors in the system.
 
 ### Named Rules
 
-**The Live-Earns-Color Rule.** Colored shadows, rings and tints attach only to
-live or decision states — running sensor chips, focus, the verdict, the phase
-chip. At rest, cards stay seated on ambient shadow alone.
+**The Plain-Language Rule.** Anything a person must read is written the way a
+helpful colleague would say it. Banned in visible copy: *physiological*,
+*behavioral*, *modality*, *modality fusion*, *normalized*, *embedding*,
+*gallery*, *cosine similarity*, *clean rounds*, *dwell*, *flight*, *FAR*, *FRR*,
+*EER*, *AUC*, *threshold*. These may appear only inside the technical
+disclosure, where the reader asked for them.
 
-**The Numeral-Only Gradient Rule.** A brand gradient may paint type in exactly
-one place — dashboard KPI numerals (`background-clip: text`). Prose and headings
-never wear it.
+**The No-Dead-End Rule.** A screen may never present a sensor that is off
+without a visible, labelled control that turns it on — in the panel itself, not
+in a corner. The camera area always shows either a live feed or an instruction
+and a button; never a grey rectangle.
 
-**The Multiply-Not-Screen Rule.** The scan band over the camera feed blends
-`multiply` (a bright band would *erase* the feed under `screen`). A
-screen-blended light effect only ever belongs on a dark surface.
+**The Reassurance Rule.** Wherever a camera or a keyboard is involved, the page
+states that the data stays on the machine ("Everything runs on this computer.
+Nothing is uploaded."). It appears in the footer of every page and beside every
+capture step.
+
+**The One-Accent Rule.** Teal is the only accent. Clay and Rose appear only as
+verdict colours. Nothing else is coloured for emphasis.
 
 ## Typography
 
-**Display Font:** Space Grotesk (variable 300–700, self-hosted woff2; fallback
-Plus Jakarta Sans → system sans).
-**Body Font:** Plus Jakarta Sans (variable 200–800, self-hosted; fallback Segoe
-UI → system-ui).
-**Label/Mono Font:** JetBrains Mono (variable 100–800, self-hosted) for the
-console voice.
-
-**Character:** A geometric grotesk with scanner crispness reads headings and
-numerals; a warm-but-precise Jakarta carries UI prose; the mono exists strictly
-for the machine's own speech. The pairing stays legible at label size because
-every smallcaps role gets +0.14em tracking minimum.
+**Display Font:** Outfit (400–700, self-hosted woff2) — friendly geometric
+sans, weight-led hierarchy.
+**Body Font:** DM Sans (400–700, self-hosted woff2) — warm, very legible.
+**Label Font:** Atkinson Hyperlegible Next (400/700, self-hosted woff2) — drawn
+for low vision; used for every field label, button and step name.
+**Mono Font:** JetBrains Mono (100–800, self-hosted woff2) — identifiers, module
+codes and technical readouts only.
 
 ### Hierarchy
 
-- **Display** (Space Grotesk 600, `clamp(28px, 4.6vw, 44px)`, 1.06,
-  −0.035em): page h1, verdict banner, KPI numerals (30px turn).
-- **Title** (Space Grotesk 600, 15.5px, 0.01em): card h2, nav brand.
-- **Body** (Jakarta 400, 15px, 1.65): page copy; leads capped ≈66ch.
-- **Label** (Jakarta 600, 10.5px, +0.16em, uppercase): kpi labels, table
-  headers (rows 12–13.5px body).
-- **Console/Mono** (JetBrains 500, 10–10.5px, +0.16em, uppercase): module
-  codes `FS-01`, HUD lines, status chips, phase labels, elapsed counters.
+- **Display** (Outfit 600, `clamp(30px, 3.6vw, 38px)`, 1.14, −0.025em): page
+  h1.
+- **Title** (Outfit 600, 19px): card h2, brand.
+- **Body** (DM Sans 400, 17px, 1.6): all prose; leads capped ≈62ch.
+- **Label** (Atkinson 700, 17px): field labels, buttons, step names — never
+  uppercase, never small.
+- **Helper** (DM Sans 400, 15px, 1.45): the line under a field that explains
+  what happens.
+- **Mono** (JetBrains 500, 13px): module codes, IDs, numbers in the lab log.
 
 ### Named Rules
 
-**The Console Column Rule.** JetBrains Mono belongs to machine channels — codes,
-measurements, machine state. Body prose never borrows mono as a technicality
-costume.
+**The Console Column Rule.** JetBrains Mono belongs to machine channels. It is
+never used for an instruction, a label a person acts on, or a sentence.
+
+**The 15px Floor Rule.** No text a person must read is smaller than 15px.
+Technical mono may be 13px.
 
 ## Layout
 
-A single centered ledger column: `.topbar` floats the nav as a detached island
-pill (9px 12px padding, 22px top margin); `main` is capped at 1140px with 22px
-side padding and 54px first gap. Content grids split 1fr/1fr (`.grid`), or
-1.45fr/1fr for form-needs-camera companions (`.grid.two-thirds`), gap 22px; the
-KPI band is `repeat(auto-fit, minmax(190px, 1fr))` at 16px gap.
+One centered column, `max-width: 1120px`, 24px side padding. The novice path
+(set up, sign in) is a **single column of steps**; the two-panel form-and-camera
+composition only appears where two things must happen side by side. Cards are
+24px radius with a 1px hairline and a very soft warm shadow.
 
-- **Spacing rhythm:** macro sections breathe (50px+ between page header and
-  content; card padding 18/22/20); measurement deltas stay tight (4–12px).
-- **Breakpoints:** `md` 860px — island nav wraps to a full-width rounded bar
-  (26px radius), grids collapse to one column, admin sidebar stacks; `sm` 640px — console rows
-  drop their bar column, HUD lines wrap, stamp tracking eases.
-- **Responsive discipline:** asymmetric companions reset to single column
-  `w-full`; tables scroll horizontally inside `.table-wrap`.
+- **Spacing rhythm:** 32px between blocks, 44–64px between sections; controls
+  are at least 56px tall.
+- **Breakpoints:** `md` 900px — nav wraps to a full-width bar, grids collapse to
+  one column, the lab sidebar stacks; `sm` 640px — the verification console
+  drops its bar column.
+- **Responsive discipline:** no horizontal scroll at any width; tap targets
+  never below 48px.
 
 ## Elevation & Depth
 
-**Layered porcelain** (operator's recorded rule): soft shadow and hairline are
-the material — cards float above the paper as real layers, not decals. Shadow
-stays large, soft and *ambient* (offset down, wide blur, negative spread) so
-nothing reads as a sticker; joints are marked by hairlines, and a machine ring
-may join only when the panel is live.
+**Porcelain, not glass.** Depth comes from a 1px hairline and a soft, warm,
+low-opacity shadow (offset down, wide blur, negative spread) — never a hard
+black shadow and never a glow. There is exactly one "live" treatment in the
+system: a breathing teal dot on a status chip.
 
 ### Shadow Vocabulary
 
-- **Ambient seat** (`0 1px 2px rgba(20,24,29,0.05), 0 18px 44px -24px rgba(20,24,29,0.22)`):
-  default under every card shell and KPI.
-- **Pop lift** (`0 24px 70px -28px rgba(20,24,29,0.35)`): foreground chrome
-  only (toasts, nav pill).
-- **Press/lift pool** (`0 10px 30px -12px rgba(11,147,112,0.55)`): primary
+- **Ambient seat** (`0 1px 2px rgba(27,27,31,.05), 0 18px 44px -24px rgba(27,27,31,.22)`):
+  under every card and stat tile.
+- **Pop lift** (`0 24px 70px -28px rgba(27,27,31,.35)`): foreground chrome only
+  (toasts, nav island).
+- **Press pool** (`0 10px 26px -14px rgba(15,157,140,.7)`): the primary
   button's own colored pool; hover adds `translateY(-1px)`.
-- **Live ring** (`0 0 0 1px rgba(13,148,136,0.35), 0 10px 34px -14px rgba(14,116,144,0.35)`):
-  the ring token — sensor-live and focus moments.
-- **Verdict seat** (`0 12px 34px -18px rgba(12,151,106,0.5)`): ACCEPT banner;
-  ember variant `rgba(217,45,32,0.45)` for REJECT.
-- **Inset lip** (`inset 0 1px 0 rgba(255,255,255,0.85), inset 0 -1px 0 rgba(20,24,29,0.05)`):
-  the inner core's lip — depth that costs no light.
+- **Inset lip** (`inset 0 1px 0 rgba(255,255,255,.85), inset 0 -1px 0 rgba(20,24,29,.05)`):
+  depth that costs no light.
 
 ### Named Rules
 
-**The Porcelain Rule.** Blur belongs to fixed chrome (nav, toasts) where it
-frosts a live scene behind it; scrolling content never carries
-`backdrop-filter`. Depth is shadow + hairline + inset lip — never a darker,
-offset "drop shadow" costume, and never a hard black shadow on paper.
+**The Porcelain Rule.** Blur belongs to fixed chrome (nav, toasts). Scrolling
+content never carries `backdrop-filter`. Depth is hairline + soft shadow +
+inset — never a dark offset "drop shadow" costume, and never a glow on a
+non-live element.
 
 ## Shapes
 
-Radii form a strict concentric family: `outer 30px → lg 22px → md 16px →
-sm 12px → pill 999px`. Cards are **double-bezel**: the outer shell (30px)
-wraps an inset inner core (`inset 18px 22px 20px` desktop, `14px 16px 16px`
-mobile) whose radius is exactly *outer − bezel thickness* (`calc(30px − 20px)`
-→ 10px desktop) so the curve stays concentric. All borders are 1px hairlines —
-never solid gray, never thicker than 1px. Controls break the family toward the
-pill: every button, input, chip and nav link is fully rounded; squarer corners
-only explain containment, never decoration. Micro geometry sits below the
-family floor: code pills and console fault/bypass rows at 8px, sidenav rows at
-14px, the md-width island at 26px, strips and dots at 1–6px — containment and
-chrome variants, never new card corners.
+Radii form one family: `card 24px → panel 20px → button 20px → input 16px →
+sm 12px → pill 999px`. Controls break toward the pill — every button, input and
+chip is fully rounded. The camera panel is a 24px rectangle with a **dashed**
+2px border while it waits, and a solid hairline once the feed is live: the
+dashed line is itself a signal ("not ready yet").
 
 ### Named Rules
 
-**The Double-Bezel Rule.** Machining is concentric or it is wrong: inner radius
-= outer radius − bezel inset. A card's core never out-corners its shell.
+**The Dashed Means Waiting Rule.** A dashed border is reserved for an element
+that is waiting for the person (the camera panel, empty photo slots). Solid
+hairlines mean "ready".
 
 ## Components
 
-The system's furniture favors pills and pale shells with wide generous padding;
-states are declared with color shifts plus 300–500ms `--ease` motion (accent
-deepens where meaning grows). Full snippets (incl. the primary gradient and
-motion) live in `.impeccable/design.json`.
+States are declared with colour shifts plus 240–420ms `--ease` motion. Full
+snippets live in `.impeccable/design.json`.
 
 ### Buttons
 
-- **Shape:** pill (`999px`), padding `11px 20px`, 13.5px/600 text.
-- **Primary:** gradient `135deg #0b9370 → #0c7f9c`, text `#ffffff`, colored
-  pool shadow, inset top lip. Trailing `↗`/`→` sits in its own 26px inner orb
-  that nudges +3px/−2px on hover; press = `scale(0.97)`.
-- **Ghost / Danger:** transparent or ember-wash fill, hairline or ember-30%
-  border; hover raises fill only.
-- **Focus/hover:** border → `rgba(13,148,136,.55)` + a 4px mint focus ring;
-  `:focus-visible` ring is always 2px `optic-bright`.
+- **Shape:** pill (20px radius), 56px minimum height, 17px Atkinson 700.
+- **Primary:** Friendly Teal fill, white text, colored pool shadow. Exactly one
+  primary per screen.
+- **Secondary:** white surface, hairline border, deep ink text.
+- **Copy:** the button says what happens — "Turn on camera", "Continue to your
+  face", "Save my account", "Work it out". Never "Submit", "OK" or "Save".
+- **Press:** `translateY(0) scale(0.985)`; hover lifts 1px.
 
-### Chips (HUD)
+### Inputs
 
-- **Style:** JetBrains 10px caps, hairline border, shell fill, 5px 12px.
-- **State:** `.live` = deep mint text/border with blinking 5px dot (1.6s);
-  `.bad` = ember wash. Default dot sits at 50% opacity.
+- Label **above** (Atkinson 700, 17px), input below (56px, 16px radius, 1px
+  border), helper text **below** the input (15px, Soft Slate).
+- The helper answers "what happens", never "what not to do": *"This is also how
+  you type — we check your typing rhythm too. A typo is fine, just fix it."*
+- Placeholders are human examples (`e.g. priya.sharma`), never instructions.
+- Focus: teal border plus a single soft ring `0 0 0 4px rgba(15,157,140,.16)`.
 
-### Cards / Containers
+### The camera panel
 
-- **Corner Style:** outer 30px shell, concentric inner core 10px (see Shapes).
-- **Background:** shell = white-on-paper gradient (`155deg, 92%→66%` fill) at
-  hairline border; core = `#ffffff→#fcfdfc` with an inset lip.
-- **Shadow Strategy:** ambient seat; live ring only per The Live-Earns-Color
-  Rule.
-- **Internal Padding:** 18px 22px 20px (14px 16px 16px ≤860px).
+The single most important component. It is a large 24px rectangle that is in
+exactly one of two states:
 
-### Inputs / Fields
+- **Waiting:** dashed 2px border, pale teal wash, a drawn oval face guide, the
+  line *"Look at the camera to switch it on."* and a large **Turn on camera**
+  button inside the panel.
+- **Live:** solid hairline, the video fills the panel, teal corner brackets, and
+  a calm overlay reading *"Camera on — look straight ahead"*. A state chip in
+  the card header reads **Camera on** with a breathing dot.
 
-- **Style:** pill, white fill, hairline border, 11px 18px; labels 13px/550
-  above (password fields add 0.08em tracking).
-- **Focus:** border `rgba(13,148,136,0.55)` + a single soft ring
-  (`0 0 0 4px rgba(13,148,136,0.13)`) — no neon halo in daylight.
-- **Error:** ember text on ember wash, 1px 28% ember border, 13.5px.
+The same panel is used on sign-in and on set-up; on set-up it also shows ten
+photo slots that fill as frames arrive, plus a plain progress line ("6 of 10
+photos taken").
 
-### Navigation
+### The step indicator
 
-- **Island nav:** detached pill `rgba(255,255,255,0.82)` + 22px blur + 140%
-  saturate; links 13.5px/500 with 7px 15px pills. Active link = deep jade text
-  on mint-wash with mint-24% inset ring; Admin anchor is a dimmer side pill.
-- **Admin sidebar:** 250px fixed column on a paper-white wash, `sidenav` rows
-  11px 14px radius 14px; active identical mint treatment; content column
-  padding 44px/4vw.
+A row of numbered pills with plain-language names — "Your details", "Your face",
+"Your typing", "All done". The current step is filled teal; finished steps get
+a check. No module codes, no numbers-only steps.
 
-### Signature: KPI numerals
+### Status messages
 
-- 30px Space Grotesk 600 with the sanctioned mint→cyan gradient text (the
-  Numeral-Only exception), gradient-active envelopes may outline the envelope
-  pills themselves (`stepper li.active`).
+Always plain English, always reassuring: *"Camera is off — that's fine, switch
+it on below."* / *"Nice — round 3 of 8 saved."* / *"No problem — just carry on
+typing."* / *"We couldn't switch the camera on — that's fine, you can try
+again."* Errors never show an exception name to a person (the error code goes
+in parentheses at most).
 
-### Signature: Verdict + console theatre
+### The technical disclosure
 
-- **Verdict banner:** lg-radius wash panel, 19–23px Space Grotesk 650, soft
-  accept/ember seat (`0 12px 34px −18px`).
-- **Stamp:** Space Grotesk 700, `clamp(21px,3.2vw,30px)`, +0.14em tracking; the
-  ACCESS GRANTED/DENIED block stamps in (460ms, scale 1.5→0.97→1 with blur
-  resolving) and is the system's single loudest authored moment.
-- **Console rows:** 4-line grid (62px code / name / 170px bar / 120px stat);
-  module codes in Scanner Cyan; fault = ember wash, bypass = amber wash.
+Numbers live behind a link — "Show me the technical numbers" — which expands
+the table and charts. The plain-language answer is always shown first: *"44.0%
+of impostors got in, 0.0% of the real person was turned away."*
 
-### Signature: Phase chip (KD-02)
+### Icons
 
-- The typing phase (`Phase A · Dwell & Hold`) lives in the HUD line as a
-  mono chip on a mint wash with a mint hairline; the phase's plain-language
-  characteristic sits beside it in muted prose. Changing phase is a 320ms
-  color/border shift — never a layout jump.
+Inline SVG symbols in a same-document sprite (`#i-camera`, `#i-shield`,
+`#i-face`, `#i-check-plain`, `#i-bulb`, …). No icon font, no external request,
+and every icon sits beside text that carries the meaning on its own.
 
 ## Do's and Don'ts
 
 ### Do:
 
-- **Do** animate `transform`, `opacity` and bounded `filter` only; use
-  `--ease cubic-bezier(0.32,0.72,0,1)` for UI, `--ease-io` for sweeps.
-- **Do** keep borders `rgba(20,24,29,0.09)` hairlines and data numerals
-  `font-variant-numeric: tabular-nums`.
-- **Do** self-host every asset (fonts, noise svg, favicon) — the CSP is
-  `default-src 'self'` with no inline style/script; page config rides the
-  `#bio-config` JSON block.
-- **Do** stagger sibling entrances 90–450ms via `data-delay` steps through the
-  `motion.js` observer; state entrances land 240–400ms.
+- **Do** write instructions as a helpful colleague would: what happens, what to
+  do, what if it goes wrong.
+- **Do** put a visible, labelled control next to anything that can be off.
+- **Do** say where the data goes (nowhere) whenever a camera or keyboard is
+  involved.
+- **Do** keep the technical numbers behind a disclosure, and state the plain
+  answer first.
+- **Do** animate `transform` and `opacity` only; `--ease
+  cubic-bezier(0.22,1,0.36,1)` for UI, `--ease-io` for the breathing dot.
+- **Do** keep tap targets ≥ 48px and text ≥ 15px.
 - **Do** treat reduced-motion as global: the stylesheet collapses all
-  animation/transition to 0.01ms and neutralizes reveals.
-- **Do** give every sensor a visible on-switch and a state chip — the camera
-  says `camera on` / `camera off`, the phase says which trait it is measuring.
+  animation/transition to 0.01ms.
+- **Do** self-host every asset — the CSP is `default-src 'self'` with no inline
+  style or script; page config rides the `#bio-config` JSON block.
 
 ### Don't:
 
-- **Don't** put a colored shadow or ring on anything that isn't live, focus,
-  or a verdict (The Live-Earns-Color Rule).
+- **Don't** use jargon in anything a person must read (The Plain-Language
+  Rule).
+- **Don't** name things in all-caps mono labels or module codes — that is the
+  operator's language, not the user's.
+- **Don't** show a sensor that is off without a button to turn it on (The
+  No-Dead-End Rule).
+- **Don't** use `mix-blend-mode: screen` on a light surface; use `multiply`.
 - **Don't** use backdrop-blur on scrolling content; fixed chrome only.
-- **Don't** animate `width/height/top/left` — bars fill with `scaleX`,
-  strips with `scaleY`.
-- **Don't** introduce a third accent or paint free-floating gradients on gaps;
-  mint and cyan are state-earned, ≤ ~10% of any screen combined.
-- **Don't** use `mix-blend-mode: screen` on a light surface (The
-  Multiply-Not-Screen Rule).
-- **Don't** hard-code raster font links, inline styles, or inline scripts;
-  mono is for console voice, never for prose.
+- **Don't** animate `width/height/top/left` — bars fill with `scaleX`.
+- **Don't** introduce a second accent, or colour something for emphasis.
+- **Don't** hard-code raster font links, inline styles, or inline scripts.

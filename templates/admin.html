@@ -3,11 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f4f5f2">
-  <title>Admin — ARGUS</title>
+  <meta name="theme-color" content="#fffdf9">
+  <title>Lab page — ARGUS</title>
   <link rel="icon" href="{{ url_for('static', filename='img/favicon.svg') }}" type="image/svg+xml">
-  <link rel="preload" href="{{ url_for('static', filename='fonts/space-grotesk-var.woff2') }}" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="{{ url_for('static', filename='fonts/plus-jakarta-sans-var.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/Outfit-600.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/DMSans-400.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/AtkinsonHyperlegibleNext-700.woff2') }}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body class="admin-body">
@@ -18,15 +19,15 @@
         <button class="sidenav-item active" data-tab="overview" type="button">
           <span class="ico" aria-hidden="true">◱</span> Overview</button>
         <button class="sidenav-item" data-tab="attempts" type="button">
-          <span class="ico" aria-hidden="true">≡</span> Attempt log</button>
+          <span class="ico" aria-hidden="true">≡</span> Sign-in attempts</button>
         <button class="sidenav-item" data-tab="users" type="button">
-          <span class="ico" aria-hidden="true">◍</span> Users</button>
+          <span class="ico" aria-hidden="true">◍</span> People</button>
         <button class="sidenav-item" data-tab="settings" type="button">
           <span class="ico" aria-hidden="true">⚙</span> Settings</button>
       </nav>
       <form class="sidebar-foot" method="post" action="/admin/logout">
-        <button class="btn ghost sm wide" type="submit">Sign out of admin</button>
-        <a class="hint" href="/">← public dashboard</a>
+        <button class="btn ghost sm wide" type="submit">Sign out of the lab page</button>
+        <a class="hint" href="/">← back to the main pages</a>
       </form>
     </aside>
 
@@ -36,22 +37,23 @@
         <div class="admin-head" data-reveal>
           <p class="eyebrow">console</p>
           <h1>Overview</h1>
-          <p class="hint">System health, recent attempt activity and generated evaluation charts.</p>
+          <p class="hint">How the system is doing, the latest sign-in attempts, and
+            the latest charts.</p>
         </div>
         <div class="kpi-row" id="kpi-row" data-reveal data-delay="1"></div>
         <div class="grid">
           <article class="card" data-reveal data-delay="2">
             <div class="card-head">
-              <h2>Recent attempts</h2>
+              <h2>Latest sign-in attempts</h2>
               <button class="btn sm ghost" data-tab-target="attempts" type="button">Open log</button>
             </div>
             <div class="table-wrap" id="recent-attempts"></div>
           </article>
           <article class="card" data-reveal data-delay="3">
-            <div class="card-head"><h2>Latest evaluation charts</h2></div>
+            <div class="card-head"><h2>Latest charts</h2></div>
             <div id="overview-charts"></div>
-            <p class="hint">Charts regenerate when you run the metric sweep on the
-              <a href="/evaluation">evaluation page</a>.</p>
+            <p class="hint">Charts are redrawn when you run the measurement on the
+              <a href="/evaluation">results page</a>.</p>
           </article>
         </div>
       </section>
@@ -65,32 +67,32 @@
         </div>
         <article class="card">
           <div class="filters">
-            <label>mode
+            <label>type
               <select id="f-mode">
                 <option value="">all</option>
                 <option value="login">login</option>
-                <option value="eval">eval</option>
+                <option value="eval">lab recording</option>
               </select>
             </label>
-            <label>decision
+            <label>result
               <select id="f-decision">
                 <option value="">all</option>
-                <option value="ACCEPT">ACCEPT</option>
-                <option value="REJECT">REJECT</option>
+                <option value="ACCEPT">let in</option>
+                <option value="REJECT">turned away</option>
               </select>
             </label>
-            <label>relation
+            <label>who
               <select id="f-relation">
                 <option value="">all</option>
-                <option value="genuine">genuine</option>
-                <option value="impostor">impostor</option>
-                <option value="unknown">public logins</option>
+                <option value="genuine">the real person</option>
+                <option value="impostor">someone else</option>
+                <option value="unknown">not recorded</option>
               </select>
             </label>
-            <label class="grow">user
-              <input id="f-q" type="search" placeholder="claimed or operator name">
+            <label class="grow">person
+              <input id="f-q" type="search" placeholder="name of the person">
             </label>
-            <label>rows
+            <label>how many
               <select id="f-limit">
                 <option>10</option><option selected>25</option><option>50</option><option>100</option>
               </select>
@@ -109,9 +111,9 @@
       <section class="admin-tab" data-tab="users" hidden>
         <div class="admin-head">
           <p class="eyebrow">console</p>
-          <h1>Users</h1>
-          <p class="hint">Enrollment status per user. Deleting removes their templates
-            from the local database and their stored enrollment frames.</p>
+          <h1>People</h1>
+          <p class="hint">What has been set up for each person. Removing someone
+            deletes their photos and typing samples from this computer.</p>
         </div>
         <article class="card">
           <div class="table-wrap" id="users-table"></div>
@@ -123,17 +125,18 @@
         <div class="admin-head">
           <p class="eyebrow">console</p>
           <h1>Settings</h1>
-          <p class="hint">Runtime overrides for the fusion operating point. Defaults live in
-            <code>config.py</code>; values saved here survive restarts (stored in the local DB).</p>
+          <p class="hint">How strict the gate is, and how much each check counts.
+            Whatever you set here is remembered on this computer; the starting
+            values live in <code>config.py</code>.</p>
         </div>
         <div class="grid">
           <article class="card">
-            <h2>Fusion &amp; threshold</h2>
+            <h2>How strict the gate is</h2>
             <form id="settings-form">
-              <label>Decision threshold θ (accept at ≥)
+              <label>Cut-off — let someone in at or above
                 <input id="s-threshold" type="number" min="0.01" max="0.99" step="0.01" required>
               </label>
-              <label>Face weight (keystroke weight = 1 − face)
+              <label>How much the face counts (typing counts for the rest)
                 <input id="s-wface" type="number" min="0" max="1" step="0.05" required>
               </label>
               <p class="hint" id="w-effect"></p>
@@ -141,17 +144,18 @@
             </form>
           </article>
           <article class="card">
-            <h2>Effective configuration</h2>
+            <h2>What's in force right now</h2>
             <dl class="kv" id="effective-kv"></dl>
-            <p class="hint">The evaluation page uses θ from here; FAR/FRR at θ report
-              against this operating point.</p>
+            <p class="hint">The results page measures against these numbers, so
+              the charts always match what the gate is really doing.</p>
           </article>
         </div>
         <article class="card danger-zone">
-          <h2>Danger zone</h2>
-          <p class="hint">Clears every logged attempt. Users and their biometric templates are kept.
-            Useful between lab rounds so metrics recompute clean.</p>
-          <button class="btn danger-outline" id="btn-reset-attempts" type="button">Clear attempt log</button>
+          <h2>Start again</h2>
+          <p class="hint">Clears every recorded sign-in attempt. People and their
+            photos and typing samples are kept — useful between lab rounds so
+            the numbers are measured from scratch.</p>
+          <button class="btn danger-outline" id="btn-reset-attempts" type="button">Clear the sign-in log</button>
           <span id="reset-status" class="hint"></span>
         </article>
       </section>

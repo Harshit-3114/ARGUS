@@ -1,58 +1,52 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-05T14:30:00Z",
+  "generatedAt": "2026-11-05T11:15:00Z",
   "title": "Design System: ARGUS",
   "extensions": {
     "colorMeta": {
-      "paper": { "role": "neutral", "displayName": "Paper", "canonical": "#f4f5f2", "tonalRamp": ["#e8ebe3", "#f4f5f2", "#fafbf9", "#fcfdfc", "#ffffff"] },
-      "core": { "role": "neutral", "displayName": "Core Panel", "canonical": "#ffffff", "tonalRamp": ["#fcfdfc", "#ffffff", "#fafbf9", "#f4f5f2", "#e8ebe3"] },
-      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#14181d", "tonalRamp": ["#0a0c0e", "#14181d", "#1e242b", "#2d353e", "#3d4751"] },
-      "ink-soft": { "role": "neutral", "displayName": "Ink Soft", "canonical": "#333b44", "tonalRamp": ["#1f242b", "#333b44", "#4a5460", "#626f7d", "#7b8999"] },
-      "ink-muted": { "role": "neutral", "displayName": "Ink Muted", "canonical": "#64707d", "tonalRamp": ["#3a434d", "#64707d", "#7d8a99", "#97a5b4", "#b1bec9"] },
-      "hairline": { "role": "neutral", "displayName": "Hairline", "canonical": "rgba(20, 24, 29, 0.09)", "tonalRamp": ["rgba(20,24,29,0.03)", "rgba(20,24,29,0.05)", "rgba(20,24,29,0.09)", "rgba(20,24,29,0.13)", "rgba(20,24,29,0.18)"] },
-      "hairline-strong": { "role": "neutral", "displayName": "Hairline Strong", "canonical": "rgba(20, 24, 29, 0.16)", "tonalRamp": ["rgba(20,24,29,0.06)", "rgba(20,24,29,0.10)", "rgba(20,24,29,0.16)", "rgba(20,24,29,0.22)", "rgba(20,24,29,0.30)"] },
-      "shell-fill": { "role": "neutral", "displayName": "Shell Fill", "canonical": "rgba(20, 24, 29, 0.035)", "tonalRamp": ["rgba(20,24,29,0.01)", "rgba(20,24,29,0.02)", "rgba(20,24,29,0.035)", "rgba(20,24,29,0.05)", "rgba(20,24,29,0.07)"] },
-      "signal-mint": { "role": "primary", "displayName": "Signal Mint", "canonical": "#0da271", "tonalRamp": ["#042a1c", "#07412a", "#0b5a39", "#0da271", "#1cd68a", "#5feaa3", "#a2f2c9", "#d8fbe7"] },
-      "signal-mint-wash": { "role": "primary", "displayName": "Signal Mint Wash", "canonical": "rgba(12, 151, 106, 0.10)", "tonalRamp": ["rgba(12,151,106,0.03)", "rgba(12,151,106,0.06)", "rgba(12,151,106,0.10)", "rgba(12,151,106,0.15)", "rgba(12,151,106,0.22)"] },
-      "scanner-cyan": { "role": "secondary", "displayName": "Scanner Cyan", "canonical": "#0e7490", "tonalRamp": ["#041d25", "#07303b", "#0a4552", "#0e7490", "#14a0c4", "#5cd6ed", "#a6eaf7", "#d5f7fc"] },
-      "optic-bright": { "role": "secondary", "displayName": "Bright Optic", "canonical": "#0e8f7c", "tonalRamp": ["#032520", "#053a32", "#084f45", "#0e8f7c", "#14b8a0", "#5edfc6", "#a6efe4", "#d5f7f2"] },
-      "optic-deep": { "role": "secondary", "displayName": "Optic Deep", "canonical": "#0b7565", "tonalRamp": ["#031d1a", "#052e28", "#083e36", "#0b7565", "#0ea87e", "#34d399", "#86e8cb", "#cbf7e8"] },
-      "caution-amber": { "role": "tertiary", "displayName": "Caution Amber", "canonical": "#b54708", "tonalRamp": ["#2b0e02", "#551c04", "#842a06", "#b54708", "#e35d0a", "#f58a34", "#fac081", "#fddcbb"] },
-      "caution-wash": { "role": "tertiary", "displayName": "Caution Wash", "canonical": "rgba(181, 71, 8, 0.10)", "tonalRamp": ["rgba(181,71,8,0.03)", "rgba(181,71,8,0.06)", "rgba(181,71,8,0.10)", "rgba(181,71,8,0.15)", "rgba(181,71,8,0.22)"] },
-      "danger-ember": { "role": "tertiary", "displayName": "Danger Ember", "canonical": "#d92d20", "tonalRamp": ["#2e0908", "#5b110f", "#8d1a15", "#d92d20", "#e7584e", "#f0847b", "#f8b6b0", "#fce5e4"] },
-      "danger-wash": { "role": "tertiary", "displayName": "Danger Wash", "canonical": "rgba(217, 45, 32, 0.09)", "tonalRamp": ["rgba(217,45,32,0.03)", "rgba(217,45,32,0.05)", "rgba(217,45,32,0.09)", "rgba(217,45,32,0.14)", "rgba(217,45,32,0.20)"] },
-      "signal-mint-deep": { "role": "primary", "displayName": "Signal Mint Deep", "canonical": "#0b9370", "purpose": "Primary action gradient start (135deg to scanner-cyan-deep); flat press-end stand-in.", "tonalRamp": ["#04261c", "#063a2a", "#094e38", "#0b9370", "#0ea87e", "#2fc796", "#8ceccc", "#cbf7e8"] },
-      "scanner-cyan-deep": { "role": "secondary", "displayName": "Scanner Cyan Deep", "canonical": "#0c7f9c", "purpose": "Primary action gradient end; the cyan family's deep register.", "tonalRamp": ["#041e26", "#062d39", "#093e4d", "#0c7f9c", "#0e91b2", "#22d3ee", "#8ceef9", "#c9f8fd"] },
-      "code-jade": { "role": "secondary", "displayName": "Code Jade", "canonical": "#0b7565", "purpose": "Inline code literal pills — deep jade end of the optic family.", "tonalRamp": ["#031d1a", "#052e28", "#083e36", "#0b7565", "#0ea87e", "#34d399", "#86e8cb", "#cbf7e8"] },
-      "ambient-violet": { "role": "ambient", "displayName": "Ambient Violet", "canonical": "rgba(139, 92, 246, 0.10)", "purpose": "Violet corner of the fixed background mesh glow — page light-work only, never a UI accent.", "tonalRamp": ["rgba(139,92,246,0.02)", "rgba(139,92,246,0.05)", "rgba(139,92,246,0.10)", "rgba(139,92,246,0.15)", "rgba(139,92,246,0.22)"] }
+      "paper": { "role": "neutral", "displayName": "Warm Paper", "canonical": "#fffdf9", "tonalRamp": ["#f6f4ee", "#faf8f3", "#fffdf9", "#ffffff"] },
+      "surface": { "role": "neutral", "displayName": "Clean Surface", "canonical": "#ffffff", "tonalRamp": ["#fbfaf7", "#fdfcf9", "#ffffff"] },
+      "ink": { "role": "neutral", "displayName": "Deep Ink", "canonical": "#1b1b1f", "tonalRamp": ["#0d0e10", "#1b1b1f", "#2c2f34", "#41454c", "#5a5f6b", "#7b8490", "#a5adb8", "#d2d6db"] },
+      "ink-2": { "role": "neutral", "displayName": "Ink Soft", "canonical": "#4a4f5a", "tonalRamp": ["#1f2126", "#333840", "#4a4f5a", "#646b76", "#848d98", "#a8b0ba", "#c9ced4", "#e6e9ec"] },
+      "slate": { "role": "neutral", "displayName": "Soft Slate", "canonical": "#5a5f6b", "tonalRamp": ["#2a2d33", "#454a54", "#5a5f6b", "#757c88", "#959ca6", "#b3b9c2", "#ced3d9", "#e8eaee"] },
+      "hairline": { "role": "neutral", "displayName": "Whisper Line", "canonical": "#e8e4dc", "tonalRamp": ["#f2efe8", "#ece8e1", "#e8e4dc", "#e1dcd3", "#d8d3c9", "#cbc5ba", "#b9b2a6", "#a49c8f"] },
+      "hairline-strong": { "role": "neutral", "displayName": "Whisper Line Strong", "canonical": "#d8d3c9", "tonalRamp": ["#e8e4dc", "#e1dcd3", "#d8d3c9", "#cbc5ba", "#bcb5a9", "#a89f92", "#948a7d", "#7e7568"] },
+      "teal": { "role": "primary", "displayName": "Friendly Teal", "canonical": "#0f9d8c", "tonalRamp": ["#032b25", "#075145", "#0a7566", "#0f9d8c", "#1cbb9f", "#43d4b6", "#7ce6ce", "#b9f3e8"] },
+      "teal-deep": { "role": "primary", "displayName": "Deep Teal", "canonical": "#0b7c6e", "tonalRamp": ["#02231e", "#053f38", "#075a51", "#0b7c6e", "#12998a", "#35b8a7", "#6dd3c3", "#a8ebe0"] },
+      "teal-wash": { "role": "primary", "displayName": "Friendly Teal Wash", "canonical": "#e4f6f3", "tonalRamp": ["#f2fbfa", "#eaf8f5", "#e4f6f3", "#d9f0ec", "#c9e8e2", "#b2dcd4", "#93c9be", "#6faea1"] },
+      "clay": { "role": "tertiary", "displayName": "Gentle Clay", "canonical": "#b45309", "tonalRamp": ["#3a1c03", "#6b3406", "#8f4508", "#b45309", "#cf6a18", "#e08a3f", "#eeab73", "#f7cdab"] },
+      "clay-wash": { "role": "tertiary", "displayName": "Clay Wash", "canonical": "#faf0e4", "tonalRamp": ["#fdf8f2", "#fcf4ea", "#faf0e4", "#f7e8d6", "#f2dcc2", "#ebcba9", "#e0b485", "#d19a60"] },
+      "rose": { "role": "tertiary", "displayName": "Calm Rose", "canonical": "#c0392b", "tonalRamp": ["#3d0e09", "#6f1a12", "#9c2a1d", "#c0392b", "#d95f50", "#e68174", "#efa79d", "#f7cdc7"] },
+      "rose-wash": { "role": "tertiary", "displayName": "Rose Wash", "canonical": "#fbebe9", "tonalRamp": ["#fef7f6", "#fdf1ef", "#fbebe9", "#f8dedb", "#f4cbc6", "#ecb0a9", "#e08e85", "#cf6155"] },
+      "code-jade": { "role": "secondary", "displayName": "Code Jade", "canonical": "#0b7565", "purpose": "Inline code literal pills - the deep jade end of the accent family.", "tonalRamp": ["#02231e", "#053f38", "#075a51", "#0b7565", "#12998a", "#35b8a7", "#6dd3c3", "#a8ebe0"] }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "Page h1, verdict banner frame, KPI numerals (30px variant)." },
-      "title": { "displayName": "Title", "purpose": "Card h2 and the nav brand line." },
-      "body": { "displayName": "Body", "purpose": "All UI prose; leads capped near 66ch." },
-      "label": { "displayName": "Label", "purpose": "KPI labels, table headers — tracked uppercase micro-labels." },
-      "mono": { "displayName": "Console", "purpose": "Machine channels only: module codes, HUD lines, status chips, phase labels, stamps' meta." }
+      "display": { "displayName": "Display", "purpose": "Page h1 - friendly geometric sans, weight-led hierarchy." },
+      "title": { "displayName": "Title", "purpose": "Card h2 and the brand line." },
+      "body": { "displayName": "Body", "purpose": "All UI prose; leads capped near 62 characters per line." },
+      "label": { "displayName": "Label", "purpose": "Field labels, buttons, step names - Atkinson Hyperlegible, never uppercase, never small." },
+      "helper": { "displayName": "Helper", "purpose": "The line under a field that explains what will happen." },
+      "mono": { "displayName": "Console", "purpose": "Machine channels only: module codes, identifiers, lab readouts." }
     },
     "shadows": [
-      { "name": "ambient-seat", "value": "0 1px 2px rgba(20, 24, 29, 0.05), 0 18px 44px -24px rgba(20, 24, 29, 0.22)", "purpose": "Default seat under card shells and KPI tiles." },
-      { "name": "pop-lift", "value": "0 24px 70px -28px rgba(20, 24, 29, 0.35)", "purpose": "Foreground chrome only — toasts and the nav island." },
-      { "name": "press-pool", "value": "0 10px 30px -12px rgba(11, 147, 112, 0.55)", "purpose": "Primary button's own colored pool; pairs with inset lip rgba(255,255,255,0.28)." },
-      { "name": "live-ring", "value": "0 0 0 1px rgba(13, 148, 136, 0.35), 0 10px 34px -14px rgba(14, 116, 144, 0.35)", "purpose": "The ring token — sensor-live and focus moments only (Live-Earns-Color Rule)." },
-      { "name": "verdict-seat", "value": "0 12px 34px -18px rgba(12, 151, 106, 0.5)", "purpose": "ACCEPT banner; ember variant rgba(217,45,32,0.45) for REJECT." },
-      { "name": "inset-lip", "value": "inset 0 1px 0 rgba(255, 255, 255, 0.85), inset 0 -1px 0 rgba(20, 24, 29, 0.05)", "purpose": "Inner core lip of the double bezel — depth without light." }
+      { "name": "ambient-seat", "value": "0 1px 2px rgba(27, 27, 31, 0.05), 0 18px 44px -24px rgba(27, 27, 31, 0.22)", "purpose": "Default seat under every card and stat tile." },
+      { "name": "pop-lift", "value": "0 24px 70px -28px rgba(27, 27, 31, 0.35)", "purpose": "Foreground chrome only - toasts and the nav island." },
+      { "name": "press-pool", "value": "0 10px 26px -14px rgba(15, 157, 140, 0.7)", "purpose": "The primary button's own colored pool; pairs with an inset top lip rgba(255,255,255,0.28)." },
+      { "name": "inset-lip", "value": "inset 0 1px 0 rgba(255, 255, 255, 0.85), inset 0 -1px 0 rgba(20, 24, 29, 0.05)", "purpose": "Depth that costs no light." }
     ],
     "motion": [
-      { "name": "ease-standard", "value": "cubic-bezier(0.32, 0.72, 0, 1)", "purpose": "Default UI easing (--ease, paired with --speed 420ms)." },
-      { "name": "ease-io", "value": "cubic-bezier(0.6, 0, 0.2, 1)", "purpose": "Continuous sweeps (scan band) and toast exits." },
-      { "name": "panel-in", "value": "keyframes 400ms / 300ms ease-standard, from {opacity 0, translateY(12px)}", "purpose": "State-change entrances: wizard steps (400ms), verdict card + eval results (300ms)." },
+      { "name": "ease-standard", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Default UI easing (--ease) - a soft spring for a calm, unhurried feel." },
+      { "name": "ease-io", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Continuous states - the breathing camera-status dot, toast exits." },
+      { "name": "breathe", "value": "3.5s ease-io infinite; opacity 0.45 -> 1, scale 0.94 -> 1.08", "purpose": "The one perpetual micro-loop: the status dot that says the sensor is live." },
+      { "name": "panel-in", "value": "keyframes 400ms / 300ms ease-standard, from {opacity 0, translateY(12px)}", "purpose": "State-change entrances: wizard steps (400ms), verdict card and results (300ms)." },
       { "name": "row-in", "value": "keyframes 240ms ease-standard, from {opacity 0, translateY(5px)}", "purpose": "Console rows and score rows appearing in sequence." },
-      { "name": "stamp-in", "value": "460ms ease-standard; scale 1.5 -> 0.97 -> 1 with blur 8px -> 0", "purpose": "The ACCESS GRANTED/DENIED stamp — the system's single authored loudest moment." },
-      { "name": "toast-in-out", "value": "480ms in (toastIn) / 240ms out (opacity + translateY(10px) scale(0.97))", "purpose": "Symmetric toast path: bottom-right enters, bottom-right leaves." },
-      { "name": "scroll-reveal", "value": "750ms ease-standard blur(10px)->0 + translateY(18px)->0, stagger 90ms steps", "purpose": "First-paint choreography via motion.js IntersectionObserver; JS-applied so failure never hides content." },
+      { "name": "stamp-in", "value": "460ms ease-standard; scale 1.4 -> 0.98 -> 1", "purpose": "The YOU'RE IN / THAT WASN'T YOU stamp - the system's single loudest moment." },
+      { "name": "toast-in-out", "value": "420ms in (toastIn) / 240ms out (opacity + translateY(10px) scale(0.97))", "purpose": "Symmetric toast path: bottom-right enters, bottom-right leaves." },
+      { "name": "scroll-reveal", "value": "750ms ease-standard; translateY(18px) -> 0, staggered 60ms steps", "purpose": "First-paint choreography via motion.js IntersectionObserver; JS-applied so a failure never hides content." },
       { "name": "reduced-motion", "value": "all animation/transition durations 0.01ms; reveals neutralized", "purpose": "Global prefers-reduced-motion collapse in style.css." }
     ],
     "breakpoints": [
-      { "name": "md", "value": "860px" },
+      { "name": "md", "value": "900px" },
       { "name": "sm", "value": "640px" }
     ]
   },
@@ -61,94 +55,99 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Pill CTA with mint-to-cyan gradient, inset lip, and a nested trailing icon orb.",
-      "html": "<button class=\"ds-btn-primary\">Verify — face + typing <span class=\"ds-orb\" aria-hidden=\"true\">↗</span></button>",
-      "css": ".ds-btn-primary { position: relative; display: inline-flex; align-items: center; gap: 10px; padding: 11px 20px; border: none; border-radius: 999px; background: linear-gradient(135deg, #0b9370 0%, #0c7f9c 100%); color: #ffffff; font: 600 13.5px \"Plus Jakarta Sans\", system-ui, sans-serif; letter-spacing: 0.01em; cursor: pointer; box-shadow: 0 10px 30px -12px rgba(11, 147, 112, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.28); transition: transform 380ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)), filter 380ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)); } .ds-btn-primary:hover { filter: brightness(1.06); transform: translateY(-1px); } .ds-btn-primary:active { transform: translateY(0) scale(0.97); } .ds-btn-primary:focus-visible { outline: 2px solid var(--optic-bright, #0e8f7c); outline-offset: 3px; } .ds-btn-primary:disabled { opacity: 0.4; transform: none; box-shadow: none; cursor: default; } .ds-orb { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; margin-right: -8px; border-radius: 50%; background: rgba(255, 255, 255, 0.22); font-size: 13px; transition: transform 380ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)); } .ds-btn-primary:hover .ds-orb { transform: translate(3px, -2px) scale(1.06); }"
+      "description": "Large pill CTA in Friendly Teal; the label always says what happens.",
+      "html": "<button class=\"ds-btn-primary\">Continue to your face</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 14px 26px; border: 1px solid #0f9d8c; border-radius: 20px; background: #0f9d8c; color: #ffffff; font-family: \"Atkinson Hyperlegible Next\", sans-serif; font-size: 17px; font-weight: 700; cursor: pointer; box-shadow: 0 10px 26px -14px rgba(15, 157, 140, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.28); transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1), background 240ms cubic-bezier(0.22, 1, 0.36, 1); } .ds-btn-primary:hover { background: #0b7c6e; border-color: #0b7c6e; transform: translateY(-1px); } .ds-btn-primary:active { transform: translateY(0) scale(0.985); } .ds-btn-primary:focus-visible { outline: 3px solid rgba(15, 157, 140, 0.45); outline-offset: 3px; }"
     },
     {
-      "name": "Ghost Button",
+      "name": "Secondary Button",
       "kind": "button",
       "refersTo": "button-ghost",
-      "description": "Hairline-glass pill for secondary actions and table row commands.",
-      "html": "<button class=\"ds-btn-ghost\">Enroll new</button>",
-      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px; border: 1px solid var(--hairline, rgba(20, 24, 29, 0.09)); border-radius: 999px; background: transparent; color: var(--ink, #14181d); font: 600 12.5px \"Plus Jakarta Sans\", system-ui, sans-serif; cursor: pointer; transition: background 320ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)), border-color 320ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)); } .ds-btn-ghost:hover { background: rgba(20, 24, 29, 0.04); border-color: var(--hairline-strong, rgba(20, 24, 29, 0.16)); } .ds-btn-ghost:active { transform: translateY(0) scale(0.97); } .ds-btn-ghost:focus-visible { outline: 2px solid var(--optic-bright, #0e8f7c); outline-offset: 3px; }"
+      "description": "White surface with a hairline border; used for the second action in a pair.",
+      "html": "<button class=\"ds-btn-ghost\">Turn on camera</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 14px 26px; border: 1px solid #d8d3c9; border-radius: 20px; background: #ffffff; color: #1b1b1f; font-family: \"Atkinson Hyperlegible Next\", sans-serif; font-size: 17px; font-weight: 700; cursor: pointer; transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1), border-color 240ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 240ms cubic-bezier(0.22, 1, 0.36, 1); } .ds-btn-ghost:hover { border-color: #0f9d8c; box-shadow: 0 4px 14px -6px rgba(27, 27, 31, 0.18); transform: translateY(-1px); } .ds-btn-ghost:active { transform: translateY(0) scale(0.985); }"
     },
     {
-      "name": "Pill Input",
+      "name": "Labelled Field",
       "kind": "input",
       "refersTo": "input-pill",
-      "description": "White pill field with the deep-mint focus halo.",
-      "html": "<input class=\"ds-input\" placeholder=\"username\" autocomplete=\"off\" spellcheck=\"false\">",
-      "css": ".ds-input { display: block; width: 100%; max-width: var(--input-max, 460px); padding: 11px 18px; border: 1px solid var(--hairline-strong, rgba(20, 24, 29, 0.16)); border-radius: 999px; font: 400 14px \"Plus Jakarta Sans\", system-ui, sans-serif; color: var(--ink, #14181d); background: #ffffff; transition: border-color 300ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)), box-shadow 300ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)), background 300ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)); } .ds-input::placeholder { color: rgba(100, 112, 125, 0.65); } .ds-input:focus { border-color: rgba(13, 148, 136, 0.55); outline: none; box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.13); background: #ffffff; }"
+      "description": "Label above, input below, helper text underneath explaining what happens.",
+      "html": "<div class=\"ds-field\"><label for=\"ds-name\">Your name</label><input id=\"ds-name\" placeholder=\"e.g. priya.sharma\"><span class=\"help\">The name you used when you set up your account.</span></div>",
+      "css": ".ds-field { margin: 0 0 18px; } .ds-field label { display: block; margin: 0 0 7px; font-family: \"Atkinson Hyperlegible Next\", sans-serif; font-size: 17px; font-weight: 700; color: #1b1b1f; } .ds-field input { display: block; width: 100%; max-width: 460px; min-height: 56px; padding: 14px 20px; border: 1px solid #d8d3c9; border-radius: 16px; background: #ffffff; color: #1b1b1f; font: 400 17px \"DM Sans\", sans-serif; } .ds-field input::placeholder { color: rgba(90, 95, 107, 0.6); } .ds-field input:focus { border-color: #0f9d8c; outline: none; box-shadow: 0 0 0 4px rgba(15, 157, 140, 0.16); } .ds-field .help { display: block; margin: 7px 0 0; font-size: 15px; line-height: 1.45; color: #5a5f6b; }"
     },
     {
-      "name": "Console Card",
-      "kind": "card",
-      "refersTo": "card-shell",
-      "description": "The double-bezel signature: pale shell around a concentric porcelain core with an inset lip.",
-      "html": "<article class=\"ds-card\"><h2 class=\"ds-card-title\">Auth request</h2><p class=\"ds-card-body\">Glass shell, machined core. Inner radius equals outer radius minus bezel inset, always concentric.</p></article>",
-      "css": ".ds-card { position: relative; isolation: isolate; padding: 18px 22px 20px; border: 1px solid var(--hairline, rgba(20, 24, 29, 0.09)); border-radius: 30px; background: linear-gradient(155deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.66)); box-shadow: 0 1px 2px rgba(20, 24, 29, 0.05), 0 18px 44px -24px rgba(20, 24, 29, 0.22); max-width: 560px; } .ds-card::before { content: \"\"; position: absolute; inset: 18px 22px 20px; z-index: -1; background: linear-gradient(180deg, #ffffff 0%, #fcfdfc 100%); border-radius: calc(30px - 20px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), inset 0 -1px 0 rgba(20, 24, 29, 0.05); } .ds-card-title { margin: 0 0 10px; font: 600 15.5px \"Space Grotesk\", \"Plus Jakarta Sans\", sans-serif; letter-spacing: 0.01em; color: var(--ink, #14181d); } .ds-card-body { margin: 0; font: 400 14px/1.65 \"Plus Jakarta Sans\", system-ui, sans-serif; color: var(--ink-soft, #333b44); }"
+      "name": "Camera Panel",
+      "kind": "custom",
+      "refersTo": "camera-panel",
+      "description": "The waiting state - dashed border, face guide, a real button - and the live state with the feed.",
+      "html": "<div class=\"ds-camera\"><div class=\"ds-camera-off\"><span class=\"ds-guide\"></span><h3>Camera is off</h3><p>Look at the camera to switch it on.</p><button>Turn on camera</button></div></div>",
+      "css": ".ds-camera { position: relative; display: grid; place-items: center; min-height: 320px; padding: 26px; border-radius: 24px; border: 2px dashed #d8d3c9; background: radial-gradient(circle at 50% 42%, rgba(15, 157, 140, 0.07), transparent 62%), #f2faf8; text-align: center; } .ds-camera.live { border-style: solid; border-color: #e8e4dc; background: #ffffff; padding: 10px; } .ds-camera h3 { font-family: \"Outfit\", sans-serif; font-size: 20px; margin: 0; } .ds-camera p { color: #5a5f6b; font-size: 16px; max-width: 34ch; margin: 0; } .ds-guide { width: 150px; height: 190px; border: 2px solid rgba(15, 157, 140, 0.4); border-radius: 50% / 42%; }"
+    },
+    {
+      "name": "Step Indicator",
+      "kind": "custom",
+      "refersTo": "stepper-plain",
+      "description": "Numbered pills with plain-language step names.",
+      "html": "<ol class=\"ds-steps\"><li class=\"active\"><span>1</span> Your details</li><li><span>2</span> Your face</li></ol>",
+      "css": ".ds-steps { list-style: none; display: flex; gap: 12px; padding: 0; margin: 0 0 26px; flex-wrap: wrap; } .ds-steps li { display: flex; align-items: center; gap: 10px; padding: 10px 18px 10px 10px; border: 1px solid #e8e4dc; border-radius: 999px; background: rgba(255, 255, 255, 0.6); font-family: \"Atkinson Hyperlegible Next\", sans-serif; font-size: 16px; font-weight: 600; color: #5a5f6b; } .ds-steps li span { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: rgba(27, 27, 31, 0.06); font-family: \"Outfit\", sans-serif; font-size: 15px; font-weight: 600; } .ds-steps li.active { color: #0b7c6e; border-color: rgba(15, 157, 140, 0.35); background: #e4f6f3; } .ds-steps li.active span { background: #0f9d8c; color: #ffffff; }"
     },
     {
       "name": "Status Chip",
       "kind": "chip",
       "refersTo": "chip-status",
-      "description": "Console-voice status pill; the live state earns the blinking dot and deep-mint glow.",
-      "html": "<span class=\"ds-chip\">SCN ······</span> <span class=\"ds-chip ds-chip-live\">LIVE</span>",
-      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px; border: 1px solid var(--hairline, rgba(20, 24, 29, 0.09)); border-radius: 999px; background: rgba(20, 24, 29, 0.035); color: var(--ink-muted, #64707d); font: 500 10px \"JetBrains Mono\", ui-monospace, monospace; letter-spacing: 0.16em; text-transform: uppercase; font-variant-numeric: tabular-nums; transition: color 300ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)), border-color 300ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)), background 300ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)); } .ds-chip::before { content: \"\"; width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.5; } .ds-chip-live { color: var(--optic-deep, #0b7565); border-color: rgba(12, 151, 106, 0.35); background: rgba(12, 151, 106, 0.08); box-shadow: 0 0 18px -6px rgba(13, 148, 136, 0.4); } .ds-chip-live::before { opacity: 1; animation: ds-chip-blink 1.6s cubic-bezier(0.6, 0, 0.2, 1) infinite; } @keyframes ds-chip-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }"
+      "description": "The live-state chip with the one breathing dot in the system.",
+      "html": "<span class=\"ds-chip\"><span class=\"dot\"></span> Camera on</span>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 9px; padding: 8px 16px; border-radius: 999px; background: #e4f6f3; color: #0b7c6e; font-size: 15px; font-weight: 500; } .ds-chip .dot { width: 9px; height: 9px; border-radius: 50%; background: #0f9d8c; animation: ds-breathe 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite; } @keyframes ds-breathe { 0%, 100% { opacity: 0.45; transform: scale(0.94); } 50% { opacity: 1; transform: scale(1.08); } }"
     },
     {
-      "name": "Toast",
+      "name": "Reassurance Panel",
       "kind": "custom",
-      "refersTo": "toast",
-      "description": "Porcelain pill notice; enters and leaves bottom-right via the same edge.",
-      "html": "<div class=\"ds-toast ds-toast-good\">Fusion settings saved</div>",
-      "css": ".ds-toast { box-sizing: border-box; max-width: 340px; padding: 12px 20px; border: 1px solid var(--hairline, rgba(20, 24, 29, 0.09)); border-radius: 999px; background: rgba(255, 255, 255, 0.92); color: var(--ink, #14181d); font: 500 13px \"Plus Jakarta Sans\", system-ui, sans-serif; box-shadow: 0 24px 70px -28px rgba(20, 24, 29, 0.35); animation: ds-toast-in 480ms var(--ease-standard, cubic-bezier(0.32, 0.72, 0, 1)); transition: opacity 240ms var(--ease-io, cubic-bezier(0.6, 0, 0.2, 1)), transform 240ms var(--ease-io, cubic-bezier(0.6, 0, 0.2, 1)); } .ds-toast.ds-toast-good { border-color: rgba(12, 151, 106, 0.4); } .ds-toast.ds-toast-bad { border-color: rgba(217, 45, 32, 0.4); } .ds-toast.ds-toast-out { opacity: 0; transform: translateY(10px) scale(0.97); } @keyframes ds-toast-in { from { opacity: 0; transform: translateY(12px) scale(0.96); } to { opacity: 1; transform: none; } }"
-    },
-    {
-      "name": "Verdict Banner",
-      "kind": "custom",
-      "refersTo": "verdict-accept",
-      "description": "The decision surface — accept and reject states with their earned seat.",
-      "html": "<p class=\"ds-verdict ds-verdict-accept\">ACCESS GRANTED</p><p class=\"ds-verdict ds-verdict-reject\">ACCESS DENIED</p>",
-      "css": ".ds-verdict { display: flex; align-items: center; gap: 12px; font: 650 clamp(19px, 2.4vw, 23px) \"Space Grotesk\", \"Plus Jakarta Sans\", sans-serif; letter-spacing: -0.02em; padding: 16px 20px; border-radius: 22px; margin: 0 0 12px; } .ds-verdict-accept { background: var(--signal-mint-wash, rgba(12, 151, 106, 0.10)); color: #067a52; border: 1px solid rgba(12, 151, 106, 0.32); box-shadow: 0 12px 34px -18px rgba(12, 151, 106, 0.5); } .ds-verdict-reject { background: var(--danger-wash, rgba(217, 45, 32, 0.09)); color: var(--danger-ember, #d92d20); border: 1px solid rgba(217, 45, 32, 0.32); box-shadow: 0 12px 34px -18px rgba(217, 45, 32, 0.45); }"
+      "refersTo": "reassure",
+      "description": "The privacy statement that sits wherever a camera or keyboard appears.",
+      "html": "<div class=\"ds-reassure\"><p><strong>Everything runs on this computer.</strong> Your photos and typing samples are stored here and never uploaded.</p></div>",
+      "css": ".ds-reassure { display: flex; align-items: flex-start; gap: 14px; padding: 18px 22px; background: #e4f6f3; border: 1px solid rgba(15, 157, 140, 0.18); border-radius: 20px; color: #0b7c6e; } .ds-reassure p { margin: 0; font-size: 16px; } .ds-reassure strong { display: block; font-size: 16px; }"
     }
   ],
   "narrative": {
     "northStar": "The Watchman's Console — in daylight",
-    "overview": "ARGUS renders the hundred-eyed watchman at his instrument. This revision moves that instrument into daylight: warm paper (#f4f5f2) instead of a void, deep graphite ink instead of glowing white, and porcelain panels — white cores seated inside a pale shell — instead of black glass in the dark. The console is an Operate surface, so craft concentrates in precision furniture: hairline joints, machined radii, tabular numerals, a dedicated console voice for machine channels. The rare theatrical moment — the verification pipeline with its scan sweep, staged module rows and verdict stamp — survives the re-skin; it is a committed product ritual, not decoration; the numbers it displays are always the live pipeline's actual output. Theatrical motion is spent exactly and only there.",
+    "overview": "ARGUS is a login gate that checks a person's face and their typing rhythm, so the person setting it up may not know what a biometric is, may be on a borrowed laptop, and may be nervous about a camera pointed at them. The console is therefore built as a welcoming desk rather than an instrument panel: warm paper, one friendly teal accent, plain words, generous controls, and the reassurance - repeated where it matters - that photos, typing samples and logs never leave the machine. The one theatrical moment, the verification console, survives as a ritual: the numbers it shows are always the live pipeline's actual output.",
     "keyCharacteristics": [
-      "Daylight surface: faint emerald/violet/cyan mesh (10–13% alpha) on warm paper, self-hosted grain at 2.8% opacity.",
-      "Porcelain panels in honest depth — 1px ink hairlines mark joints; soft ambient shadows lift cards off the paper; blur is reserved to fixed chrome (nav pill, toasts) where it frosts a moving scene behind it.",
-      "Optic accents (Signal Mint #0da271 accept, Scanner Cyan #0e7490 live optics) are earned by state — never decoration.",
-      "Machine channels speak the console voice — JetBrains Mono 10–10.5px tracked caps.",
-      "Double-bezel machining survives the re-skin: every card is a pale shell around an inset porcelain core, radii strictly concentric.",
-      "Camera has an on-switch: the Face step auto-starts the sensor and always shows an explicit Enable camera control plus a live/blocked state chip.",
-      "Typing is phased and forgiving: the rhythm step names the phase (A · dwell, B · flight, C · correction) in the HUD line, and a typo corrected with backspace no longer voids the round — the correction stays inside the sample as behavior."
+      "Warm, not clinical - cream paper #fffdf9, one soft teal accent, hairline borders instead of hard edges.",
+      "Plain language everywhere - no physiological, modality, dwell, clean rounds or FAR in anything a person must read; the technical vocabulary lives behind a link.",
+      "Big, forgiving controls - 56px buttons and inputs, sentence-case labels in a low-vision typeface, helper text that says what will happen rather than what is forbidden.",
+      "No dead ends - if the camera is off there is always a visible, labelled control to turn it on.",
+      "Machine channels stay technical - module codes and identifiers live in 13px monospace where an operator wants them.",
+      "The dashed border means waiting - the camera panel and the empty photo slots are the only dashed things in the system."
     ],
     "rules": [
-      { "name": "The Live-Earns-Color Rule", "body": "Colored shadows, rings and tints attach only to live or decision states — running sensor chips, focus, the verdict, the phase chip. At rest, cards stay seated on ambient shadow alone.", "section": "colors" },
-      { "name": "The Numeral-Only Gradient Rule", "body": "A brand gradient may paint type in exactly one place — dashboard KPI numerals (background-clip: text). Prose and headings never wear it.", "section": "colors" },
-      { "name": "The Multiply-Not-Screen Rule", "body": "The scan band over the camera feed blends multiply (a bright band would erase the feed under screen). A screen-blended light effect only ever belongs on a dark surface.", "section": "colors" },
-      { "name": "The Console Column Rule", "body": "JetBrains Mono belongs to machine channels — codes, measurements, machine state. Body prose never borrows mono as a technicality costume.", "section": "typography" },
-      { "name": "The Porcelain Rule", "body": "Blur belongs to fixed chrome (nav, toasts) where it frosts a live scene behind it; scrolling content never carries backdrop-filter. Depth is shadow + hairline + inset lip — never a darker, offset \"drop shadow\" costume, and never a hard black shadow on paper.", "section": "elevation" },
-      { "name": "The Double-Bezel Rule", "body": "Machining is concentric or it is wrong: inner radius = outer radius − bezel inset. A card's core never out-corners its shell.", "section": "components" }
+      { "name": "The Plain-Language Rule", "body": "Anything a person must read is written the way a helpful colleague would say it. Banned in visible copy: physiological, behavioral, modality, normalized, embedding, gallery, cosine similarity, clean rounds, dwell, flight, FAR, FRR, EER, AUC, threshold. These may appear only inside the technical disclosure, where the reader asked for them.", "section": "colors" },
+      { "name": "The No-Dead-End Rule", "body": "A screen may never present a sensor that is off without a visible, labelled control that turns it on - in the panel itself, not in a corner. The camera area always shows either a live feed or an instruction and a button; never a grey rectangle.", "section": "colors" },
+      { "name": "The Reassurance Rule", "body": "Wherever a camera or a keyboard is involved, the page states that the data stays on the machine. It appears in the footer of every page and beside every capture step.", "section": "colors" },
+      { "name": "The One-Accent Rule", "body": "Teal is the only accent. Clay and Rose appear only as verdict colours. Nothing else is coloured for emphasis.", "section": "colors" },
+      { "name": "The Console Column Rule", "body": "JetBrains Mono belongs to machine channels - identifiers, module codes, lab readouts. It is never used for an instruction, a label a person acts on, or a sentence.", "section": "typography" },
+      { "name": "The 15px Floor Rule", "body": "No text a person must read is smaller than 15px. Technical mono may be 13px.", "section": "typography" },
+      { "name": "The Porcelain Rule", "body": "Blur belongs to fixed chrome (nav, toasts). Scrolling content never carries backdrop-filter. Depth is hairline + soft shadow + inset - never a dark offset drop-shadow costume, and never a glow on a non-live element.", "section": "elevation" },
+      { "name": "The Dashed Means Waiting Rule", "body": "A dashed border is reserved for an element that is waiting for the person - the camera panel, the empty photo slots. Solid hairlines mean ready.", "section": "shapes" }
     ],
     "dos": [
-      "Do animate transform, opacity and bounded filter only; use --ease cubic-bezier(0.32,0.72,0,1) for UI, --ease-io for sweeps.",
-      "Do keep borders rgba(20,24,29,0.09) hairlines and data numerals tabular-nums.",
-      "Do self-host every asset — the CSP is default-src 'self' with no inline style/script; page config rides the #bio-config JSON block.",
-      "Do stagger sibling entrances 90–450ms via data-delay steps through the motion.js observer; state entrances land 240–400ms.",
-      "Do treat reduced-motion as global: the stylesheet collapses all animation/transition to 0.01ms and neutralizes reveals.",
-      "Do give every sensor a visible on-switch and a state chip — the camera says camera on / camera off, the phase says which trait it is measuring."
+      "Do write instructions as a helpful colleague would: what happens, what to do, what if it goes wrong.",
+      "Do put a visible, labelled control next to anything that can be off.",
+      "Do say where the data goes (nowhere) whenever a camera or keyboard is involved.",
+      "Do keep the technical numbers behind a disclosure, and state the plain answer first.",
+      "Do animate transform and opacity only; --ease cubic-bezier(0.22,1,0.36,1) for UI, --ease-io for the breathing dot.",
+      "Do keep tap targets at least 48px and text at least 15px.",
+      "Do treat reduced-motion as global: the stylesheet collapses all animation/transition to 0.01ms.",
+      "Do self-host every asset - the CSP is default-src 'self' with no inline style or script; page config rides the #bio-config JSON block."
     ],
     "donts": [
-      "Don't put a colored shadow or ring on anything that isn't live, focus, or a verdict (The Live-Earns-Color Rule).",
+      "Don't use jargon in anything a person must read (The Plain-Language Rule).",
+      "Don't name things in all-caps mono labels or module codes - that is the operator's language, not the user's.",
+      "Don't show a sensor that is off without a button to turn it on (The No-Dead-End Rule).",
+      "Don't use mix-blend-mode: screen on a light surface; use multiply.",
       "Don't use backdrop-blur on scrolling content; fixed chrome only.",
-      "Don't animate width/height/top/left — bars fill with scaleX, strips with scaleY.",
-      "Don't introduce a third accent or paint free-floating gradients on gaps; mint and cyan are state-earned, ≤ ~10% of any screen combined.",
-      "Don't use mix-blend-mode: screen on a light surface (The Multiply-Not-Screen Rule).",
-      "Don't hard-code raster font links, inline styles, or inline scripts; mono is for console voice, never for prose."
+      "Don't animate width/height/top/left - bars fill with scaleX, strips with scaleY.",
+      "Don't introduce a second accent, or colour something for emphasis.",
+      "Don't hard-code raster font links, inline styles, or inline scripts."
     ]
   }
 }

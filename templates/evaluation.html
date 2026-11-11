@@ -1,55 +1,74 @@
 {% extends 'base.html' %}
-{% block title %}Evaluation — ARGUS{% endblock %}
+{% block title %}How well is it working? — ARGUS{% endblock %}
 {% block content %}
 <section class="page-head" data-reveal>
-  <p class="eyebrow">metrics lab</p>
-  <h1>FAR · FRR · EER, per modality and fused.</h1>
-  <p class="lead">Computed from labeled attempts collected in evaluation mode. The numbers are
-    only as honest as the dataset behind them.</p>
+  <p class="eyebrow">Measuring the system</p>
+  <h1>How well is it working?</h1>
+  <p class="lead">To know whether ARGUS is any good, we need sign-in attempts that
+    are honestly labelled — who was actually at the keyboard, and whose account
+    they were signing in to. Once we have those, we can measure how often the
+    wrong person gets in, and how often the right person gets turned away.</p>
 </section>
 
 <article class="card" data-reveal data-delay="1">
   <div class="card-head">
-    <h2>1 · Data collection</h2>
-    <a class="btn sm primary" href="/login?mode=eval">Open evaluation login <span class="icon-orb" aria-hidden="true">↗</span></a>
+    <div>
+      <h2>Step 1 — record some attempts</h2>
+      <p>Have people sign in, and record who each attempt really was.</p>
+    </div>
+    <a class="btn sm primary" href="/login?mode=eval">Record an attempt</a>
   </div>
   <div class="grid two-thirds">
     <div>
-      <p>The metrics below are only as honest as the data behind them:</p>
+      <p>Two kinds of attempt, and both matter:</p>
       <ul class="steps">
-        <li><strong>genuine</strong> — operator logs in as themselves; aim for ≥ 10 rounds per user
-          for a usable FRR estimate;</li>
-        <li><strong>impostor</strong> — operator logs in as <em>every other user</em>, typing that
-          user's passphrase (they “know” it); aim for ≥ 5 rounds per user pair.</li>
+        <li><strong>The real person.</strong> They sign in as themselves, at
+          least 10 times each. This shows how often the system wrongly turns
+          them away.</li>
+        <li><strong>Somebody else.</strong> They try to sign in as every other
+          person, at least 5 times each — they already know the passphrase, so
+          only the face and the typing can stop them. This shows how often the
+          system wrongly lets someone in.</li>
       </ul>
     </div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>operator</th><th class="num">as self</th><th class="num">as others</th></tr></thead>
+        <thead><tr><th>person</th><th class="num">as themselves</th><th class="num">as someone else</th></tr></thead>
         <tbody>
           {% for op, c in summary.per_operator.items() %}
           <tr><td><code>{{ op }}</code></td><td class="num">{{ c.as_self }}</td>
             <td class="num">{{ c.as_other }}</td></tr>
           {% else %}
-          <tr><td colspan="3" class="muted">no labeled attempts yet</td></tr>
+          <tr><td colspan="3" class="muted">no attempts recorded yet</td></tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
   </div>
-  <p class="hint">labeled so far: {{ summary.genuine }} genuine · {{ summary.impostor }} impostor.
-    Only passphrase-correct attempts are scored — the knowledge gate rejects the rest first.</p>
+  <p class="hint">Recorded so far: {{ summary.genuine }} by the real person and
+    {{ summary.impostor }} by someone else. Attempts with the wrong passphrase
+    are not counted — that check happens first.</p>
 </article>
 
 <article class="card" data-reveal data-delay="2">
   <div class="card-head">
-    <h2>2 · Metrics <span class="tag">θ = {{ '%g'|format(cfg_threshold) }} (runtime setting)</span></h2>
-    <button id="btn-evaluate" class="btn primary sm" type="button">Compute FAR / FRR / EER
-      <span class="icon-orb" aria-hidden="true">↗</span></button>
+    <div>
+      <h2>Step 2 — work out the numbers</h2>
+      <p>Uses the same code that scores a real sign-in.</p>
+    </div>
+    <button id="btn-evaluate" class="btn primary sm" type="button">
+      Work it out
+    </button>
   </div>
   <p id="eval-status" class="hint" aria-live="polite"></p>
   <div id="eval-out"></div>
 </article>
+
+<div class="reassure" data-reveal>
+  <svg aria-hidden="true" width="22" height="22"><use href="#i-shield"/></svg>
+  <p><strong>Everything runs on this computer.</strong>
+    The attempts, the photos and the typing samples never leave this machine.</p>
+</div>
 {% endblock %}
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/evaluation.js') }}"></script>

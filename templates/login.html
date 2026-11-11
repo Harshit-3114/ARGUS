@@ -1,100 +1,125 @@
 {% extends 'base.html' %}
-{% block title %}Login — ARGUS{% endblock %}
+{% block title %}Sign in — ARGUS{% endblock %}
 {% block content %}
 {% if mode == 'eval' %}
 <section class="page-head" data-reveal>
-  <p class="eyebrow">evaluation mode</p>
-  <h1>Labeled login attempt.</h1>
-  <p class="lead">Evaluation mode logs every attempt with ground truth. Choose
-    <strong>who is operating</strong> (the real person at the keyboard) and the target username.
-    Same-person attempts count as genuine; anyone-else attempts as impostor — all users share the
-    demo passphrase <code>{{ passphrase }}</code>.</p>
+  <p class="eyebrow">Lab mode</p>
+  <h1>Recording a sign-in attempt.</h1>
+  <p class="lead">This page is used to measure how well the system works. Tell it
+    <strong>who is sitting at the keyboard</strong> and <strong>whose account
+    they are signing in to</strong> — that is how the system learns which
+    attempts were real and which were not. Everyone in the lab uses the same
+    passphrase, <code>{{ passphrase }}</code>.</p>
 </section>
 {% else %}
 <section class="page-head" data-reveal>
-  <p class="eyebrow">secure gate</p>
-  <h1>Face. Rhythm. <span class="amp">&amp;</span> passphrase.</h1>
-  <p class="lead">ARGUS fuses three factors into one verdict: the knowledge factor you type,
-    the face the camera sees, and the rhythm only your hands know.</p>
-  <div class="modtag-row" aria-hidden="true">
-    <span class="mono modtag">PF-00 · KNOWLEDGE</span>
-    <span class="mono modtag">FS-01 · FACE SCAN</span>
-    <span class="mono modtag">KD-02 · RHYTHM</span>
-    <span class="mono modtag">FS-09 · FUSION</span>
-  </div>
+  <p class="eyebrow">Signing in</p>
+  <h1>Welcome back.</h1>
+  <p class="lead">We check three things: the passphrase you type, your face, and
+    the way you type. All three have to match — that is what makes it hard for
+    anyone else to copy.</p>
 </section>
 {% endif %}
+
+<ol class="stepper-plain" aria-hidden="true">
+  <li class="active"><span>1</span> Your details</li>
+  <li><span>2</span> Your camera</li>
+</ol>
 
 <div class="grid form-cam">
   <article class="card" data-reveal data-delay="1">
     <div class="card-head">
-      <h2>Auth request</h2>
-      <span class="mono hud-chip" id="hud-session">SCN ······</span>
+      <div>
+        <h2>Your details</h2>
+        <p>Who are you signing in as?</p>
+      </div>
     </div>
     <form id="login-form" novalidate>
       {% if mode == 'eval' %}
-      <label for="in-operator">You are <span class="soft">(operator, ground truth)</span>
+      <div class="field">
+        <label for="in-operator">Who is at the keyboard right now?</label>
         <select id="in-operator">
-          <option value="">— select the actual person —</option>
+          <option value="">— choose a person —</option>
           {% for u in users %}<option value="{{ u }}">{{ u }}</option>{% endfor %}
         </select>
-      </label>
+        <span class="help">This is the honest answer, so the system can tell
+          real sign-ins from pretend ones.</span>
+      </div>
       {% endif %}
-      <label for="in-username">Logging in as
-        <input id="in-username" autocomplete="off" placeholder="username" spellcheck="false">
-      </label>
-      <label for="in-password">Passphrase <span class="soft">(your typing rhythm is measured)</span>
+      <div class="field">
+        <label for="in-username">Your name</label>
+        <input id="in-username" autocomplete="off" placeholder="e.g. priya.sharma" spellcheck="false">
+        <span class="help">The name you used when you set up your account.</span>
+      </div>
+      <div class="field">
+        <label for="in-password">Your passphrase</label>
         <input id="in-password" type="password" autocomplete="current-password"
-               placeholder="type without edits, pauses or holding keys">
-      </label>
-
-      <div class="hud-block">
-        <div class="hud-line">
-          <span class="mono">KD-02 · RHYTHM CAPTURE</span>
-          <span class="mono" id="ks-count">0 CH</span>
-        </div>
-        <div class="pulse-strip idle" id="ks-pulse"></div>
-        <div class="hud-line">
-          <span class="hint" id="ks-stat">awaiting keystrokes</span>
-        </div>
+               placeholder="type it here">
+        <span class="help">This is also how you type — we check your typing
+          rhythm too. A typo is fine, just fix it.</span>
       </div>
 
-      <button id="btn-login" class="btn primary wide" type="submit">Verify — face + typing
-        <span class="icon-orb" aria-hidden="true">↗</span></button>
+      <div class="rhythm-card">
+        <div class="hud-line">
+          <span class="mono">Live typing rhythm</span>
+          <span class="mono" id="ks-count">0 keys</span>
+        </div>
+        <div class="rhythm-strip idle" id="ks-pulse"></div>
+        <p class="rhythm-note" id="ks-stat">Waiting for you to start typing</p>
+      </div>
+
+      <button id="btn-login" class="btn primary wide btn-spaced" type="submit">
+        Sign in
+      </button>
       <p id="login-status" class="hint" aria-live="polite"></p>
     </form>
   </article>
 
   <article class="card cam-card" data-reveal data-delay="2">
     <div class="card-head">
-      <h2>Optical sensor</h2>
-      <span class="mono hud-chip" id="cam-state">OFFLINE</span>
+      <div>
+        <h2>Your camera</h2>
+        <p>We take a few photos to check it's really you.</p>
+      </div>
+      <span class="status-chip" id="cam-state"><span class="dot" aria-hidden="true"></span>
+        <span id="cam-state-text">Camera off</span></span>
     </div>
-    <div class="cam-center">
-      <div class="cam-wrap">
-        <span class="hud-corner tl" aria-hidden="true"></span>
-        <span class="hud-corner tr" aria-hidden="true"></span>
-        <span class="hud-corner bl" aria-hidden="true"></span>
-        <span class="hud-corner br" aria-hidden="true"></span>
-        <span class="scan-band" aria-hidden="true"></span>
+
+    <div class="camera-panel" id="cam-panel">
+      <div class="cam-inner" id="cam-off">
+        <span class="camera-guide" aria-hidden="true">
+          <svg><use href="#i-face"/></svg>
+        </span>
+        <h3>Camera is off</h3>
+        <p>Look at the camera to switch it on.</p>
+        <button id="btn-cam" class="btn primary" type="button">
+          <svg class="icon-orb" aria-hidden="true" width="20" height="20"><use href="#i-camera"/></svg>
+          Turn on camera
+        </button>
+      </div>
+      <div class="cam-wrap" id="cam-live" hidden>
+        <span class="cam-corner tl" aria-hidden="true"></span>
+        <span class="cam-corner tr" aria-hidden="true"></span>
+        <span class="cam-corner bl" aria-hidden="true"></span>
+        <span class="cam-corner br" aria-hidden="true"></span>
         <video id="face-video" width="480" height="360" autoplay playsinline muted></video>
-        <p class="cam-overlay" id="cam-overlay">camera off</p>
+        <p class="cam-overlay" id="cam-overlay">Camera on</p>
       </div>
     </div>
-    <div class="hud-line cam-meta">
-      <span class="mono">FS-01 · FACE CAPTURE</span>
-      <span class="mono" id="face-progress">0/{{ n_frames }}</span>
+
+    <div class="progress-row">
+      <span class="label" id="face-count">0 photos taken</span>
+      <span class="count" id="face-progress">0/{{ n_frames }}</span>
     </div>
-    <div class="cap-meter"><i id="face-meter"></i></div>
-    <div class="cam-row">
-      <span class="hint" id="face-count">0 frames in buffer</span>
-      <button id="btn-cam" class="btn sm">Enable camera</button>
-    </div>
+    <div class="progress"><i id="face-meter"></i></div>
+
+    <p class="hint">Video stays on this device. Switch the camera off any time
+      with the button on the photo.</p>
   </article>
 </div>
 
 <section id="verdict" class="card verdict" hidden aria-live="polite">
-  <p class="eyebrow">verification pipeline</p>
+  <p class="eyebrow">Checking</p>
   <div class="console" id="verdict-console"></div>
   <p class="stamp" id="stamp"></p>
   <p class="v-elapsed mono" id="v-elapsed"></p>

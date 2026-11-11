@@ -34,7 +34,9 @@ cloud product.
 - Run locally via `start.bat` (venv bootstrap → Flask dev server on
   `127.0.0.1:5000`).
 - Enrollment: the operator walks a classmate through face capture and clean
-  typing rounds of the shared passphrase.
+  typing rounds of the shared passphrase. The subject is assumed to be a
+  first-timer: the camera switches itself on, the step names are in plain
+  words, and every screen restates that the data stays on the machine.
 - Labeled collection: login `?mode=eval` logs genuine/impostor attempts with
   ground truth (all users share the demo passphrase `biometrics123` — by design,
   so impostors pass the knowledge factor).
@@ -85,3 +87,12 @@ cloud product.
    not intuition.
 4. **Contained by default.** Single-tenant, localhost-bound, hardened boundaries;
    the lab machine is the trust boundary.
+5. **Plain language to the person, exact language to the operator.** The
+   subject setting up an account may not know what a biometric is and may be
+   nervous about the camera. Every instruction they must read is written as a
+   helpful colleague would say it, and every number they don't need to act on
+   sits behind a disclosure. The operator's console keeps the exact vocabulary
+   — module codes, thresholds, modality names — because there it is the
+   subject matter. Neither voice is allowed to leak into the other.
+6. **No dead ends.** If a sensor is off, the person is one labelled button away
+   from turning it on, and the page says what will happen next.

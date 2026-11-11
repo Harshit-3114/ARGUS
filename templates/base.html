@@ -3,34 +3,68 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f4f5f2">
+  <meta name="theme-color" content="#fffdf9">
   <title>{% block title %}ARGUS{% endblock %}</title>
   <link rel="icon" href="{{ url_for('static', filename='img/favicon.svg') }}" type="image/svg+xml">
-  <link rel="preload" href="{{ url_for('static', filename='fonts/space-grotesk-var.woff2') }}" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="{{ url_for('static', filename='fonts/plus-jakarta-sans-var.woff2') }}" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="{{ url_for('static', filename='fonts/jetbrains-mono-var.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/Outfit-600.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/DMSans-400.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/AtkinsonHyperlegibleNext-700.woff2') }}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- icon sprite: same-document SVG symbols (no external requests) -->
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.5 20 5.5v6.2c0 5-3.4 9.4-8 10.8-4.6-1.4-8-5.8-8-10.8V5.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m8.6 12.2 2.4 2.4 4.4-4.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M3.5 7.5h3.2l1.6-2.2h7.4l1.6 2.2h3.2v11.2H3.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.4" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-camera-off" viewBox="0 0 24 24"><path d="M3.5 7.5h3.2l1.6-2.2h7.4l1.6 2.2h3.2v11.2H3.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m3.5 3.5 17 17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-face" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="10.5" r="1.1" fill="currentColor"/><circle cx="15" cy="10.5" r="1.1" fill="currentColor"/><path d="M9 15.5c1.8 1.6 4.2 1.6 6 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-keyboard" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2.4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M6.5 10h.01M10 10h.01M13.5 10h.01M17 10h.01M8 14h8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m8 12.3 2.7 2.7L16 9.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-check-plain" viewBox="0 0 24 24"><path d="m4.5 12.5 4.8 4.8L19.5 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 17.5h6M10 20.5h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 3.5a5.5 5.5 0 0 0-3.2 10c.6.5.9 1 .9 1.6h4.6c0-.6.3-1.1.9-1.6A5.5 5.5 0 0 0 12 3.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8.5" r="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M2.8 19.5c0-3.4 2.8-5.6 6.2-5.6s6.2 2.2 6.2 5.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M16.5 6.2a3.4 3.4 0 0 1 0 6.6M18 19.5c0-2-.7-3.7-1.9-4.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-signin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9.5 12h6m-2.6-2.8L15.7 12l-2.8 2.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9.5 5.5 7 6.5-7 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.8" y="10.5" width="14.4" height="9.5" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.2 10.5V7.8a3.8 3.8 0 0 1 7.6 0v2.7" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.3-.9.8-.9 1.4v.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17" r="1.1" fill="currentColor"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  </svg>
+
   <header class="topbar">
     <nav class="navpill" aria-label="Main">
       <a class="brand" href="/"><span class="brand-mark" aria-hidden="true">◍</span> ARGUS</a>
       <div class="navlinks">
-        <a href="/" {% if request.path == '/' %}aria-current="page"{% endif %}>Dashboard</a>
-        <a href="/enroll" {% if request.path == '/enroll' %}aria-current="page"{% endif %}>Enroll</a>
-        <a href="/login" {% if request.path == '/login' %}aria-current="page"{% endif %}>Login</a>
-        <a href="/evaluation" {% if request.path == '/evaluation' %}aria-current="page"{% endif %}>Evaluation</a>
+        <a href="/" {% if request.path == '/' %}aria-current="page"{% endif %}>Home</a>
+        <a href="/enroll" {% if request.path == '/enroll' %}aria-current="page"{% endif %}>Set up an account</a>
+        <a href="/login" {% if request.path == '/login' %}aria-current="page"{% endif %}>Sign in</a>
+        <a href="/evaluation" {% if request.path == '/evaluation' %}aria-current="page"{% endif %}>Results</a>
       </div>
-      <a class="topbar-side" href="/admin">Admin</a>
+      <span class="status-chip"><span class="dot" aria-hidden="true"></span> Runs on this computer</span>
+      <a class="topbar-side" href="/admin">For the lab</a>
     </nav>
   </header>
+
   <main id="main">
     {% block content %}{% endblock %}
   </main>
+
   <footer class="site-footer">
-    <span>ARGUS &middot; face recognition (Facenet512) + keystroke rhythm &middot; score-level fusion &middot; local lab tool</span>
+    <div class="foot-inner">
+      <p class="foot-note">
+        <svg class="foot-icon" aria-hidden="true"><use href="#i-shield"/></svg>
+        <span><strong>Your privacy is protected by design.</strong>
+        Everything runs on this computer. Nothing is uploaded.</span>
+      </p>
+      <nav class="foot-links" aria-label="Footer">
+        <a href="/evaluation">Privacy details</a>
+        <a href="/login">Need help?</a>
+        <a href="/admin">For the lab</a>
+      </nav>
+    </div>
   </footer>
+
   <script src="{{ url_for('static', filename='js/motion.js') }}" defer></script>
   {% block extra_js %}{% endblock %}
 </body>

@@ -1,106 +1,190 @@
 {% extends 'base.html' %}
-{% block title %}Enroll — ARGUS{% endblock %}
+{% block title %}Set up an account — ARGUS{% endblock %}
 {% block content %}
 <section class="page-head" data-reveal>
-  <p class="eyebrow">enrollment wizard</p>
-  <h1>Build a biometric template.</h1>
-  <p class="lead">Four steps: account, face capture, phased typing rounds, save. The passphrase is
-    both your knowledge factor and the keystroke phrase; each phase profiles a different
-    characteristic of how you type, and typos are recoverable.</p>
-  <div class="modtag-row" aria-hidden="true">
-    <span class="mono modtag">PF-00 · KNOWLEDGE</span>
-    <span class="mono modtag">FS-01 · FACE SCAN</span>
-    <span class="mono modtag">KD-02 · RHYTHM</span>
-    <span class="mono modtag">FS-09 · FUSION</span>
-  </div>
+  <p class="eyebrow">Setting up an account</p>
+  <h1>Let's get you set up.</h1>
+  <p class="lead">Three short steps: your details, a few photos of your face, and
+    typing a phrase eight times. Takes about two minutes. Everything you give
+    us stays on this computer.</p>
 </section>
 
-<ol class="stepper" id="stepper" aria-hidden="true" data-reveal data-delay="1">
-  <li data-step="1" class="active"><span>1</span> Account</li>
-  <li data-step="2"><span>2</span> Face</li>
-  <li data-step="3"><span>3</span> Typing</li>
-  <li data-step="4"><span>4</span> Save</li>
+<ol class="stepper-plain" id="stepper" aria-hidden="true">
+  <li class="active" data-step="1"><span>1</span> Your details</li>
+  <li data-step="2"><span>2</span> Your face</li>
+  <li data-step="3"><span>3</span> Your typing</li>
+  <li data-step="4"><span>4</span> All done</li>
 </ol>
 
-<!-- STEP 1: account -->
-<section id="step-account" class="card step" data-reveal data-delay="2">
-  <h2><span class="stepno">1</span> Account</h2>
-  <label for="in-username">Username
-    <input id="in-username" autocomplete="off" placeholder="e.g. patel.rad" spellcheck="false">
-  </label>
-  <label for="in-password">Passphrase <span class="soft">(typed phrase = password = keystroke phrase)</span>
+<!-- STEP 1: details -->
+<section id="step-account" class="card step" data-reveal data-delay="1">
+  <div class="card-head">
+    <div>
+      <h2>Your details</h2>
+      <p>Pick a name and a passphrase. The passphrase is also the phrase you'll
+        type later, so choose something you won't mind typing eight times.</p>
+    </div>
+  </div>
+  <div class="field">
+    <label for="in-username">Your name</label>
+    <input id="in-username" autocomplete="off" placeholder="e.g. priya.sharma" spellcheck="false">
+    <span class="help">Letters, numbers, dots and dashes. You can use your
+      email address or a nickname.</span>
+  </div>
+  <div class="field">
+    <label for="in-password">Your passphrase</label>
     <input id="in-password" type="password" value="{{ passphrase }}" autocomplete="new-password">
-  </label>
-  <label for="in-password2">Confirm passphrase
+    <span class="help">At least {{ min_len }} characters. Everyone in the lab
+      shares the passphrase <code>{{ passphrase }}</code> so we can test the
+      system honestly.</span>
+  </div>
+  <div class="field">
+    <label for="in-password2">Type your passphrase again</label>
     <input id="in-password2" type="password" autocomplete="new-password">
-    <span class="hint">Lab users should share the demo passphrase <code>{{ passphrase }}</code>
-      so impostor attempts pass the knowledge factor.</span>
-  </label>
+  </div>
   <p id="account-status" class="form-error" role="alert" hidden></p>
-  <button id="btn-account" class="btn primary">Start face capture <span class="icon-orb" aria-hidden="true">→</span></button>
+  <div class="btn-row">
+    <button id="btn-account" class="btn primary" type="button">
+      Continue to your face
+    </button>
+  </div>
 </section>
 
 <!-- STEP 2: face -->
 <section id="step-face" class="card step" hidden>
-  <h2><span class="stepno">2</span> Face capture — <span id="face-count">0</span>/{{ n_frames }} frames kept</h2>
-  <div class="cam-wrap" id="cam-frame">
-    <span class="hud-corner tl" aria-hidden="true"></span>
-    <span class="hud-corner tr" aria-hidden="true"></span>
-    <span class="hud-corner bl" aria-hidden="true"></span>
-    <span class="hud-corner br" aria-hidden="true"></span>
-    <span class="scan-band" aria-hidden="true"></span>
-    <video id="face-video" width="480" height="360" autoplay playsinline muted></video>
-    <p class="cam-overlay" id="cam-overlay">camera off — enabling automatically…</p>
+  <div class="card-head">
+    <div>
+      <h2>Your face</h2>
+      <p>We need about {{ n_frames }} photos so the system learns your face.
+        Nothing leaves this computer.</p>
+    </div>
+    <span class="status-chip" id="cam-status"><span class="dot" aria-hidden="true"></span>
+      <span id="cam-status-text">Camera off</span></span>
   </div>
-  <div class="hud-line cam-meta">
-    <span class="mono">FS-01 · FACE CAPTURE</span>
-    <span class="mono" id="cam-status">camera off</span>
-    <span class="mono" id="face-progress">0/{{ n_frames }}</span>
+
+  <div class="camera-panel" id="cam-panel">
+    <div class="cam-inner" id="cam-off">
+      <span class="camera-guide" aria-hidden="true">
+        <svg><use href="#i-face"/></svg>
+      </span>
+      <h3>Camera is off</h3>
+      <p>Look at the camera to switch it on.</p>
+      <button id="btn-cam-enable" class="btn primary" type="button">
+        <svg class="icon-orb" aria-hidden="true" width="20" height="20"><use href="#i-camera"/></svg>
+        Turn on camera
+      </button>
+    </div>
+    <div class="cam-wrap" id="cam-live" hidden>
+      <span class="cam-corner tl" aria-hidden="true"></span>
+      <span class="cam-corner tr" aria-hidden="true"></span>
+      <span class="cam-corner bl" aria-hidden="true"></span>
+      <span class="cam-corner br" aria-hidden="true"></span>
+      <video id="face-video" width="480" height="360" autoplay playsinline muted></video>
+      <p class="cam-overlay" id="cam-overlay">Camera on</p>
+    </div>
   </div>
-  <div class="cap-meter"><i id="face-meter"></i></div>
-  <p class="hint">The camera turns on when this step opens. If it doesn't, press
-    <strong>Enable camera</strong> and allow the browser permission prompt. Center your face,
-    light from the front and vary pose slightly between frames for a robust template.</p>
-  <button id="btn-cam-enable" class="btn">Enable camera</button>
-  <button id="btn-face-record" class="btn">Start capturing</button>
-  <button id="btn-face-done" class="btn primary" disabled>Done — next: typing <span class="icon-orb" aria-hidden="true">→</span></button>
+
+  <div class="slots" id="face-slots" aria-hidden="true"></div>
+  <div class="progress-row">
+    <span class="label" id="face-count">0 photos taken</span>
+    <span class="count" id="face-progress">0/{{ n_frames }}</span>
+  </div>
+  <div class="progress"><i id="face-meter"></i></div>
+
+  <div class="tips-block">
+    <h3>Three simple tips</h3>
+    <p class="hint">These help ARGUS recognise you reliably without any
+      passwords.</p>
+    <ul class="tip-list">
+      <li><svg aria-hidden="true"><use href="#i-check-plain"/></svg>
+        <span><strong>Face the camera</strong>
+          <span>Keep your head comfortably upright and centred inside the oval
+            guide.</span></span></li>
+      <li><svg aria-hidden="true"><use href="#i-check-plain"/></svg>
+        <span><strong>Good light on your face</strong>
+          <span>A gentle lamp or natural window light in front of you works
+            best.</span></span></li>
+      <li><svg aria-hidden="true"><use href="#i-check-plain"/></svg>
+        <span><strong>Try a small smile, then a neutral face</strong>
+          <span>Natural expressions make daily sign-in quick and easy.</span></span></li>
+    </ul>
+    <p class="hint">Wear glasses? Keep them on, just like you normally do.</p>
+  </div>
+
+  <div class="btn-row">
+    <button id="btn-face-record" class="btn ghost" type="button">Take the photos</button>
+    <button id="btn-face-done" class="btn primary" type="button" disabled>
+      Continue to your typing
+    </button>
+  </div>
 </section>
 
 <!-- STEP 3: typing -->
 <section id="step-typing" class="card step" hidden>
-  <h2><span class="stepno">3</span> Typing rounds — <span id="kt-count">0</span>/{{ n_typing_rounds }} clean rounds</h2>
-  <div class="hud-line phase-line">
-    <span class="mono" id="typing-phase">Phase A · Dwell &amp; Hold</span>
-    <span class="hint" id="phase-hint">phrase timing — natural pace, accurate to the phrase</span>
-  </div>
-  <p class="hint">Retype <code id="kt-phrase">{{ passphrase }}</code> each round. A typo is not
-    the end of the round: backspace and fix it — only the final text is scored, and the correction
-    itself stays part of the rhythm sample. No paste, no holding keys. The round records
-    automatically the instant the full phrase is typed.</p>
-  <div class="hud-block">
-    <div class="hud-line">
-      <span class="mono">KD-02 · RHYTHM CAPTURE</span>
-      <span class="mono" id="ks-count">0 CH</span>
-    </div>
-    <div class="pulse-strip idle" id="ks-pulse"></div>
-    <div class="hud-line">
-      <span class="hint" id="ks-stat">awaiting keystrokes</span>
+  <div class="card-head">
+    <div>
+      <h2>Your typing</h2>
+      <p>We check how fast and how long you press each key. That's your typing
+        rhythm — nobody else reproduces it by accident.</p>
     </div>
   </div>
-  <label for="in-typing">Round <span id="kt-round">1</span>
-    <input id="in-typing" type="password" autocomplete="off" placeholder="type the passphrase here">
-  </label>
-  <label class="inline"><input type="checkbox" id="show-typing" checked> show passphrase while typing</label>
-  <button id="btn-record-round" class="btn">Record round</button>
+
+  <p class="phase-pill" id="typing-phase">
+    <span class="num" aria-hidden="true">1</span>
+    <span id="typing-phase-text">Part 1 of 3 — type it the way you normally would</span>
+  </p>
+
+  <div class="phrase-box">
+    <span class="label">Your phrase</span>
+    <span class="phrase" id="kt-phrase">{{ passphrase }}</span>
+    <span class="hint" id="typing-phase-hint">Keep your natural pace.</span>
+  </div>
+
+  <div class="field">
+    <label for="in-typing">Type it here</label>
+    <input id="in-typing" type="password" autocomplete="off" placeholder="type the phrase here">
+    <span class="help">Typo? No problem — just fix it and carry on. The round
+      saves itself the moment the phrase is complete.</span>
+  </div>
+
+  <div class="rhythm-card">
+    <div class="hud-line">
+      <span class="mono">Live typing rhythm</span>
+      <span class="mono" id="ks-count">0 keys</span>
+    </div>
+    <div class="rhythm-strip idle" id="ks-pulse"></div>
+    <p class="rhythm-note" id="ks-stat">Waiting for you to start typing</p>
+  </div>
+
+  <div class="progress-row">
+    <span class="label" id="kt-count-label">Round 1 of {{ n_typing_rounds }}</span>
+    <span class="count" id="kt-count">0</span>
+  </div>
+  <div class="progress"><i id="kt-meter"></i></div>
+
+  <label class="inline"><input type="checkbox" id="show-typing" checked> Show the phrase while I type</label>
+  <div class="btn-row">
+    <button id="btn-record-round" class="btn ghost" type="button">Save this round</button>
+  </div>
   <p id="round-status" class="hint" aria-live="polite"></p>
 </section>
 
-<!-- STEP 4: finalize -->
+<!-- STEP 4: done -->
 <section id="step-done" class="card step" hidden>
-  <h2><span class="stepno">4</span> Finish</h2>
-  <p class="hint">Face frames and typing rounds are buffered. Saving embeds the face crops
-    (Facenet512) and builds the scaled-Manhattan rhythm model.</p>
-  <button id="btn-enroll-submit" class="btn primary wide">Save user biometrics <span class="icon-orb" aria-hidden="true">↗</span></button>
+  <div class="card-head">
+    <div>
+      <h2>All done</h2>
+      <p>Your photos and your typing rhythm are saved. You can sign in now.</p>
+    </div>
+  </div>
+  <div class="reassure">
+    <svg aria-hidden="true" width="22" height="22"><use href="#i-shield"/></svg>
+    <p><strong>Everything stays on this computer.</strong>
+      Your photos and typing samples are stored here and never uploaded.</p>
+  </div>
+  <div class="btn-row">
+    <button id="btn-enroll-submit" class="btn primary" type="button">Save my account</button>
+  </div>
   <p id="enroll-status" class="hint" aria-live="polite"></p>
 </section>
 {% endblock %}

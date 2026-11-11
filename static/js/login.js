@@ -1,4 +1,4 @@
-/* ARGUS — login: camera HUD, live rhythm pulses, and the staged
+/* ARGUS — sign in: camera panel, live typing rhythm, and the staged
  * verification console. The console paces the UX while the real
  * /api/attempt pipeline runs server-side; when the response lands,
  * every displayed number is the server's actual score. */
@@ -16,40 +16,70 @@
   }
   const CFG = readConfig();
 
-  /* ---------------- session chip ---------------- */
-  $("hud-session").textContent =
-    "SCN " + Array.from(crypto.getRandomValues(new Uint8Array(3)))
-      .map((b) => b.toString(16).padStart(2, "0")).join("").toUpperCase();
-
-  /* ---------------- camera HUD (FS-01) ---------------- */
+  /* ---------------- camera panel ---------------- */
   let meterTimer = null;
-  $("btn-cam").addEventListener("click", async (e) => {
-    e.target.disabled = true;
+
+  function cameraOn() {
+    $("cam-off").hidden = true;
+    $("cam-live").hidden = false;
+    $("cam-panel").classList.add("live");
+    $("cam-state-text").textContent = "Camera on";
+    $("btn-cam").innerHTML =
+      '<svg class="icon-orb" aria-hidden="true" width="20" height="20">' +
+      '<use href="#i-camera-off"></use></svg> Turn camera off';
+  }
+
+  function cameraOff() {
+    $("cam-live").hidden = true;
+    $("cam-off").hidden = false;
+    $("cam-panel").classList.remove("live");
+    $("cam-state-text").textContent = "Camera off";
+    $("btn-cam").innerHTML =
+      '<svg class="icon-orb" aria-hidden="true" width="20" height="20">' +
+      '<use href="#i-camera"></use></svg> Turn on camera';
+  }
+
+  async function startCamera() {
+    const btn = $("btn-cam");
+    btn.disabled = true;
     try {
       await window.BioCam.start($("face-video"),
         { intervalMs: 400, maxFrames: CFG.nFrames });
-      document.querySelector(".cam-wrap").classList.add("live");
-      $("cam-overlay").textContent = "camera on · align face in frame";
-      $("cam-state").textContent = "LIVE";
-      $("cam-state").classList.add("live");
+      cameraOn();
+      $("cam-overlay").textContent = "Camera on — look straight ahead";
       meterTimer = setInterval(() => {
         const n = window.BioCam.count();
-        $("face-count").textContent = `${n} frames in buffer`;
+        $("face-count").textContent = `${n} photo${n === 1 ? "" : "s"} taken`;
         $("face-progress").textContent = `${n}/${CFG.nFrames}`;
         window.Hud.meter($("face-meter"), n / CFG.nFrames);
       }, 280);
     } catch (err) {
-      $("cam-overlay").textContent = "camera blocked";
-      $("cam-state").textContent = "BLOCKED";
-      $("cam-state").classList.add("bad");
-      e.target.disabled = false;
-      const st = $("login-status");
-      st.textContent = "Could not start the camera: " + err.message +
-        " — open this page via http://localhost and allow the permission prompt.";
+      cameraOff();
+      $("cam-state-text").textContent = "Camera off";
+      btn.disabled = false;
+      $("login-status").textContent =
+        "We couldn't switch the camera on — that's fine, you can try again. " +
+        "If your browser asked permission, choose Allow. (" + err.name + ")";
     }
+  }
+
+  $("btn-cam").addEventListener("click", async () => {
+    if (!$("cam-live").hidden) {
+      /* second click switches the camera back off — the preview is the
+       * user's to control, always. */
+      clearInterval(meterTimer);
+      window.BioCam.stop();
+      cameraOff();
+      return;
+    }
+    await startCamera();
   });
 
-  /* ---------------- rhythm HUD (KD-02) ---------------- */
+  /* the camera asks permission by itself, so the page never sits on a
+   * dead grey box; the button stays for the second tap browsers ask for */
+  window.addEventListener("load", () => { startCamera(); });
+
+  /* ---------------- live typing rhythm ---------------- */
   const recorder = window.KsCapture.attach($("in-password"));
   let rhythmSig = "";
   setInterval(() => {
@@ -59,25 +89,29 @@
     if (sig === rhythmSig) return;
     rhythmSig = sig;
     window.Hud.pulse($("ks-pulse"), recorder.events);
-    $("ks-count").textContent = `${v.value.length} CH`;
+    $("ks-count").textContent = `${v.value.length} keys`;
     const stat = $("ks-stat");
     if (recorder.hasBackspace()) {
-      stat.textContent = "corrections in progress — final text is what counts";
-      stat.classList.add("bad-text");
-    } else {
-      stat.textContent = v.value.length ? "capturing rhythm…" : "awaiting keystrokes";
+      stat.textContent = "That's fine — just carry on typing";
       stat.classList.remove("bad-text");
+      stat.classList.add("good-text");
+    } else if (v.value.length) {
+      stat.textContent = "Good — keep typing";
+      stat.classList.remove("bad-text", "good-text");
+    } else {
+      stat.textContent = "Waiting for you to start typing";
+      stat.classList.remove("bad-text", "good-text");
     }
   }, 140);
 
   /* ---------------- verification console (staged) ---------------- */
   const STAGES = [
-    { code: "FS-01", name: "Face embedding", min: 750 },
-    { code: "FS-02", name: "Gallery match", min: 800 },
-    { code: "KD-02", name: "Rhythm analysis", min: 800 },
-    { code: "FS-09", name: "Fusion · decision", min: 700 },
+    { code: "Your photo", name: "Checking your face", min: 700 },
+    { code: "Your photo", name: "Comparing with your saved photos", min: 800 },
+    { code: "Your typing", name: "Checking your typing rhythm", min: 800 },
+    { code: "Result", name: "Putting it together", min: 700 },
   ];
-  const fmt = (x) => (x === null || x === undefined) ? "N/A" :
+  const fmt = (x) => (x === null || x === undefined) ? "—" :
     (Math.round(x * 1000) / 1000).toFixed(3);
   const clamp01 = (x) => Math.max(0, Math.min(1, x));
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -89,7 +123,7 @@
       `<span class="c-code mono">${s.code}</span>` +
       `<span class="c-name">${s.name}</span>` +
       `<div class="c-bar"><i></i></div>` +
-      `<span class="c-stat mono">STANDBY</span>`;
+      `<span class="c-stat mono">waiting</span>`;
     return { row, bar: row.querySelector("i"), stat: row.querySelector(".c-stat") };
   }
 
@@ -105,7 +139,7 @@
     stamp.textContent = text;
     stamp.className = "stamp " + cls;
     requestAnimationFrame(() => stamp.classList.add("show"));
-    $("v-elapsed").textContent = `PIPELINE ${ms} MS`;
+    $("v-elapsed").textContent = `TOOK ${ms} MS`;
     $("verdict").scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
@@ -115,7 +149,7 @@
     if (data.decision === "REJECT" && !data.scores) {
       const n = document.createElement("div");
       n.className = "notes";
-      n.textContent = data.reason || "knowledge factor failed";
+      n.textContent = data.reason || "That passphrase did not match.";
       rows.appendChild(n);
       return;
     }
@@ -147,12 +181,12 @@
       row.append(label, bar, pct, detail);
       rows.appendChild(row);
     };
-    add("FS-02 · Face (normalized)", s.face_norm,
-      s.face_cos !== null && s.face_cos !== undefined ? `cos ${s.face_cos}` : "—");
-    add("KD-02 · Keystroke (similarity)", s.ks_norm,
-      s.ks_sim !== null && s.ks_sim !== undefined ? `sim ${s.ks_sim}` : "—");
-    add("FS-09 · Fused score", s.fused,
-      `θ ${s.threshold} · w ${s.weights ? s.weights.face + "/" + s.weights.keystroke : ""}`);
+    add("Face check", s.face_norm,
+      s.face_cos !== null && s.face_cos !== undefined ? `similarity ${s.face_cos}` : "—");
+    add("Typing check", s.ks_norm,
+      s.ks_sim !== null && s.ks_sim !== undefined ? `similarity ${s.ks_sim}` : "—");
+    add("Combined result", s.fused,
+      `cut-off ${s.threshold} · weights ${s.weights ? s.weights.face + "/" + s.weights.keystroke : ""}`);
     if (data.notes && data.notes.length) {
       const n = document.createElement("div");
       n.className = "notes";
@@ -183,38 +217,38 @@
       const r = rowFor(s);
       built.push([s, r]);
       consoleEl.appendChild(r.row);
-      r.stat.textContent = "SCANNING";
+      r.stat.textContent = "checking";
       const start = performance.now();
       while (performance.now() - start < s.min && !body && !netErr) {
         r.bar.style.transform =
-          "scaleX(" + Math.min(0.94, (performance.now() - start) / s.min * 1.1) .toFixed(3) + ")";
+          "scaleX(" + Math.min(0.94, (performance.now() - start) / s.min * 1.1).toFixed(3) + ")";
         await wait(70);
       }
     }
 
     // Server still crunching? hold the top bar softly rather than lying "done".
     if (!body && !netErr) {
-      for (const [, r] of built) r.stat.textContent = "ANALYZING";
+      for (const [, r] of built) r.stat.textContent = "still checking";
       do { await wait(120); } while (!body && !netErr);
     }
 
     // Apply the real verdict data to every stage now.
     if (netErr) {
-      for (const [, r] of built) setRow(r, 0, "FAULT", "fail");
+      for (const [, r] of built) setRow(r, 0, "problem", "fail");
       const n = document.createElement("div");
       n.className = "notes";
       n.textContent = "request failed: " + netErr.message;
       $("scores-rows").appendChild(n);
-      showStamp("ACCESS DENIED", "denied", Math.round(performance.now() - t0));
+      showStamp("SOMETHING WENT WRONG", "denied", Math.round(performance.now() - t0));
       return;
     }
     if (body.ok === false) {
-      for (const [, r] of built) setRow(r, 0, "FAULT", "fail");
+      for (const [, r] of built) setRow(r, 0, "problem", "fail");
       const n = document.createElement("div");
       n.className = "notes";
-      n.textContent = body.error || `HTTP error`;
+      n.textContent = body.error || "Could not sign in";
       $("scores-rows").appendChild(n);
-      showStamp("ACCESS DENIED", "denied", Math.round(performance.now() - t0));
+      showStamp("SOMETHING WENT WRONG", "denied", Math.round(performance.now() - t0));
       return;
     }
 
@@ -222,37 +256,33 @@
     const sc = body.scores || {};
     for (const [s, r] of built) {
       switch (s.code) {
-        case "FS-01":
-          knowledgeFail ? setRow(r, 0, "BYPASS", "skip")
+        case "Your photo":
+          knowledgeFail ? setRow(r, 0, "skipped", "skip")
             : setRow(r, clamp01((payload.frames || []).length / (CFG.nFrames || 1)),
-                     knowledgeFail ? "" : `OK · ${(payload.frames || []).length} FR`);
+                     knowledgeFail ? "" : `ok · ${(payload.frames || []).length} photos`);
           break;
-        case "FS-02":
-          knowledgeFail ? setRow(r, 0, "BYPASS", "skip")
-            : setRow(r, sc.face_norm || 0, `SIM ${fmt(sc.face_cos)}`);
+        case "Your typing":
+          knowledgeFail ? setRow(r, 0, "skipped", "skip")
+            : setRow(r, sc.ks_norm || 0, `match ${fmt(sc.ks_sim)}`);
           break;
-        case "KD-02":
-          knowledgeFail ? setRow(r, 0, "BYPASS", "skip")
-            : setRow(r, sc.ks_norm || 0, `SIM ${fmt(sc.ks_sim)}`);
-          break;
-        case "FS-09":
-          knowledgeFail ? setRow(r, 0, "PF-00 · FAIL", "fail")
+        case "Result":
+          knowledgeFail ? setRow(r, 0, "passphrase wrong", "fail")
             : setRow(r, sc.fused || 0,
-              body.decision === "ACCEPT" ? `GRANTED @ θ${sc.threshold}` : `DENIED @ θ${sc.threshold}`);
+              body.decision === "ACCEPT" ? "you're in" : "not you");
           break;
       }
     }
     if (knowledgeFail) {
       const pf = document.createElement("div");
       pf.className = "c-row fault";
-      pf.innerHTML = `<span class="c-code mono">PF-00</span>` +
-        `<span class="c-name">Knowledge factor — passphrase rejected</span>` +
-        `<div class="c-bar"><i></i></div>` + `<span class="c-stat mono">FAIL</span>`;
+      pf.innerHTML = `<span class="c-code mono">Passphrase</span>` +
+        `<span class="c-name">That passphrase did not match</span>` +
+        `<div class="c-bar"><i></i></div>` + `<span class="c-stat mono">no</span>`;
       consoleEl.appendChild(pf);
     }
 
     renderScores(body);
-    showStamp(body.decision === "ACCEPT" ? "ACCESS GRANTED" : "ACCESS DENIED",
+    showStamp(body.decision === "ACCEPT" ? "YOU'RE IN" : "THAT WASN'T YOU",
       body.decision === "ACCEPT" ? "granted" : "denied",
       Math.round(performance.now() - t0));
 
@@ -272,10 +302,10 @@
       frames: window.BioCam.getFrames(CFG.nFrames),
     };
     if (CFG.mode === "eval") payload.operator = ($("in-operator") || {}).value || "";
-    if (!payload.username) { status.textContent = "enter a username"; return; }
-    if (!payload.password) { status.textContent = "type the passphrase"; return; }
+    if (!payload.username) { status.textContent = "Please type your name."; return; }
+    if (!payload.password) { status.textContent = "Please type your passphrase."; return; }
     if (CFG.mode === "eval" && !payload.operator) {
-      status.textContent = "evaluation mode: select who is operating";
+      status.textContent = "Please choose who is at the keyboard.";
       return;
     }
     status.textContent = "";
@@ -294,7 +324,7 @@
     const done = () => { btn.disabled = false; };
     runConsole(payload, resPromise).then(done).catch((err) => {
       console.error("verification console fault:", err);
-      status.textContent = "verification console fault: " + err.message;
+      status.textContent = "Something went wrong: " + err.message;
       done();
     });
   });

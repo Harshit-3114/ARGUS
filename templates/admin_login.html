@@ -3,30 +3,35 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f4f5f2">
-  <title>Admin sign-in — ARGUS</title>
+  <meta name="theme-color" content="#fffdf9">
+  <title>Lab page sign-in — ARGUS</title>
   <link rel="icon" href="{{ url_for('static', filename='img/favicon.svg') }}" type="image/svg+xml">
-  <link rel="preload" href="{{ url_for('static', filename='fonts/space-grotesk-var.woff2') }}" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="{{ url_for('static', filename='fonts/plus-jakarta-sans-var.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/Outfit-600.woff2') }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ url_for('static', filename='fonts/DMSans-400.woff2') }}" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body class="admin-gate">
   <main class="gate" data-reveal>
     <article class="card gate-card">
-      <p class="eyebrow">restricted area</p>
-      <h1>Admin sign-in</h1>
-      <p class="hint">Laboratory administration of users, attempt log and fusion settings.</p>
+      <p class="eyebrow">For the lab</p>
+      <h1>Lab page</h1>
+      <p class="hint">This is where you look after the people who have set up
+        accounts, the sign-in attempts they made, and how strict the gate is.</p>
       {% if error %}<p class="form-error" role="alert">{{ error }}</p>{% endif %}
       <form method="post" action="/admin/login">
-        <label for="pin">Admin PIN</label>
-        <input id="pin" name="pin" type="password" inputmode="numeric"
-               autocomplete="current-password" required autofocus>
-        <button class="btn primary wide" type="submit">Unlock dashboard <span class="icon-orb" aria-hidden="true">↗</span></button>
+        <div class="field">
+          <label for="pin">Lab PIN</label>
+          <input id="pin" name="pin" type="password" inputmode="numeric"
+                 autocomplete="current-password" required autofocus>
+          <span class="help">Ask whoever set up the machine. The default is
+            <code>admin123</code> — change it before anyone else uses it.</span>
+        </div>
+        <button class="btn primary wide" type="submit">Open the lab page</button>
       </form>
-      <p class="hint small">Default PIN lives in <code>config.py</code> as <code>ADMIN_PIN</code>
-        (override via the <code>ARGUS_ADMIN_PIN</code> environment variable).
-        Change it before employing this system in an open lab.</p>
-      <a class="hint" href="/">← back to public pages</a>
+      <p class="hint small">The PIN lives in <code>config.py</code> as
+        <code>ADMIN_PIN</code>, or in the <code>ARGUS_ADMIN_PIN</code>
+        environment variable. Change it before using this system in an open lab.</p>
+      <a class="hint" href="/">← back to the main pages</a>
     </article>
   </main>
   <script src="{{ url_for('static', filename='js/motion.js') }}" defer></script>

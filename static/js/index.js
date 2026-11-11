@@ -23,21 +23,32 @@
   document.querySelectorAll(".del-user").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const name = btn.dataset.name;
-      if (!confirm(`Delete user "${name}" and all their biometrics?`)) return;
+      if (!confirm(`Remove "${name}" and their photos and typing samples?`)) return;
       try {
         const res = await fetch(`/api/users/${name}`, { method: "DELETE" });
         const body = await res.json().catch(() => ({}));
         if (res.ok) {
-          toast(`User ${name} deleted.`, "good");
+          toast(`${name} has been removed.`, "good");
           setTimeout(() => window.location.reload(), 700);
         } else if (res.status === 401) {
-          toast("Delete requires an admin session — sign in at /admin.", "bad");
+          toast("Removing someone needs the lab PIN — sign in on the lab page.", "bad");
         } else {
-          toast(body.error || "Delete failed.", "bad");
+          toast(body.error || "That didn't work.", "bad");
         }
       } catch (err) {
-        toast("Request failed: " + err.message, "bad");
+        toast("Couldn't reach the server: " + err.message, "bad");
       }
     });
   });
+
+  /* the technical numbers hide behind a link, like everywhere else */
+  const techToggle = document.getElementById("tech-toggle");
+  if (techToggle) {
+    const detail = document.getElementById("tech-detail");
+    techToggle.addEventListener("click", () => {
+      const open = techToggle.getAttribute("aria-expanded") === "true";
+      techToggle.setAttribute("aria-expanded", String(!open));
+      detail.hidden = open;
+    });
+  }
 })();

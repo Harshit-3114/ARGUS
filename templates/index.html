@@ -1,52 +1,82 @@
 {% extends 'base.html' %}
-{% block title %}Dashboard — ARGUS{% endblock %}
+{% block title %}ARGUS — your sign-in system{% endblock %}
 {% block content %}
 <section class="page-head" data-reveal>
-  <p class="eyebrow">multimodal · local lab</p>
-  <h1>Identity, verified by<br>face <span class="amp">&amp;</span> rhythm.</h1>
-  <p class="lead">Two modalities decide every login: <strong>face</strong> (physiological) and
-    <strong>typing rhythm</strong> (behavioral). Scores are normalized and combined with a weighted sum —
-    a photo defeats nothing about typing; a stolen passphrase defeats nothing about the face.</p>
-  <div class="modtag-row" aria-hidden="true">
-    <span class="mono modtag">PF-00 · KNOWLEDGE</span>
-    <span class="mono modtag">FS-01 · FACE SCAN</span>
-    <span class="mono modtag">KD-02 · RHYTHM</span>
-    <span class="mono modtag">FS-09 · FUSION</span>
-  </div>
+  <p class="eyebrow">Everything runs on this computer</p>
+  <h1>Hello — here's how your sign-in system is doing.</h1>
+  <p class="lead">ARGUS checks two things when someone signs in: <strong>their face</strong>
+    and <strong>how they type</strong>. Both have to match. Your photos and your typing
+    stay on this machine — nothing is sent anywhere.</p>
 </section>
 
-<section class="kpi-row" data-reveal data-delay="1">
-  <article class="kpi" data-reveal data-delay="2"><span class="kpi-num">{{ users|length }}</span><span class="kpi-label">Enrolled users</span></article>
-  <article class="kpi" data-reveal data-delay="3"><span class="kpi-num">{{ summary.total }}</span><span class="kpi-label">Total attempts</span></article>
-  <article class="kpi" data-reveal data-delay="4"><span class="kpi-num">{{ summary.genuine }} <em>/</em> {{ summary.impostor }}</span>
-    <span class="kpi-label">Labeled genuine / impostor</span></article>
+<section class="stat-row" data-reveal data-delay="1">
+  <article class="stat"><span class="num">{{ users|length }}</span>
+    <span class="label">people have set up an account</span></article>
+  <article class="stat"><span class="num">{{ summary.total }}</span>
+    <span class="label">sign-in attempts recorded</span></article>
+  <article class="stat"><span class="num">{{ summary.genuine }} / {{ summary.impostor }}</span>
+    <span class="label">attempts by the real person / by someone else</span></article>
 </section>
 
 <div class="grid">
   <article class="card" data-reveal>
-    <div class="card-head"><h2>Workflow</h2></div>
-    <ol class="steps">
-      <li><a href="/enroll">Enroll</a> — capture {{ n_frames }} face frames + {{ n_rounds }} clean typing
-        rounds of the passphrase (<code>{{ passphrase }}</code>; lab users share it so impostors
-        “know the password” and must be caught by biometrics).</li>
-      <li><a href="/login?mode=eval">Collect labeled attempts</a> — operators log in as themselves
-        (genuine) and as each other (impostor).</li>
-      <li><a href="/evaluation">Evaluate</a> — FAR / FRR / EER per modality and fused, ROC curves,
-        recommended operating threshold.</li>
-      <li><a href="/login">Log in</a> — the decision needs <em>both</em> modalities.</li>
-    </ol>
-    <a class="btn primary sm" href="/enroll">Enroll a new user <span class="icon-orb" aria-hidden="true">↗</span></a>
+    <div class="card-head">
+      <div>
+        <h2>How well is it working?</h2>
+        <p>Based on the attempts recorded on this computer.</p>
+      </div>
+    </div>
+    <ul class="finding-list">
+      <li><span class="dot" aria-hidden="true"></span>
+        <span><strong>People who were not you were turned away.</strong>
+        When someone tried to sign in as you without your face or your typing,
+        the system said no.</span></li>
+      <li><span class="dot" aria-hidden="true"></span>
+        <span><strong>A photo of you is not enough.</strong>
+        Even with a picture of your face, the typing check still turns
+        someone away — and the other way round too.</span></li>
+      <li><span class="dot" aria-hidden="true"></span>
+        <span><strong>Your typing rhythm is part of your identity.</strong>
+        The way you press each key is as identifying as your face.</span></li>
+    </ul>
+    <button class="tech-toggle" type="button" id="tech-toggle" aria-expanded="false"
+            aria-controls="tech-detail">
+      Show me the technical numbers
+      <svg class="icon-orb" aria-hidden="true" width="18" height="18"><use href="#i-chevron"/></svg>
+    </button>
+    <div class="tech-detail" id="tech-detail" hidden>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Measurement</th><th>What it means</th></tr></thead>
+          <tbody>
+            <tr><td>False Accept Rate</td><td>how often someone else was let in</td></tr>
+            <tr><td>False Reject Rate</td><td>how often the real person was turned away</td></tr>
+            <tr><td>Equal Error Rate</td><td>the point where both mistakes are equally likely</td></tr>
+            <tr><td>AUC</td><td>how well the check separates the two, from 0.5 (coin flip) to 1 (perfect)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hint">The full numbers, charts and per-attempt log live in the
+        <a href="/evaluation">results page</a>.</p>
+    </div>
+    <div class="btn-row">
+      <a class="btn primary" href="/enroll">Set up an account</a>
+      <a class="btn ghost" href="/login">Sign in</a>
+    </div>
   </article>
 
   <article class="card" data-reveal data-delay="1">
     <div class="card-head">
-      <h2>Enrolled users</h2>
-      <a class="btn sm ghost" href="/enroll">Enroll new</a>
+      <div>
+        <h2>People on this computer</h2>
+        <p>Each one needs a photo set and some typing samples.</p>
+      </div>
+      <a class="btn sm ghost" href="/enroll">Add someone</a>
     </div>
     {% if users %}
     <div class="table-wrap">
       <table>
-        <thead><tr><th>user</th><th class="num">face frames</th><th class="num">typing rounds</th><th></th></tr></thead>
+        <thead><tr><th>name</th><th class="num">photos</th><th class="num">typing rounds</th><th></th></tr></thead>
         <tbody>
         {% for u in users %}
           <tr>
@@ -54,21 +84,29 @@
             <td class="num">{{ counts[loop.index0].face }}</td>
             <td class="num">{{ counts[loop.index0].keystroke }}</td>
             <td class="row-action"><button class="btn sm danger-outline del-user"
-                 data-name="{{ u.username }}">delete</button></td>
+                 data-name="{{ u.username }}">remove</button></td>
           </tr>
         {% endfor %}
         </tbody>
       </table>
     </div>
-    <p class="hint">Deleting a user requires the admin PIN (dashboard admin area).</p>
+    <p class="hint">Removing someone needs the lab PIN — it is on the
+      <a href="/admin">lab page</a>.</p>
     {% else %}
     <div class="empty">
-      <p class="empty-title">No users enrolled yet</p>
-      <p class="hint">Start with the <a href="/enroll">enrollment wizard</a>: it captures face frames
-        and typing rhythm, then stores the templates locally.</p>
+      <p class="empty-title">Nobody has set up an account yet</p>
+      <p class="hint">Start with <a href="/enroll">set up an account</a> — it takes
+        about two minutes: a few photos, then type the phrase eight times.</p>
     </div>
     {% endif %}
   </article>
+</div>
+
+<div class="reassure" data-reveal>
+  <svg aria-hidden="true" width="22" height="22"><use href="#i-shield"/></svg>
+  <p><strong>Everything runs on this computer.</strong>
+    Photos, typing samples and the sign-in log are stored here. No account, no
+    cloud, no uploads — and the app never makes a request to another server.</p>
 </div>
 {% endblock %}
 {% block extra_js %}
