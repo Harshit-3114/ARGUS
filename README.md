@@ -169,8 +169,14 @@ Modify `SUGGESTED_PASSPHRASE` / `DECISION_THRESHOLD` / fusion weights in
 - **Keystroke capture in the browser** (not `pynput`): a server-side keylogger would
   capture every keystroke on the machine and can't tell which window you typed in.
   The web UI records per-character `keydown`/`keyup` timing — the same features
-  (hold times, digraph latencies) without invasive software. Edited rounds
-  (backspace), held keys (auto-repeat), and pastes are rejected as invalid samples.
+  (hold times, digraph latencies) without invasive software. A typo corrected
+  with backspace no longer voids the round: the server reconstructs the final
+  text with an edit buffer, so only the surviving keystrokes are scored. Held
+  keys (auto-repeat) and pastes are still rejected as invalid samples.
+- **Phased typing test**: the 8 enrollment rounds run in three phases — *A*
+  dwell & hold (phrase timing), *B* flight & latency (inter-key speed), *C*
+  correction & recovery (how you fix a typo). Each round is tagged with its
+  phase in `keystroke_samples.phase`; all phases feed one shared rhythm model.
 - **Face pipeline**: OpenCV Haar detection picks the largest face and crops it with
   a margin; DeepFace *Facenet512* embeds the crop; match = max cosine vs. the
   user's gallery. Detection is ours, embedding is deepface's (`detector_backend="skip"`).
@@ -213,6 +219,7 @@ smoke_test.py           logic tests that need no webcam (run with the venv)
 start.bat               one-click launcher (venv bootstrap + server + browser)
 DESIGN.md               design-system spec (tokens, motion grammar, named rules)
 PRODUCT.md              product truth record (users, operating context, principles)
+ARGUS-presentation.pptx  21-slide deck (explains + pitches the system, speaker notes)
 data/                   SQLite db, enrolled JPEGs, admin secret (runtime, gitignored)
 ```
 

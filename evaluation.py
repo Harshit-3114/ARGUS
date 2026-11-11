@@ -101,7 +101,9 @@ def _render_charts(report, genuine, impostor) -> None:
     import matplotlib.pyplot as plt
 
     STATIC_GEN_DIR.mkdir(parents=True, exist_ok=True)
-    colors = {"face": "#0e7490", "ks": "#b45309", "fused": "#6d28d9"}
+    # palette matches the light theme tokens: scanner-cyan, caution-amber,
+    # signal-mint
+    colors = {"face": "#0e7490", "ks": "#b54708", "fused": "#0da271"}
 
     # --- ROC curves ----------------------------------------------------
     fig, ax = plt.subplots(figsize=(6, 5))
