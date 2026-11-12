@@ -65,7 +65,8 @@ cloud product.
 - Console theatre (staged verification, ACCESS GRANTED/DENIED stamp, scan-sweep
   camera HUD) is a product feature confirmed by the user — motion renders the
   gate's reasoning, not chrome.
-- Fonts: Space Grotesk / Plus Jakarta Sans / JetBrains Mono, self-hosted.
+- Fonts: Outfit (display) / DM Sans (body) / Atkinson Hyperlegible Next
+  (labels) / JetBrains Mono (technical readouts only), self-hosted.
 
 ## Evidence on Hand
 

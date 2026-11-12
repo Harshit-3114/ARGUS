@@ -2,11 +2,10 @@
 {% block title %}ARGUS — your sign-in system{% endblock %}
 {% block content %}
 <section class="page-head" data-reveal>
-  <p class="eyebrow">Everything runs on this computer</p>
+  <p class="eyebrow">At a glance</p>
   <h1>Hello — here's how your sign-in system is doing.</h1>
   <p class="lead">ARGUS checks two things when someone signs in: <strong>their face</strong>
-    and <strong>how they type</strong>. Both have to match. Your photos and your typing
-    stay on this machine — nothing is sent anywhere.</p>
+    and <strong>how they type</strong>. Both have to match.</p>
 </section>
 
 <section class="stat-row" data-reveal data-delay="1">
@@ -76,7 +75,7 @@
       <a class="btn sm ghost" href="/enroll">Add someone</a>
     </div>
     {% if users %}
-    <div class="table-wrap">
+    <div class="table-wrap table-scroll">
       <table>
         <thead><tr><th>name</th><th class="num">photos</th><th class="num">typing rounds</th><th></th></tr></thead>
         <tbody>
@@ -108,7 +107,7 @@
   <svg aria-hidden="true" width="22" height="22"><use href="#i-shield"/></svg>
   <p><strong>Everything runs on this computer.</strong>
     Photos, typing samples and the sign-in log are stored here. No account, no
-    cloud, no uploads — and the app never makes a request to another server.</p>
+    cloud, no uploads.</p>
 </div>
 {% endblock %}
 {% block extra_js %}

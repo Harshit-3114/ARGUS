@@ -112,13 +112,16 @@
     }
 
     if (charts) {
+      const row = document.createElement("div");
+      row.className = "chart-row";
       const img1 = document.createElement("img");
       img1.className = "chart";
       img1.src = charts.roc; img1.alt = "How well each check separates the real person from someone else";
       const img2 = document.createElement("img");
       img2.className = "chart";
       img2.src = charts.dist; img2.alt = "Score distributions for the real person and for impostors";
-      out.appendChild(img1); out.appendChild(img2);
+      row.append(img1, img2);
+      out.appendChild(row);
     }
     if (report.insufficient) {
       const warn = document.createElement("p");

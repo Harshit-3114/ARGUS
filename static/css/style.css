@@ -130,11 +130,11 @@ body {
 
 h1, h2, h3, .brand, .verdict-banner, .kpi-num { font-family: "Outfit", "DM Sans", sans-serif; }
 h1 {
-  font-size: clamp(30px, 3.6vw, 38px);
+  font-size: clamp(28px, 3vw, 34px);
   font-weight: 600;
   letter-spacing: -0.025em;
   line-height: 1.14;
-  margin: 6px 0 10px;
+  margin: 4px 0 6px;
 }
 h2 { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 6px; }
 h3 { font-size: 16px; font-weight: 600; margin: 0 0 4px; }
@@ -169,7 +169,7 @@ code {
 .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 .foot-note {
   display: flex; align-items: flex-start; gap: 12px;
-  margin: 0; max-width: 56ch;
+  margin: 0; max-width: 74ch;
 }
 .foot-note .foot-icon { width: 22px; height: 22px; flex: 0 0 auto; color: var(--teal); margin-top: 2px; }
 .foot-note strong { display: block; }
@@ -179,11 +179,11 @@ code {
 .finding-list svg { width: 20px; height: 20px; }
 
 /* ---------------- page shell ---------------- */
-.topbar { padding: 20px 18px 0; }
+.topbar { padding: 16px 18px 0; }
 .navpill {
   display: flex; align-items: center; gap: 20px;
   width: max-content; max-width: 100%;
-  margin: 0 auto; padding: 10px 14px 10px 22px;
+  margin: 0 auto; padding: 8px 12px 8px 20px;
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(20px);
   border: 1px solid var(--line);
@@ -239,12 +239,12 @@ code {
   50% { opacity: 1; transform: scale(1.08); }
 }
 
-main#main { max-width: 1120px; margin: 40px auto 0; padding: 0 24px; }
-main#main { padding-bottom: 48px; }
+main#main { max-width: 1120px; margin: 26px auto 0; padding: 0 24px; }
+main#main { padding-bottom: 24px; }
 
-.page-head { margin-bottom: 30px; max-width: 68ch; }
-.page-head h1 { margin: 4px 0 10px; }
-.lead { color: var(--slate); font-size: 18px; margin: 0; max-width: 62ch; line-height: 1.6; }
+.page-head { margin-bottom: 18px; max-width: 68ch; display: grid; gap: 8px; justify-items: start; }
+.page-head h1 { margin: 2px 0 6px; }
+.lead { color: var(--slate); font-size: 16.5px; margin: 0; max-width: 64ch; line-height: 1.5; }
 .lead strong { color: var(--ink-2); }
 
 /* eyebrow: a small plain-language kicker, never a technical code */
@@ -265,9 +265,9 @@ main#main { padding-bottom: 48px; }
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-card);
-  padding: 24px 26px 26px;
+  padding: 20px 22px 22px;
   box-shadow: var(--shadow-soft);
-  margin-bottom: 22px;
+  margin-bottom: 16px;
 }
 .card > * { position: relative; }
 .card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
@@ -275,14 +275,14 @@ main#main { padding-bottom: 48px; }
 .card-head h2 { margin: 0; }
 .card-head p { color: var(--slate); margin: 4px 0 0; font-size: 16px; }
 
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: start; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
 .grid > .card { margin-bottom: 0; }
 .grid.two-thirds { grid-template-columns: 1.45fr 1fr; }
 
 /* soft reassurance panel */
 .reassure {
-  display: flex; align-items: flex-start; gap: 14px;
-  padding: 18px 22px;
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 18px;
   background: var(--teal-wash);
   border: 1px solid rgba(15, 157, 140, 0.18);
   border-radius: var(--r-panel);
@@ -297,7 +297,7 @@ main#main { padding-bottom: 48px; }
   position: relative;
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
   min-height: 56px;
-  padding: 14px 26px;
+  padding: 12px 22px;
   border: 1px solid var(--line-2);
   border-radius: var(--r-btn);
   background: var(--surface);
@@ -305,6 +305,7 @@ main#main { padding-bottom: 48px; }
   font-family: "Atkinson Hyperlegible Next", "DM Sans", sans-serif;
   font-size: 17px; font-weight: 700; letter-spacing: 0;
   cursor: pointer; user-select: none; text-decoration: none;
+  white-space: nowrap;          /* a button label never wraps */
   transition: transform 240ms var(--ease), background 240ms var(--ease),
               border-color 240ms var(--ease), box-shadow 240ms var(--ease);
 }
@@ -349,7 +350,7 @@ main#main { padding-bottom: 48px; }
 /* ---------------- friendly step indicator ---------------- */
 .stepper-plain {
   list-style: none; display: flex; gap: 12px; padding: 0;
-  margin: 0 0 26px; flex-wrap: wrap;
+  margin: 0 0 18px; flex-wrap: wrap;
 }
 .stepper-plain li {
   display: flex; align-items: center; gap: 10px;
@@ -377,7 +378,7 @@ main#main { padding-bottom: 48px; }
 .stepper-plain li.done span { background: var(--teal-wash); color: var(--teal-deep); }
 
 /* ---------------- forms ---------------- */
-.field { margin: 0 0 18px; }
+.field { margin: 0 0 14px; }
 .field label,
 label.field-label {
   display: block; margin: 0 0 7px;
@@ -390,8 +391,8 @@ label.field-label {
 }
 input, select {
   display: block; width: 100%; max-width: 460px;
-  min-height: 56px;
-  padding: 14px 20px;
+  min-height: 52px;
+  padding: 12px 18px;
   border: 1px solid var(--line-2);
   border-radius: var(--r-input);
   font: 400 17px "DM Sans", sans-serif;
@@ -418,7 +419,7 @@ label.inline {
   cursor: pointer;
 }
 label.inline input { width: auto; max-width: none; min-height: 0; margin: 0; accent-color: var(--teal); }
-.hint { color: var(--slate); font-size: 16px; margin: 10px 0 0; }
+.hint { color: var(--slate); font-size: 15.5px; margin: 8px 0 0; }
 .form-error {
   color: var(--rose);
   background: var(--rose-wash);
@@ -432,8 +433,9 @@ label.inline input { width: auto; max-width: none; min-height: 0; margin: 0; acc
 .camera-panel {
   position: relative;
   display: flex; flex-direction: column; align-items: center; gap: 18px;
-  min-height: 320px;
-  padding: 26px;
+  min-height: 236px;
+  padding: 14px;
+  max-width: 440px; margin-inline: auto;   /* the camera module stays compact */
   border-radius: var(--r-card);
   border: 2px solid var(--line);
   background:
@@ -474,7 +476,8 @@ label.inline input { width: auto; max-width: none; min-height: 0; margin: 0; acc
    always on screen - never pushed below the fold by a tall preview */
 .head-actions {
   display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-  justify-content: flex-end; flex: 0 0 auto;
+  justify-content: flex-start; flex: 0 0 auto;
+  margin: -8px 0 14px;
 }
 .cam-toggle { min-height: 44px; padding: 10px 18px; font-size: 15px; }
 
@@ -482,13 +485,13 @@ label.inline input { width: auto; max-width: none; min-height: 0; margin: 0; acc
 .camera-panel h3 { font-size: 20px; }
 .camera-panel p { color: var(--slate); font-size: 16px; max-width: 34ch; margin: 0; }
 .camera-guide {
-  width: 150px; height: 190px;
+  width: 104px; height: 130px;
   border: 2px solid rgba(15, 157, 140, 0.4);
   border-radius: 50% / 42%;
   display: grid; place-items: center;
   color: rgba(15, 157, 140, 0.55);
 }
-.camera-guide svg { width: 58px; height: 58px; }
+.camera-guide svg { width: 48px; height: 48px; }
 /* the camera toggle sits outside the swapped states, so it is always there */
 .btn-label { transition: opacity 160ms var(--ease); }
 /* Icons are decoration: they must never intercept a click meant for the
@@ -498,9 +501,12 @@ label.inline input { width: auto; max-width: none; min-height: 0; margin: 0; acc
 .reassure svg, .tip-list svg, .foot-note svg {
   pointer-events: none;
 }
-.camera-wrap { position: relative; overflow: hidden; border-radius: var(--r-card); }
-.camera-wrap video {
-  display: block; width: 100%; max-width: 400px; aspect-ratio: 4 / 3;
+.cam-wrap {
+  position: relative; overflow: hidden; border-radius: var(--r-card);
+  width: 100%; max-width: 320px; justify-self: center;
+}
+.cam-wrap video {
+  display: block; width: 100%; height: auto; aspect-ratio: 4 / 3;
   object-fit: cover; background: #e6e3da; transform: scaleX(-1);
 }
 .cam-overlay {
@@ -523,7 +529,7 @@ label.inline input { width: auto; max-width: none; min-height: 0; margin: 0; acc
 .cam-corner.br { bottom: 10px; right: 10px; border-bottom-width: 2px; border-right-width: 2px; border-radius: 0 0 6px 0; }
 
 /* photo slots: how many photos are captured */
-.slots { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 0; }
+.slots { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 0; justify-content: center; }
 .slots i {
   width: 52px; height: 40px; border-radius: 8px;
   border: 1px dashed var(--line-2); background: rgba(27, 27, 31, 0.02);
@@ -552,7 +558,7 @@ label.inline input { width: auto; max-width: none; min-height: 0; margin: 0; acc
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-card);
-  padding: 22px 24px 24px;
+  padding: 16px 20px 18px;
   box-shadow: var(--shadow-soft);
 }
 .phrase-box {
@@ -587,7 +593,7 @@ label.inline input { width: auto; max-width: none; min-height: 0; margin: 0; acc
 }
 .rhythm-strip {
   display: flex; align-items: flex-end; gap: 5px;
-  height: 62px; padding: 10px 12px;
+  height: 52px; padding: 8px 10px;
   border: 1px solid var(--line);
   border-radius: var(--r-input);
   background: var(--teal-wash-2);
@@ -629,19 +635,20 @@ label.inline input { width: auto; max-width: none; min-height: 0; margin: 0; acc
 /* ---------------- stats ---------------- */
 .stat-row {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 18px; margin-bottom: 24px;
+  gap: 16px; margin-bottom: 18px;
 }
 .stat {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-card);
-  padding: 22px 24px;
+  padding: 18px 20px;
   box-shadow: var(--shadow-soft);
 }
 .stat .num {
   display: block;
-  font-family: "Outfit", sans-serif; font-size: 34px; font-weight: 600;
+  font-family: "Outfit", sans-serif; font-size: 30px; font-weight: 600;
   color: var(--teal-deep); line-height: 1.1; letter-spacing: -0.02em;
+  text-align: left;            /* .num is a right-aligned table utility */
 }
 .stat .label { display: block; margin-top: 4px; color: var(--slate); font-size: 16px; }
 
@@ -663,7 +670,7 @@ label.inline input { width: auto; max-width: none; min-height: 0; margin: 0; acc
 }
 
 /* ---------------- plain-language list of findings ---------------- */
-.finding-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.finding-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .finding-list li { display: flex; gap: 12px; align-items: flex-start; }
 .finding-list .dot { margin-top: 9px; flex: 0 0 auto; }
 .finding-list strong { display: block; }
@@ -695,6 +702,8 @@ label.inline input { width: auto; max-width: none; min-height: 0; margin: 0; acc
 
 /* ---------------- tables ---------------- */
 .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+/* long tables scroll inside their card instead of stretching the page */
+.table-scroll { max-height: 280px; overflow-y: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 16px; }
 th {
   text-align: left; padding: 10px 12px; color: var(--slate);
@@ -702,7 +711,7 @@ th {
   font-weight: 700; font-size: 14px;
   border-bottom: 1px solid var(--line-2); white-space: nowrap;
 }
-td { padding: 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+td { padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
 tbody tr { transition: background 240ms var(--ease); }
 tbody tr:hover { background: rgba(27, 27, 31, 0.03); }
 /* the lab log has many columns - keep them on one line and clip the note */
@@ -783,7 +792,7 @@ tbody tr:hover { background: rgba(27, 27, 31, 0.03); }
 
 /* ---------------- empty states ---------------- */
 .empty {
-  padding: 40px 20px; text-align: center;
+  padding: 30px 20px; text-align: center;
   border: 1px dashed var(--line-2); border-radius: var(--r-card);
   color: var(--slate);
 }
@@ -794,6 +803,11 @@ tbody tr:hover { background: rgba(27, 27, 31, 0.03); }
   text-align: center; font-size: 16px; margin-top: 16px;
 }
 .chart { width: 100%; max-width: 620px; display: block; margin: 18px auto 0; border-radius: var(--r-panel); }
+/* two charts side by side instead of a 1200px stack */
+.chart-row { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+.chart-row .chart { max-width: 330px; }
+#overview-charts { display: flex; gap: 12px; flex-wrap: wrap; }
+#overview-charts .chart { max-width: 260px; margin: 12px 0 0; }
 
 /* ============================================================
    Admin console (lab tool - denser, but same friendly language)
@@ -876,13 +890,14 @@ tbody tr:hover { background: rgba(27, 27, 31, 0.03); }
 .gate-card form { margin-top: 16px; }
 
 /* ---------------- footer ---------------- */
-.site-footer { padding: 44px 0 40px; }
+.site-footer { padding: 20px 0 24px; }
 .site-footer .foot-inner {
   max-width: 1120px; margin: 0 auto; padding: 0 24px;
   display: flex; align-items: center; justify-content: space-between;
   gap: 18px; flex-wrap: wrap;
 }
-.site-footer .foot-note { color: var(--slate); font-size: 15px; }
+.site-footer .foot-note { color: var(--slate); font-size: 15px; display: flex; align-items: center; gap: 8px; }
+.site-footer .foot-note strong { display: inline; }
 .site-footer .foot-links { display: flex; gap: 20px; flex-wrap: wrap; }
 .site-footer .foot-links a { color: var(--ink-2); font-size: 15px; }
 
@@ -915,8 +930,7 @@ tbody tr:hover { background: rgba(27, 27, 31, 0.03); }
     flex-wrap: wrap; justify-content: space-between;
   }
   .navlinks { order: 3; width: 100%; overflow-x: auto; padding-bottom: 4px; }
-  main#main { margin-top: 24px; padding: 0 16px; }
-  .grid, .grid.two-thirds { grid-template-columns: 1fr; }
+  main#main { margin-top: 20px; padding: 0 16px; }
   .stepper-plain { gap: 8px; }
   .stepper-plain li { font-size: 15px; padding: 8px 14px 8px 8px; }
   .admin-layout { grid-template-columns: 1fr; }
@@ -928,15 +942,23 @@ tbody tr:hover { background: rgba(27, 27, 31, 0.03); }
   .sidenav-item { width: auto; }
   .sidebar-foot { margin-top: 10px; flex-direction: row; align-items: center; flex-wrap: wrap; }
   .admin-main { padding: 26px 16px 60px; }
-  .camera-panel { min-height: 260px; }
+  .camera-panel { min-height: 236px; }
   .slots i { width: 42px; height: 34px; }
+}
+
+/* A form and a camera preview still sit side by side comfortably below
+   900px - stacking them doubled the page height, so the collapse waits
+   until the columns genuinely cannot hold their content. */
+@media (max-width: 820px) {
+  .grid, .grid.two-thirds { grid-template-columns: 1fr; }
+  .grid > .card { margin-bottom: 18px; }
 }
 
 /* ============================================================
    ARGUS verification console — the one theatrical moment.
    ============================================================ */
 .hud-block {
-  margin: 18px 0 0; padding: 18px 20px;
+  margin: 14px 0 0; padding: 14px 16px;
   border: 1px solid var(--line);
   border-radius: var(--r-panel);
   background: var(--surface);

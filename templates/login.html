@@ -15,16 +15,10 @@
 <section class="page-head" data-reveal>
   <p class="eyebrow">Signing in</p>
   <h1>Welcome back.</h1>
-  <p class="lead">We check three things: the passphrase you type, your face, and
-    the way you type. All three have to match — that is what makes it hard for
-    anyone else to copy.</p>
+  <p class="lead">We check your passphrase, your face, and how you type. All
+    three have to match — that is what makes it hard for anyone else to copy.</p>
 </section>
 {% endif %}
-
-<ol class="stepper-plain" aria-hidden="true">
-  <li class="active"><span>1</span> Your details</li>
-  <li><span>2</span> Your camera</li>
-</ol>
 
 <div class="grid form-cam">
   <article class="card" data-reveal data-delay="1">
@@ -55,8 +49,8 @@
         <label for="in-password">Your passphrase</label>
         <input id="in-password" type="password" autocomplete="current-password"
                placeholder="type it here">
-        <span class="help">This is also how you type — we check your typing
-          rhythm too. A typo is fine, just fix it.</span>
+        <span class="help">Your typing rhythm is checked too — a typo is
+          fine, just fix it.</span>
       </div>
 
       <div class="rhythm-card">
@@ -81,14 +75,14 @@
         <h2>Your camera</h2>
         <p>A few photos to check it's you.</p>
       </div>
-      <div class="head-actions">
-        <span class="status-chip" id="cam-state"><span class="dot" aria-hidden="true"></span>
-          <span id="cam-state-text">Camera off</span></span>
-        <button id="btn-cam" class="btn sm cam-toggle" type="button">
-          <svg class="icon-orb" aria-hidden="true" width="18" height="18"><use href="#i-camera" id="btn-cam-icon"/></svg>
-          <span class="btn-label" id="btn-cam-label">Turn on camera</span>
-        </button>
-      </div>
+    </div>
+    <div class="head-actions">
+      <span class="status-chip" id="cam-state"><span class="dot" aria-hidden="true"></span>
+        <span id="cam-state-text">Camera off</span></span>
+      <button id="btn-cam" class="btn sm cam-toggle" type="button">
+        <svg class="icon-orb" aria-hidden="true" width="18" height="18"><use href="#i-camera" id="btn-cam-icon"/></svg>
+        <span class="btn-label" id="btn-cam-label">Turn on camera</span>
+      </button>
     </div>
 
     <div class="camera-panel" id="cam-panel">
@@ -117,8 +111,7 @@
     </div>
     <div class="progress"><i id="face-meter"></i></div>
 
-    <p class="hint">Video stays on this device. Switch the camera off any time
-      with the button on the photo.</p>
+    <p class="hint">Video stays on this device.</p>
   </article>
 </div>
 

@@ -246,11 +246,17 @@ composition only appears where two things must happen side by side. Cards are
 
 - **Spacing rhythm:** 32px between blocks, 44–64px between sections; controls
   are at least 56px tall.
-- **Breakpoints:** `md` 900px — nav wraps to a full-width bar, grids collapse to
-  one column, the lab sidebar stacks; `sm` 640px — the verification console
-  drops its bar column.
+- **Breakpoints:** `md` 900px — nav wraps to a full-width bar, the lab sidebar
+  stacks, the camera preview shrinks; `sm` 820px — multi-column grids finally
+  collapse to one column. The collapse deliberately waits until 820px: a form
+  and a camera preview still sit side by side comfortably at 900px, and stacking
+  them there doubled the page height.
 - **Responsive discipline:** no horizontal scroll at any width; tap targets
-  never below 48px.
+  never below 48px; long tables scroll inside their card
+  (`.table-scroll`, 340px cap) instead of stretching the page.
+- **Fits at 100% zoom:** the target is that every page reaches its main
+  content within one screen of a 1366×768 laptop, with only the results and
+  evaluation pages (which carry charts and tables) expected to scroll.
 
 ## Elevation & Depth
 
@@ -326,7 +332,7 @@ is in exactly one of two states, and the two states **cross-fade in place**
 - **Live:** the dashed frame fades out, the video fills the panel, teal corner
   brackets appear, and a calm overlay reads *"Camera on — look straight ahead"*.
 
-The **toggle always lives in the card header**, beside the state chip
+The **toggle lives directly under the card heading**, beside the state chip
 (**Camera on** / **Camera off**, with the breathing dot) — never inside the
 panel, never below the fold, and never disabled: a control that greys itself
 out after it has worked is a dead end. Its label cross-fades over 160ms as it
@@ -335,6 +341,13 @@ changes between *Turn on camera* and *Turn camera off*.
 The same panel is used on sign-in and on set-up; on set-up it also shows ten
 photo slots that fill as frames arrive, plus a plain progress line ("6 of 10
 photos taken").
+
+The panel is a **bounded module, not a full-width band**: it caps at 440px and
+centres itself in its card, and the live preview inside it is a 320×240
+rounded rectangle (mirrored, so the person sees themselves as in a mirror).
+The photo slots centre on the same axis. An unbounded panel with a small
+preview floating in it reads as a broken layout, and a preview that fills a
+1000px card dwarfs the form beside it.
 
 ### The step indicator
 
@@ -353,8 +366,10 @@ in parentheses at most).
 ### The technical disclosure
 
 Numbers live behind a link — "Show me the technical numbers" — which expands
-the table and charts. The plain-language answer is always shown first: *"44.0%
-of impostors got in, 0.0% of the real person was turned away."*
+the table and charts. The plain-language answer is always shown first: *"0.0%
+of impostors got in, 0.0% of the real person was turned away."* When a number
+is genuinely bad, it is said plainly in the same place — the design does not
+soften a bad result, it just never buries it.
 
 ### Icons
 
