@@ -111,14 +111,19 @@
     btn.disabled = true;
     try {
       await window.BioCam.start($("face-video"),
-        { intervalMs: 550, maxFrames: CFG.nFrames });
+        { intervalMs: 550, maxFrames: CFG.nFrames * 2 });
+      // only frames with a face in them count as photos
+      window.BioCam.setTester(window.BioCam.faceCheck);
       cameraOn();
       // the button is now the "turn camera off" control - it must stay usable
       btn.disabled = false;
       $("cam-overlay").textContent = "Camera on — look straight ahead";
       poll = setInterval(() => {
         const n = Math.min(window.BioCam.count(), CFG.nFrames);
-        $("face-count").textContent = `${n} photo${n === 1 ? "" : "s"} taken`;
+        const seen = window.BioCam.faceSeen();
+        $("face-count").textContent = seen
+          ? `${n} photo${n === 1 ? "" : "s"} taken`
+          : "looking for your face…";
         $("face-progress").textContent = `${n}/${CFG.nFrames}`;
         window.Hud.meter($("face-meter"), n / CFG.nFrames);
         const slots = $("face-slots").children;
@@ -128,6 +133,9 @@
         $("btn-face-done").disabled = n < CFG.nFrames;
         if (n >= CFG.nFrames) {
           $("cam-overlay").textContent = "That's all of them — nice";
+        } else if (!seen) {
+          $("cam-overlay").textContent =
+            "I can't see your face yet — look at the camera";
         }
       }, 400);
     } catch (err) {
@@ -301,9 +309,15 @@
     const payload = {
       username: state.username,
       password: state.password,
-      frames: window.BioCam.getFrames(CFG.nFrames),
+      frames: await window.BioCam.getFrames(CFG.nFrames),
       ks_samples: state.samples,
     };
+    if (!payload.frames.length) {
+      status("enroll-status",
+        "We could not see your face in the camera. Make sure your face is in "
+        + "the picture, and that the camera is not blocked.", "bad");
+      return;
+    }
     try {
       const res = await fetch("/api/enroll", {
         method: "POST",

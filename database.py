@@ -329,3 +329,21 @@ def attempt_summary():
             out["impostor"] += 1
             per["as_other"] += 1
     return out
+
+
+def recent_failures(username: str, window_seconds: float) -> int:
+    """How many rejected attempts were made against one account recently.
+
+    Used to lock an account that is being ground down. Counts only
+    attempts where the knowledge factor passed - a wrong passphrase is
+    already handled by the knowledge factor, and should not be able to
+    lock a real person's account.
+    """
+    since = time.time() - window_seconds
+    with connect() as conn:
+        row = conn.execute(
+            "SELECT COUNT(*) FROM attempts WHERE claimed = ? AND decision = 'REJECT' "
+            "AND password_ok = 1 AND created >= ?",
+            (username, since),
+        ).fetchone()
+    return int(row[0] if row else 0)

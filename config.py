@@ -25,6 +25,8 @@ ENROLL_FRAMES = 10               # frames captured during enrollment
 LOGIN_FRAMES = 6                 # frames kept for a login attempt
 MIN_VALID_FRAMES = 3             # frames that must contain a detectable single face
 
+
+
 # ---------------------------------------------------------------------------
 # Keystroke dynamics
 # ---------------------------------------------------------------------------
@@ -59,6 +61,20 @@ ADMIN_PIN = os.environ.get("ARGUS_ADMIN_PIN", "admin123")
 # ---------------------------------------------------------------------------
 W_FACE = 0.60                    # weight of the (normalized) face score
 W_KEYSTROKE = 0.40               # weight of the (normalized) keystroke score
+
+# Each modality also carries its own FLOOR, so neither can be skipped by a
+# strong score in the other. The face floor is the face score at its own
+# error point: below it the face is simply not the person.
+#
+#   ACCEPT if fused >= threshold
+#           and face >= FACE_FLOOR
+#           and keystroke >= KS_FLOOR
+#
+# The floors are what make the gate an AND rather than a weighted sum.
+# See README ("The keystroke floor") for why the weighted sum alone was
+# not enough, and the measured effect on a stolen-photo attack.
+FACE_FLOOR = 0.78                # normalized face score (cosine >= 0.56)
+
 DECISION_THRESHOLD = 0.78        # fusion score >= threshold => ACCEPT
                                  #
                                  # This is CALIBRATED, not a "middle of the 0-1
@@ -92,6 +108,17 @@ DECISION_THRESHOLD = 0.78        # fusion score >= threshold => ACCEPT
 # genuine however the gate is tuned. Closing that needs liveness detection on
 # the face side, or a materially better behavioural model.
 KS_FLOOR = 0.53
+
+# ---------------------------------------------------------------------------
+# Brute-force protection
+# ---------------------------------------------------------------------------
+# A biometric gate that can be retried forever is a gate that can be
+# ground down. After this many rejected attempts against one account the
+# account locks, and the lock doubles with every further failure.
+LOCKOUT_FAILURES = 3             # rejections before the account locks
+LOCKOUT_WINDOW = 900             # seconds the failures are counted over
+LOCKOUT_BASE = 30                # first lock, in seconds
+LOCKOUT_MAX = 3600               # longest lock, in seconds
 
 # ---------------------------------------------------------------------------
 # Admin dashboard

@@ -40,9 +40,10 @@ import ratelimit
 import attacks
 from config import (ADMIN_PIN, COOKIE_SECURE, ENROLL_FRAMES,
                     ENROLL_FRAMES_CAP, ENROLL_KS_SAMPLES, FACE_DIR,
-                    KS_MIN_PASSWORD_LEN, LOGIN_FRAMES, MAX_EVENTS_PER_REQ,
-                    MAX_FRAMES_PER_REQ, MIN_VALID_FRAMES, SECRET_FILE,
-                    SUGGESTED_PASSPHRASE, USERNAME_RE)
+                    KS_MIN_PASSWORD_LEN, LOCKOUT_BASE, LOCKOUT_FAILURES,
+                    LOCKOUT_MAX, LOCKOUT_WINDOW, LOGIN_FRAMES,
+                    MAX_EVENTS_PER_REQ, MAX_FRAMES_PER_REQ, MIN_VALID_FRAMES,
+                    SECRET_FILE, SUGGESTED_PASSPHRASE, USERNAME_RE)
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 48 * 1024 * 1024   # ~10 webp-quality frames
@@ -234,16 +235,18 @@ def admin_settings():
         return _err(400, "threshold in [0.01, 0.99]; face weight in [0, 1]")
     settings = {"decision_threshold": thr, "w_face": w_face,
                 "w_keystroke": round(1.0 - w_face, 6)}
-    # the keystroke floor is optional in the payload: leaving it out keeps the
-    # current floor rather than resetting it to zero.
-    if data.get("ks_floor") is not None:
-        try:
-            floor = float(data.get("ks_floor"))
-        except (TypeError, ValueError):
-            return _err(400, "keystroke floor must be a number")
-        if not (0.0 <= floor <= 1.0):
-            return _err(400, "keystroke floor in [0, 1]")
-        settings["ks_floor"] = floor
+    # the modality floors are optional in the payload: leaving one out keeps
+    # the current floor rather than resetting it to zero.
+    for _key, _label in (("ks_floor", "keystroke floor"),
+                         ("face_floor", "face floor")):
+        if data.get(_key) is not None:
+            try:
+                _value = float(data.get(_key))
+            except (TypeError, ValueError):
+                return _err(400, f"{_label} must be a number")
+            if not (0.0 <= _value <= 1.0):
+                return _err(400, f"{_label} in [0, 1]")
+            settings[_key] = _value
     db.set_settings(settings)
     return _effective_settings()
 
@@ -349,6 +352,29 @@ def api_enroll():
 # ---------------------------------------------------------------------------
 # Login / evaluation attempts
 # ---------------------------------------------------------------------------
+@app.post("/api/face-check")
+def api_face_check():
+    """Is there a face in this frame? Detection only - no embedding - so it
+    is fast enough to run on every captured frame.
+
+    The camera buffer uses this so that "photos taken" counts photos with
+    a face in them, not frames of whatever the camera is pointing at.
+    """
+    data = request.get_json(force=True, silent=True) or {}
+    frame = data.get("frame")
+    if not isinstance(frame, str) or not frame:
+        return _err(400, "frame is required")
+    if len(frame) > 8_000_000:
+        return _err(400, "frame too large")
+    try:
+        return jsonify(ok=True, face=face_engine.has_face(frame))
+    except Exception:
+        return jsonify(ok=True, face=False)
+
+
+# ---------------------------------------------------------------------------
+# Login / evaluation attempts
+# ---------------------------------------------------------------------------
 @app.post("/api/attempt")
 def api_attempt():
     limited = _rate_limited("attempt")
@@ -383,6 +409,18 @@ def api_attempt():
     user = db.get_user(claimed)
     if user is None:
         return _err(404, f"user '{claimed}' is not enrolled")
+
+    # An account that is being ground down gets locked. A gate that can be
+    # retried forever is a gate that can be ground down; the lock doubles
+    # with every further failure.
+    if mode != "eval":
+        fails = db.recent_failures(claimed, LOCKOUT_WINDOW)
+        if fails >= LOCKOUT_FAILURES:
+            lock = min(LOCKOUT_MAX,
+                        LOCKOUT_BASE * (2 ** (fails - LOCKOUT_FAILURES)))
+            return _err(429, "this account is locked for a moment after "
+                             f"{LOCKOUT_FAILURES} failed tries - please wait "
+                             f"{lock // 60 + 1} minute(s) and try again")
 
     # Knowledge factor ---------------------------------------------------------
     password_ok = check_password_hash(user["password_hash"], password)
@@ -434,10 +472,10 @@ def api_attempt():
     fused, decision, notes = None, "REJECT", []
     if face_norm is not None and ks_norm is not None:
         fused = fusion.fuse(face_norm, ks_norm)
-        # the keystroke factor has its own floor: a weighted sum alone lets a
-        # near-perfect face carry the decision, so the typing must clear a bar
-        # of its own before the attempt can be accepted.
-        decision = fusion.decide(fused, ks_norm)
+        # each modality has to clear its own bar: the keystroke floor stops
+        # a strong face from carrying the decision on its own, and the face
+        # floor stops a strong rhythm from doing the same.
+        decision = fusion.decide(fused, ks_norm, face_norm)
     else:
         if face_err:
             notes.append("face modality failed: " + face_err)
@@ -448,13 +486,29 @@ def api_attempt():
     db.add_attempt(mode, claimed, operator, True, face_cos, ks_valid, ks_sim,
                    fused, decision, "; ".join(notes))
 
+    # Say which factor(s) fell short, in plain terms. The gate has three
+    # bars and the person deserves to know which one they missed - and it
+    # makes the AND-rule visible instead of a bare "not you".
+    failed = []
+    if face_norm is None:
+        failed.append("photo")
+    elif face_norm < fusion.current_face_floor():
+        failed.append("photo")
+    if ks_norm is None:
+        failed.append("typing")
+    elif ks_norm < fusion.current_ks_floor():
+        failed.append("typing")
+    if fused is not None and fused < fusion.current_threshold():
+        failed.append("combined")
+
     w_face, w_ks = fusion.current_weights()
-    return jsonify(ok=True, decision=decision,
+    return jsonify(ok=True, decision=decision, failed=failed,
                    scores={"face_cos": _r(face_cos), "face_norm": _r(face_norm),
                            "ks_sim": _r(ks_sim), "ks_norm": _r(ks_norm),
                            "fused": _r(fused),
                            "threshold": round(fusion.current_threshold(), 4),
                            "ks_floor": round(fusion.current_ks_floor(), 4),
+                           "face_floor": round(fusion.current_face_floor(), 4),
                            "weights": {"face": round(w_face, 3),
                                        "keystroke": round(w_ks, 3)}},
                    notes=notes)

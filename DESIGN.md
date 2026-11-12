@@ -342,6 +342,15 @@ The same panel is used on sign-in and on set-up; on set-up it also shows ten
 photo slots that fill as frames arrive, plus a plain progress line ("6 of 10
 photos taken").
 
+**A frame only counts as a photo once it has been confirmed to contain a
+face.** The webcam buffer checks every captured frame (detection only, no
+embedding, so it is fast enough to run on every frame) and only counts the
+ones with a face in them. Until one is seen the counter says *"looking for
+your face…"* and the overlay says *"I can't see your face yet — look at the
+camera"*. Without this the camera cheerfully takes six pictures of the wall
+and reports "6 photos taken", then refuses to let the person in with no
+explanation — a dead end for somebody who does not understand why.
+
 The panel is a **bounded module, not a full-width band**: it caps at 440px and
 centres itself in its card, and the live preview inside it is a 320×240
 rounded rectangle (mirrored, so the person sees themselves as in a mirror).

@@ -58,14 +58,24 @@
     btn.disabled = true;
     try {
       await window.BioCam.start($("face-video"),
-        { intervalMs: 400, maxFrames: CFG.nFrames });
+        { intervalMs: 400, maxFrames: CFG.nFrames * 2 });
+      // Every captured frame is checked for a face, so "photos taken" counts
+      // photos of the person and not frames of whatever the camera sees.
+      window.BioCam.setTester(window.BioCam.faceCheck);
       cameraOn();
       // the button is now the "turn camera off" control - it must stay usable
       btn.disabled = false;
       $("cam-overlay").textContent = "Camera on — look straight ahead";
       meterTimer = setInterval(() => {
-        const n = window.BioCam.count();
-        $("face-count").textContent = `${n} photo${n === 1 ? "" : "s"} taken`;
+        const total = window.BioCam.count();
+        const n = Math.min(total, CFG.nFrames);
+        const seen = window.BioCam.faceSeen();
+        $("face-count").textContent = seen
+          ? `${n} photo${n === 1 ? "" : "s"} taken`
+          : "looking for your face…";
+        $("cam-overlay").textContent = seen
+          ? "Camera on — look straight ahead"
+          : "I can't see your face yet — look at the camera";
         $("face-progress").textContent = `${n}/${CFG.nFrames}`;
         window.Hud.meter($("face-meter"), n / CFG.nFrames);
       }, 280);
@@ -265,28 +275,34 @@
       showStamp("SOMETHING WENT WRONG", "denied", Math.round(performance.now() - t0));
       return;
     }
-    if (body.ok === false) {
+    if (body.ok === false || body.locked) {
       for (const [, r] of built) setRow(r, 0, "problem", "fail");
       const n = document.createElement("div");
       n.className = "notes";
       n.textContent = body.error || "Could not sign in";
       $("scores-rows").appendChild(n);
-      showStamp("SOMETHING WENT WRONG", "denied", Math.round(performance.now() - t0));
+      showStamp(body.locked ? "PLEASE WAIT" : "SOMETHING WENT WRONG", "denied",
+        Math.round(performance.now() - t0));
       return;
     }
 
     const knowledgeFail = body.decision === "REJECT" && !body.scores;
     const sc = body.scores || {};
+    // which factor fell short - the gate has three bars and the person
+    // deserves to know which one they missed
+    const failed = body.failed || [];
     for (const [s, r] of built) {
       switch (s.code) {
         case "Your photo":
           knowledgeFail ? setRow(r, 0, "skipped", "skip")
             : setRow(r, clamp01((payload.frames || []).length / (CFG.nFrames || 1)),
                      knowledgeFail ? "" : `ok · ${(payload.frames || []).length} photos`);
+          if (failed.includes("photo")) setRow(r, 0, "didn't match", "fail");
           break;
         case "Your typing":
           knowledgeFail ? setRow(r, 0, "skipped", "skip")
             : setRow(r, sc.ks_norm || 0, `match ${fmt(sc.ks_sim)}`);
+          if (failed.includes("typing")) setRow(r, sc.ks_norm || 0, "didn't match", "fail");
           break;
         case "Result":
           knowledgeFail ? setRow(r, 0, "passphrase wrong", "fail")
@@ -305,7 +321,12 @@
     }
 
     renderScores(body);
-    showStamp(body.decision === "ACCEPT" ? "YOU'RE IN" : "THAT WASN'T YOU",
+    // a wrong passphrase is not "that wasn't you" - it is the passphrase
+    // that was wrong, and saying otherwise sends people hunting for a face
+    // problem they do not have
+    const stampText = body.decision === "ACCEPT" ? "YOU'RE IN"
+      : (knowledgeFail ? "WRONG PASSPHRASE" : "THAT WASN'T YOU");
+    showStamp(stampText,
       body.decision === "ACCEPT" ? "granted" : "denied",
       Math.round(performance.now() - t0));
 
@@ -314,15 +335,16 @@
     recorder.events.length = 0;
   }
 
-  $("login-form").addEventListener("submit", (e) => {
+  $("login-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const status = $("login-status");
+    const btn = $("btn-login");
     const payload = {
       mode: CFG.mode,
       username: $("in-username").value.trim().toLowerCase(),
       password: $("in-password").value,
       events: recorder.exported(),
-      frames: window.BioCam.getFrames(CFG.nFrames),
+      frames: [],
     };
     if (CFG.mode === "eval") payload.operator = ($("in-operator") || {}).value || "";
     if (!payload.username) { status.textContent = "Please type your name."; return; }
@@ -332,14 +354,29 @@
       return;
     }
     status.textContent = "";
-    const btn = $("btn-login");
     btn.disabled = true;                 // pipeline guard: no double-submit races
+
+    // only frames we have confirmed contain a face
+    payload.frames = await window.BioCam.getFrames(CFG.nFrames);
+    if (!payload.frames.length) {
+      btn.disabled = false;
+      status.textContent = window.BioCam.faceSeen()
+        ? "Still getting your photos - please try again in a moment."
+        : "We could not see your face in the camera. Make sure your face is " +
+          "in the picture, and that the camera is not blocked.";
+      return;
+    }
+
     const resPromise = fetch("/api/attempt", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     })
-      .then((res) => res.json())
+      .then((res) => res.json().then((body) => {
+        // a locked account is not a fault - it is a wait
+        if (res.status === 429) body.locked = true;
+        return body;
+      }))
       .then((body) => { if (!body.ok && !body.decision) throw new Error(body.error || "HTTP " + ""); return body; });
     // ^ /api/attempt returns ok:true with decision on validation passes; ok:false
     //   bodies carry .error. Server 4xx with json body also lands here.

@@ -82,6 +82,28 @@ def embed_b64(frame_b64: str) -> np.ndarray:
     return np.asarray(objs[0]["embedding"], dtype=np.float64)
 
 
+def has_face(frame_b64: str) -> bool:
+    """Is there a face in this frame?
+
+    Detection only - no embedding - so it is fast enough to run on every
+    captured frame while the person is setting up. The camera buffer uses
+    this so that "photos taken" means "photos with your face in them",
+    instead of counting frames of whatever the camera happens to be
+    pointing at.
+    """
+    try:
+        buf = np.frombuffer(base64.b64decode(frame_b64), dtype=np.uint8)
+        bgr = cv2.imdecode(buf, cv2.IMREAD_COLOR)
+    except Exception:
+        return False
+    if bgr is None:
+        return False
+    gray = cv2.cvtColor(bgr, cv2.COLOR_BGR2GRAY)
+    boxes = _get_cascade().detectMultiScale(
+        gray, scaleFactor=1.15, minNeighbors=5, minSize=(MIN_FACE_BOX, MIN_FACE_BOX))
+    return len(boxes) > 0
+
+
 def cosine(a, b) -> float:
     a, b = np.asarray(a, dtype=np.float64), np.asarray(b, dtype=np.float64)
     denom = np.linalg.norm(a) * np.linalg.norm(b)

@@ -6,7 +6,8 @@ from the admin dashboard (stored in the `settings` table).
 import numpy as np
 
 import database
-from config import (DECISION_THRESHOLD, KS_FLOOR, W_FACE, W_KEYSTROKE)
+from config import (DECISION_THRESHOLD, FACE_FLOOR, KS_FLOOR, W_FACE,
+                    W_KEYSTROKE)
 
 
 def _setting_float(key: str, default: float) -> float:
@@ -42,6 +43,11 @@ def current_ks_floor() -> float:
     return _setting_float("ks_floor", KS_FLOOR)
 
 
+def current_face_floor() -> float:
+    """The face modality's own floor - below it the face is not the person."""
+    return _setting_float("face_floor", FACE_FLOOR)
+
+
 def normalize_keystroke(sim: float) -> float:
     """Keystroke similarity is already in [0, 1]; clamp for safety."""
     return float(min(max(sim, 0.0), 1.0))
@@ -54,14 +60,20 @@ def fuse(face_norm: float, ks_norm: float) -> float:
 
 
 def decide(fused: float, ks_norm: float | None = None,
+           face_norm: float | None = None,
            threshold: float | None = None) -> str:
-    """ACCEPT only if the fused score clears the threshold AND the keystroke
-    factor clears its own floor.
+    """ACCEPT only if every factor clears its own bar.
 
-    `ks_norm` is optional so the single-modality path (and older callers)
-    still work; when it is given, both conditions must hold.
+      * the fused score clears the threshold
+      * the face score clears the face floor
+      * the keystroke score clears the keystroke floor
+
+    `ks_norm` / `face_norm` are optional so the single-modality path (and
+    older callers) still work; when given, every condition must hold.
     """
     thr = current_threshold() if threshold is None else threshold
+    if face_norm is not None and face_norm < current_face_floor():
+        return "REJECT"
     if ks_norm is not None and ks_norm < current_ks_floor():
         return "REJECT"
     return "ACCEPT" if fused >= thr else "REJECT"

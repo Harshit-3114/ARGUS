@@ -195,24 +195,55 @@ which contributes `0.6 × 0.99 = 0.594` of a 0.78 threshold on its own — so
 their typing only has to supply the last 0.16. Measured on the lab cohort,
 **47.1% of photo attacks got through**.
 
-The fix is a floor: the keystroke factor must clear a bar *of its own*.
+The fix is a floor: each factor must clear a bar *of its own*.
 
 ```
-ACCEPT  if  fused >= 0.78  AND  keystroke >= 0.53
+ACCEPT  if  fused >= 0.78
+        and face >= 0.78
+        and keystroke >= 0.53
 ```
 
 `KS_FLOOR = 0.53` sits just below the **lowest keystroke score any genuine
 attempt ever produced** (0.5366), so by construction it rejects no genuine
-login. Measured effect on the lab cohort:
+login. `FACE_FLOOR = 0.78` is the face score at its own error point: below
+it, the face is simply not that person. Measured effect on the lab cohort:
 
 | gate | classic impostor FAR | genuine FRR | photo attack | stolen rhythm |
 |---|---|---|---|---|
 | weighted sum only (θ = 0.78) | 0.00% | 0.00% | **47.1%** | 0.0% |
-| weighted sum + floor (θ = 0.78, floor 0.53) | 0.00% | 0.00% | **35.7%** | 0.0% |
+| weighted sum + keystroke floor | 0.00% | 0.00% | **35.7%** | 0.0% |
 
 Re-weighting cannot do this: the bar the photo attacker's rhythm has to clear
 is ~0.538 at *every* weighting from 0.45 to 0.60, because the threshold moves
 in lockstep with the face term. Only a per-modality floor changes it.
+
+### Brute-force protection
+
+A biometric gate that can be retried forever is a gate that can be ground
+down. After **3 rejected attempts** in 15 minutes the account locks, and the
+lock **doubles with every further failure** (30s → 1min → 2min → 4min …,
+capped at an hour).
+
+Only attempts that passed the **knowledge factor** count towards the lock, so
+somebody who does not know the passphrase cannot lock a real person's account
+by guessing. The lock is released on its own; there is no admin action
+needed, and the person is told plainly how long to wait.
+
+### The camera only counts photos that contain a face
+
+The webcam buffer used to grab a frame every 400ms and count it as a
+"photo taken", whether or not anyone's face was in it — so a camera pointed
+at a wall reported "6 photos taken" and then refused to let the person in,
+with no explanation.
+
+Now every captured frame is checked (detection only, no embedding, so it is
+fast) before it counts:
+
+* the counter reads **"looking for your face…"** until a face is seen;
+* the overlay says **"I can't see your face yet — look at the camera"**;
+* only frames with a face are sent, and only those are counted;
+* if none can be found at all, the person is told so instead of being
+  turned away with no reason.
 
 **The remaining 35.7% is the ceiling of this design.** The keystroke template
 alone only reaches AUC 0.883, so roughly a third of impostor rhythms look
@@ -280,10 +311,23 @@ hide behind a headline false-accept rate again.
   keystroke floor cuts it from 47.1%, but the floor cannot go above ~0.53
   without rejecting genuine users, because the keystroke template only
   reaches AUC 0.883 — roughly a third of impostor rhythms look genuine
-  however the gate is tuned. Re-weighting does not help (the bar the
-  attacker's rhythm must clear is ~0.538 at every weighting). **Liveness
-  detection on the face side is the actual fix, and it is not built.**
-  `/evaluation` reports this number every run so it cannot be forgotten.
+  however the gate is tuned. Re-weighting does not help: the bar the
+  attacker's rhythm must clear is the same at every weighting.
+- **Motion-based liveness was built and measured, and is not shipped.** A
+  live face changes between frames (blinks, micro-movement); a printed
+  photograph held up to a webcam is the same picture every time. The
+  detector aligned each frame's face ROI and measured how much it changed.
+  Measured against **real people** (5 videos of real faces, frames 400ms
+  apart) and **real photographs** (8 real portraits following a smooth
+  handheld trajectory), the two populations overlap: at the best operating
+  point, 94% of live faces passed but so did 44% of photographs. Turning it
+  into a hard gate would have locked out ~6% of real users to block half the
+  photographs — the wrong trade for a login gate aimed at people who are
+  not technical. The code was removed rather than shipped half-working.
+  **Liveness detection on the face side (blink / head-pose, or DeepFace's
+  anti-spoofing model) is the actual fix, and it is not built.** `/evaluation`
+  reports the single-factor attack rates on every run, so the residual hole
+  cannot be forgotten.
 - Small-user-count FAR estimates have large confidence intervals; treat numbers
   below ~50 impostor attempts as indicative, not definitive. The shipped
   dataset (8 users, 416 attempts) separates **perfectly** (fused AUC 1.000),
