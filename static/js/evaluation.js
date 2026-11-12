@@ -25,6 +25,32 @@
 
   function fmtP(x) { return x === null || x === undefined ? "—" : (x * 100).toFixed(1) + "%"; }
 
+  /* The single-factor attacks each defeat exactly one modality: a photo of
+     you, or your typing rhythm. The headline false-accept rate is measured
+     against impostors who have BOTH wrong, so it cannot see them. They get
+     their own plain-language line, with the real limit stated rather than
+     a reassuring gloss. */
+  function attackBullet(report) {
+    const atk = report.attacks;
+    if (!atk || !atk.photo || !atk.photo.n) return "";
+    const photo = atk.photo.rate;
+    const rhythm = (atk.rhythm && atk.rhythm.n) ? atk.rhythm.rate : null;
+    let body = "";
+    if (photo !== null && photo !== undefined) {
+      body += `If someone holds up a photo of you, ${fmtP(photo)} of those ` +
+              `attempts still get in.`;
+    }
+    if (rhythm !== null && rhythm !== undefined) {
+      body += ` If someone copies your typing rhythm, ${fmtP(rhythm)} get in.`;
+    }
+    body += ` The typing check is the weaker of the two and it is what sets ` +
+            `this limit. Making the camera check able to tell a live face ` +
+            `from a print is the real fix, and that is not built yet.`;
+    return `<li><span class="dot" aria-hidden="true"></span><span>` +
+           `<strong>One attack still gets through.</strong>` +
+           `<span>${body}</span></span></li>`;
+  }
+
   function render(report, charts) {
     $("eval-status").textContent =
       `Based on ${report.n_genuine} attempts by the real person and ` +
@@ -80,14 +106,17 @@
         `<strong>${wrongIn.toFixed(1)}% of impostors got in, ` +
         `${wrongOut.toFixed(1)}% of the real person was turned away.</strong>` +
         `<span>At the cut-off the system is using right now ` +
-        `(θ = ${report.cfg_threshold}).</span></span></li>` +
+        `(θ = ${report.cfg_threshold}` +
+        (report.cfg_ks_floor ? `, and the typing has to score at least ` +
+          `${report.cfg_ks_floor}` : ``) + `).</span></span></li>` +
         `<li><span class="dot" aria-hidden="true"></span><span>` +
         `<strong>The best cut-off is ${fused.eer_thr}.</strong>` +
         `<span>At that point both kinds of mistake are equally unlikely ` +
         `(${fmtP(fused.eer)} of each). You can set it any time on the ` +
         `<a href="/admin">lab page</a>.</span></span></li>` +
         `<li><span class="dot" aria-hidden="true"></span><span>` +
-        third + `</span></li>`;
+        third + `</span></li>` +
+        attackBullet(report);
       out.appendChild(summary);
     }
 
@@ -128,6 +157,42 @@
       tbody.appendChild(tr);
     });
     inner.appendChild(table);
+
+    /* the single-factor attacks, in technical form */
+    const atk = report.attacks;
+    if (atk && atk.photo && atk.photo.n) {
+      const head = document.createElement("p");
+      head.className = "hint";
+      head.style.margin = "18px 0 8px";
+      head.innerHTML =
+        `<strong>Single-factor attacks</strong> — each defeats exactly one ` +
+        `modality, so the false-accept rate above cannot see them. ` +
+        `Judged against the same gate.`;
+      inner.appendChild(head);
+
+      const at = document.createElement("table");
+      at.innerHTML =
+        "<thead><tr><th>attack</th><th>attempts</th><th>got in</th>" +
+        "<th>rate</th><th>face score</th><th>typing score</th></tr></thead>" +
+        "<tbody></tbody>";
+      const atb = at.querySelector("tbody");
+      const rows = [
+        ["photo", "Stolen photo of the victim"],
+        ["rhythm", "Stolen typing template"],
+      ];
+      rows.forEach(([key, label]) => {
+        const v = atk[key];
+        if (!v || !v.n) return;
+        const tr = document.createElement("tr");
+        tr.innerHTML =
+          `<td><strong>${label}</strong></td><td>${v.n}</td>` +
+          `<td>${v.accepted}</td><td><strong>${fmtP(v.rate)}</strong></td>` +
+          `<td>${v.mean_face_cos.toFixed(3)}</td>` +
+          `<td>${v.mean_rhythm.toFixed(3)}</td>`;
+        atb.appendChild(tr);
+      });
+      inner.appendChild(at);
+    }
     out.appendChild(tech);
 
     let note = null;

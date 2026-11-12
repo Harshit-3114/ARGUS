@@ -16,10 +16,16 @@ STATIC_GEN_DIR = Path(__file__).resolve().parent / "static" / "generated"
 MIN_SCORES_PER_GROUP = 3
 
 
-def _to_arrays(rows):
-    """Split labeled rows into per-modality genuine/impostor score arrays."""
-    split = {"genuine": {"face": [], "ks": [], "fused": []},
-             "impostor": {"face": [], "ks": [], "fused": []}}
+def _to_arrays(rows, cfg_threshold: float = 0.0, ks_floor: float = 0.0):
+    """Split labeled rows into per-modality genuine/impostor score arrays.
+
+    Also records the joint ACCEPT decision under the real gate
+    (`fused >= threshold` AND `keystroke >= floor`). The fused score on its
+    own does not describe what the system does: the keystroke factor has its
+    own floor, so a row that clears the threshold can still be rejected.
+    """
+    split = {"genuine": {"face": [], "ks": [], "fused": [], "gate": []},
+             "impostor": {"face": [], "ks": [], "fused": [], "gate": []}}
     for r in rows:
         bucket = split["genuine"] if r["operator"] == r["claimed"] \
             else split["impostor"]
@@ -29,6 +35,10 @@ def _to_arrays(rows):
             bucket["ks"].append(r["ks_sim"])
         if r["fused"] is not None:
             bucket["fused"].append(r["fused"])
+            ks = r["ks_sim"]
+            bucket["gate"].append(
+                bool(r["fused"] >= cfg_threshold
+                     and ks is not None and ks >= ks_floor))
     return ({k: np.asarray(v) for k, v in split["genuine"].items()},
             {k: np.asarray(v) for k, v in split["impostor"].items()})
 
@@ -54,14 +64,20 @@ def _roc_metrics(genuine: np.ndarray, impostor: np.ndarray) -> dict:
             "eer": eer, "eer_thr": float(thr[k]), "auc": auc}
 
 
-def compute(rows, cfg_threshold: float) -> dict:
-    """Full evaluation summary from scored attempt rows. See README for schema."""
-    genuine, impostor = _to_arrays(rows)
+def compute(rows, cfg_threshold: float, ks_floor: float = 0.0) -> dict:
+    """Full evaluation summary from scored attempt rows. See README for schema.
+
+    `ks_floor` is the keystroke modality's own floor. The fused row reports
+    FAR/FRR under the REAL gate (fused >= threshold AND keystroke >= floor);
+    the single-modality rows are reference numbers on their own scales.
+    """
+    genuine, impostor = _to_arrays(rows, cfg_threshold, ks_floor)
     report = {
         "n_genuine": int(sum(r["operator"] == r["claimed"] for r in rows)),
         "n_impostor": int(sum(r["operator"] != r["claimed"] for r in rows)),
         "n_rows": len(rows),
         "cfg_threshold": cfg_threshold,
+        "cfg_ks_floor": ks_floor,
         "modalities": {},
         "insufficient": False,
     }
@@ -76,6 +92,13 @@ def compute(rows, cfg_threshold: float) -> dict:
             report["insufficient"] = True
             continue
         roc = _roc_metrics(gm, im)
+        if name == "fused":
+            # the real gate: both conditions, not the fused score alone
+            far_at = float(impostor["gate"].mean())
+            frr_at = 1.0 - float(genuine["gate"].mean())
+        else:
+            far_at = float((im >= cfg_threshold).mean())
+            frr_at = float((gm < cfg_threshold).mean())
         report["modalities"][name] = {
             "ok": True,
             "label": modality_label[name],
@@ -84,8 +107,8 @@ def compute(rows, cfg_threshold: float) -> dict:
             "auc": round(roc["auc"], 4),
             "eer": round(roc["eer"], 4),
             "eer_thr": round(roc["eer_thr"], 4),
-            "far_at_thr": round(float((im >= cfg_threshold).mean()), 4),
-            "frr_at_thr": round(float((gm < cfg_threshold).mean()), 4),
+            "far_at_thr": round(far_at, 4),
+            "frr_at_thr": round(frr_at, 4),
             "_roc": roc,
         }
     _render_charts(report, genuine, impostor)
@@ -142,6 +165,10 @@ def _render_charts(report, genuine, impostor) -> None:
                     label=f'{report["modalities"][name]["label"]} impostor')
     ax.axvline(report["cfg_threshold"], color="crimson", lw=1.2, ls="--",
                label="decision threshold")
+    floor = report.get("cfg_ks_floor", 0.0)
+    if floor > 0:
+        ax.axvline(floor, color="#b54708", lw=1.2, ls=":",
+                   label="keystroke floor")
     ax.set_xlabel("normalized score")
     ax.set_ylabel("attempts")
     ax.set_title("Genuine vs impostor score distributions")

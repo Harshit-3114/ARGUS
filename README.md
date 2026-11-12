@@ -187,6 +187,44 @@ The measured separation on that dataset is:
 after changing the cohort and update it — the app shows the recommended θ on
 that page, and the lab page can set it at runtime.
 
+### The keystroke floor — a weighted sum is not an AND
+
+A weighted sum lets one strong factor carry the decision. With `w_face = 0.6`,
+an attacker holding a **photo of the victim** produces a face score of ~0.99,
+which contributes `0.6 × 0.99 = 0.594` of a 0.78 threshold on its own — so
+their typing only has to supply the last 0.16. Measured on the lab cohort,
+**47.1% of photo attacks got through**.
+
+The fix is a floor: the keystroke factor must clear a bar *of its own*.
+
+```
+ACCEPT  if  fused >= 0.78  AND  keystroke >= 0.53
+```
+
+`KS_FLOOR = 0.53` sits just below the **lowest keystroke score any genuine
+attempt ever produced** (0.5366), so by construction it rejects no genuine
+login. Measured effect on the lab cohort:
+
+| gate | classic impostor FAR | genuine FRR | photo attack | stolen rhythm |
+|---|---|---|---|---|
+| weighted sum only (θ = 0.78) | 0.00% | 0.00% | **47.1%** | 0.0% |
+| weighted sum + floor (θ = 0.78, floor 0.53) | 0.00% | 0.00% | **35.7%** | 0.0% |
+
+Re-weighting cannot do this: the bar the photo attacker's rhythm has to clear
+is ~0.538 at *every* weighting from 0.45 to 0.60, because the threshold moves
+in lockstep with the face term. Only a per-modality floor changes it.
+
+**The remaining 35.7% is the ceiling of this design.** The keystroke template
+alone only reaches AUC 0.883, so roughly a third of impostor rhythms look
+genuine however the gate is tuned — and the floor cannot be raised past ~0.53
+without starting to reject real users. Closing that gap needs **liveness or
+presentation-attack detection on the face side** (blink / head-pose, or
+DeepFace's anti-spoofing model), which is not built.
+
+`/evaluation` now reports the single-factor attacks itself, derived from the
+stored galleries and typing templates (`attacks.py`), so this weakness cannot
+hide behind a headline false-accept rate again.
+
 ## Design notes
 
 - **Designed for someone who has never used a biometric.** The person setting
@@ -221,7 +259,10 @@ that page, and the lab page can set it at runtime.
   similarity `1/(1+mean(|x−μ|/σ))`. Deliberately simple: it works with only a few
   enrollment rounds far better than a per-user SVM trained against other users.
 - **Fusion**: face cosine → `[−1,1] ↦ [0,1]`, keystroke similarity ∈ [0,1];
-  weighted sum; decision at θ (`fusion.py`). Tune θ from the evaluation page.
+  weighted sum; decision at θ **and** at a per-modality keystroke floor
+  (`fusion.py`). A weighted sum alone is not an AND — a near-perfect face
+  score can carry the decision — so the keystroke factor has to clear a bar
+  of its own. Tune both from the evaluation page.
 - **Ground truth logging**: the `attempts` table stores scores per attempt but
   never the typed passphrase. Only knowledge-factor-passed attempts with both
   labeled modalities enter the FAR/FRR/EER computation.
@@ -235,6 +276,14 @@ that page, and the lab page can set it at runtime.
   detection. A printed photo next to a coerced typist is still about a face;
   a screen-replay attack on the webcam is plausible. Next steps: blink/head-pose
   liveness checks, DeepFace anti-spoofing model, per-user thresholds.
+- **A stolen photo of the victim still gets in 35.7% of the time.** The
+  keystroke floor cuts it from 47.1%, but the floor cannot go above ~0.53
+  without rejecting genuine users, because the keystroke template only
+  reaches AUC 0.883 — roughly a third of impostor rhythms look genuine
+  however the gate is tuned. Re-weighting does not help (the bar the
+  attacker's rhythm must clear is ~0.538 at every weighting). **Liveness
+  detection on the face side is the actual fix, and it is not built.**
+  `/evaluation` reports this number every run so it cannot be forgotten.
 - Small-user-count FAR estimates have large confidence intervals; treat numbers
   below ~50 impostor attempts as indicative, not definitive. The shipped
   dataset (8 users, 416 attempts) separates **perfectly** (fused AUC 1.000),
@@ -246,15 +295,11 @@ that page, and the lab page can set it at runtime.
   and impostor ranges overlap). Fusing protects against a case where one
   modality is defeated — it does not make the weak modality strong.
 - **The fusion weights are a policy choice, and the shipped one is arguable.**
-  In the simulated single-factor population, a stolen *photo* of the victim
-  passes the fused gate **62%** of the time at `w = 0.6/0.4` — the face term
-  alone contributes `0.6 × 0.99 = 0.594` of the `0.757` threshold, so the
-  attacker's own rhythm only has to supply the last 0.16. Rebalancing to
-  `w = 0.4/0.6` cuts that to **21%**, but raises the classic-impostor EER
-  from 0.00% to 1.09%. `w = 0.55/0.45` holds the classic-impostor EER at
-  0.00% while cutting the photo-attack rate further, and is the obvious next
-  experiment — but it needs the cohort regenerated to measure properly.
-  Weights are runtime-tunable on the lab page.
+  At `w = 0.4/0.6` a stolen photo passes the fused gate 21% of the time
+  instead of 62%, but the classic-impostor EER rises from 0.00% to 1.09% —
+  and re-weighting does not fix the photo attack on its own, because the
+  threshold moves in lockstep with the face term. The keystroke floor is
+  what does. Weights and the floor are runtime-tunable on the lab page.
 - Keystroke databases assume the *exact* enrolled phrase — this design ties the
   behavioral template to the user's passphrase (as do most password-tied systems).
 
@@ -266,8 +311,9 @@ config.py               all tunables (frames, floors, weights, threshold)
 database.py             SQLite: users, templates, labeled attempts
 face_engine.py          OpenCV detect + DeepFace embed + cosine match
 keystroke.py            feature extraction, integrity rules, scaled Manhattan model
-fusion.py               normalization, weighted fusion, decision
+fusion.py               normalization, weighted fusion, decision (threshold + floor)
 evaluation.py           FAR/FRR/EER/AUC + ROC & distribution charts
+attacks.py              single-factor attack populations, derived from the DB
 templates/ + static/    Flask UI, camera buffer, keystroke recorder, admin console JS
 smoke_test.py           logic tests that need no webcam (run with the venv)
 start.bat               one-click launcher (venv bootstrap + server + browser)

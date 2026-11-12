@@ -37,6 +37,7 @@ import face_engine
 import fusion
 import keystroke as ks
 import ratelimit
+import attacks
 from config import (ADMIN_PIN, COOKIE_SECURE, ENROLL_FRAMES,
                     ENROLL_FRAMES_CAP, ENROLL_KS_SAMPLES, FACE_DIR,
                     KS_MIN_PASSWORD_LEN, LOGIN_FRAMES, MAX_EVENTS_PER_REQ,
@@ -200,7 +201,8 @@ def admin_overview():
     data = db.admin_overview()
     w_face, w_ks = fusion.current_weights()
     data["settings"] = {"decision_threshold": fusion.current_threshold(),
-                        "w_face": round(w_face, 3), "w_keystroke": round(w_ks, 3)}
+                         "ks_floor": fusion.current_ks_floor(),
+                         "w_face": round(w_face, 3), "w_keystroke": round(w_ks, 3)}
     data["recent"] = db.recent_attempts()
     data["charts"] = chart_links()
     return jsonify(ok=True, **data)
@@ -230,8 +232,19 @@ def admin_settings():
         return _err(400, "threshold and weight must be numbers")
     if not (0.01 <= thr <= 0.99) or not (0.0 <= w_face <= 1.0):
         return _err(400, "threshold in [0.01, 0.99]; face weight in [0, 1]")
-    db.set_settings({"decision_threshold": thr, "w_face": w_face,
-                     "w_keystroke": round(1.0 - w_face, 6)})
+    settings = {"decision_threshold": thr, "w_face": w_face,
+                "w_keystroke": round(1.0 - w_face, 6)}
+    # the keystroke floor is optional in the payload: leaving it out keeps the
+    # current floor rather than resetting it to zero.
+    if data.get("ks_floor") is not None:
+        try:
+            floor = float(data.get("ks_floor"))
+        except (TypeError, ValueError):
+            return _err(400, "keystroke floor must be a number")
+        if not (0.0 <= floor <= 1.0):
+            return _err(400, "keystroke floor in [0, 1]")
+        settings["ks_floor"] = floor
+    db.set_settings(settings)
     return _effective_settings()
 
 
@@ -246,6 +259,7 @@ def _effective_settings():
     w_face, w_ks = fusion.current_weights()
     return jsonify(ok=True, settings={
         "decision_threshold": fusion.current_threshold(),
+        "ks_floor": fusion.current_ks_floor(),
         "w_face": round(w_face, 3), "w_keystroke": round(w_ks, 3)})
 
 
@@ -420,7 +434,10 @@ def api_attempt():
     fused, decision, notes = None, "REJECT", []
     if face_norm is not None and ks_norm is not None:
         fused = fusion.fuse(face_norm, ks_norm)
-        decision = fusion.decide(fused)
+        # the keystroke factor has its own floor: a weighted sum alone lets a
+        # near-perfect face carry the decision, so the typing must clear a bar
+        # of its own before the attempt can be accepted.
+        decision = fusion.decide(fused, ks_norm)
     else:
         if face_err:
             notes.append("face modality failed: " + face_err)
@@ -437,6 +454,7 @@ def api_attempt():
                            "ks_sim": _r(ks_sim), "ks_norm": _r(ks_norm),
                            "fused": _r(fused),
                            "threshold": round(fusion.current_threshold(), 4),
+                           "ks_floor": round(fusion.current_ks_floor(), 4),
                            "weights": {"face": round(w_face, 3),
                                        "keystroke": round(w_ks, 3)}},
                    notes=notes)
@@ -456,7 +474,15 @@ def api_evaluate():
                          "login page in evaluation mode (?mode=eval): each operator "
                          "logs in as themselves (genuine) and as other users "
                          "(impostor).")
-    report = evaluation.compute(rows, fusion.current_threshold())
+    report = evaluation.compute(rows, fusion.current_threshold(),
+                                   ks_floor=fusion.current_ks_floor())
+    # The single-factor attacks are the ones the headline FAR cannot see:
+    # each defeats exactly one modality. Deriving them here means the app
+    # reports its own attack surface instead of hiding it behind a number.
+    try:
+        report["attacks"] = attacks.evaluate_attacks()
+    except Exception:                      # never break the page on this
+        report["attacks"] = {}
     return jsonify(ok=True, report=report,
                    charts=chart_links())
 

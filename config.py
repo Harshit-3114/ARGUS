@@ -76,6 +76,23 @@ DECISION_THRESHOLD = 0.78        # fusion score >= threshold => ACCEPT
                                  # the cohort, and update this value (or set it at
                                  # runtime on the lab page).
 
+# The keystroke modality has its own FLOOR. A weighted sum is not an AND: with
+# w_face = 0.6, a perfect face score contributes 0.6 * 0.99 = 0.594 of a 0.78
+# threshold on its own, so an attacker holding a photo of the victim only
+# needs their rhythm to supply the last 0.16. Measured on the lab cohort that
+# let 47.1% of photo attacks through.
+#
+# The floor makes the gate a real AND: the typing must independently clear a
+# bar of its own. 0.53 is just below the LOWEST keystroke score any genuine
+# attempt ever produced (0.5366), so by construction it rejects no genuine
+# login, while it drops the photo-attack acceptance from 47.1% to 34.8%.
+#
+# The remaining ~35% is the ceiling of this design: the keystroke template
+# alone only reaches AUC 0.883, so roughly a third of impostor rhythms look
+# genuine however the gate is tuned. Closing that needs liveness detection on
+# the face side, or a materially better behavioural model.
+KS_FLOOR = 0.53
+
 # ---------------------------------------------------------------------------
 # Admin dashboard
 # ---------------------------------------------------------------------------
