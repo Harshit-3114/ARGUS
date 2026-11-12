@@ -220,14 +220,17 @@ in lockstep with the face term. Only a per-modality floor changes it.
 ### Brute-force protection
 
 A biometric gate that can be retried forever is a gate that can be ground
-down. After **3 rejected attempts** in 15 minutes the account locks, and the
-lock **doubles with every further failure** (30s → 1min → 2min → 4min …,
-capped at an hour).
+down. After **3 rejected attempts** an account locks, and the lock **doubles
+with every further attempt** (30s → 1min → 2min → 4min …, capped at an
+hour) — so hammering the door makes the wait longer, not shorter. The lock
+is a stored object with an expiry, so it lifts exactly when it says it will.
 
 Only attempts that passed the **knowledge factor** count towards the lock, so
 somebody who does not know the passphrase cannot lock a real person's account
-by guessing. The lock is released on its own; there is no admin action
-needed, and the person is told plainly how long to wait.
+by guessing. The sign-in page counts the wait down so the person knows when
+to come back, and the **lab console can release a lock** — somebody who gets
+locked out of their own account has no way to fix it from the sign-in page,
+because the whole point of the lock is that the gate tells them nothing.
 
 ### The camera only counts photos that contain a face
 

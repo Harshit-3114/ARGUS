@@ -203,7 +203,9 @@ def admin_overview():
     w_face, w_ks = fusion.current_weights()
     data["settings"] = {"decision_threshold": fusion.current_threshold(),
                          "ks_floor": fusion.current_ks_floor(),
+                         "face_floor": fusion.current_face_floor(),
                          "w_face": round(w_face, 3), "w_keystroke": round(w_ks, 3)}
+    data["lockouts"] = db.list_lockouts()
     data["recent"] = db.recent_attempts()
     data["charts"] = chart_links()
     return jsonify(ok=True, **data)
@@ -256,6 +258,29 @@ def admin_settings():
 def admin_reset_attempts():
     n = db.reset_attempts()
     return jsonify(ok=True, removed=n, message=f"cleared {n} attempt rows")
+
+
+@app.post("/admin/api/unlock")
+@admin_required
+def admin_unlock():
+    """Release a locked account (or all of them).
+
+    A person who gets locked out of their own account has no way to fix it
+    from the sign-in page - the whole point of the lock is that the gate
+    tells them nothing. The lab console is the way out.
+    """
+    data = request.get_json(force=True, silent=True) or {}
+    if data.get("all"):
+        n = db.clear_all_locks()
+        return jsonify(ok=True, removed=n,
+                       message=f"released {n} locked account(s)")
+    name = (data.get("username") or "").strip().lower()
+    if not name:
+        return _err(400, "username is required")
+    had = db.clear_lock(name)
+    return jsonify(ok=True, removed=1 if had else 0,
+                   message=(f"{name} is unlocked" if had
+                            else f"{name} was not locked"))
 
 
 def _effective_settings():
@@ -412,15 +437,24 @@ def api_attempt():
 
     # An account that is being ground down gets locked. A gate that can be
     # retried forever is a gate that can be ground down; the lock doubles
-    # with every further failure.
+    # with every further failure, and the lab console can release it.
     if mode != "eval":
-        fails = db.recent_failures(claimed, LOCKOUT_WINDOW)
-        if fails >= LOCKOUT_FAILURES:
-            lock = min(LOCKOUT_MAX,
-                        LOCKOUT_BASE * (2 ** (fails - LOCKOUT_FAILURES)))
-            return _err(429, "this account is locked for a moment after "
-                             f"{LOCKOUT_FAILURES} failed tries - please wait "
-                             f"{lock // 60 + 1} minute(s) and try again")
+        state = db.lock_state(claimed)
+        if state["locked"]:
+            # Every attempt made while locked counts too, so hammering the
+            # door makes the wait longer rather than shorter.
+            db.record_failure(claimed, LOCKOUT_WINDOW, LOCKOUT_FAILURES,
+                              LOCKOUT_BASE, LOCKOUT_MAX)
+            state = db.lock_state(claimed)
+            wait = state["retry_after"]
+            resp = jsonify(
+                ok=False, locked=True, retry_after=wait,
+                error=f"this account is locked for {wait} more seconds after "
+                      f"{LOCKOUT_FAILURES} failed tries - please wait and "
+                      f"try again")
+            resp.status_code = 429
+            resp.headers["Retry-After"] = str(wait)
+            return resp
 
     # Knowledge factor ---------------------------------------------------------
     password_ok = check_password_hash(user["password_hash"], password)
@@ -485,6 +519,17 @@ def api_attempt():
 
     db.add_attempt(mode, claimed, operator, True, face_cos, ks_valid, ks_sim,
                    fused, decision, "; ".join(notes))
+
+    # Keep the lockout in step with what just happened. A successful sign-in
+    # clears it; a failed one counts towards it. Only attempts that passed the
+    # knowledge factor count, so somebody who cannot guess the passphrase
+    # cannot lock a real person's account.
+    if mode != "eval":
+        if decision == "ACCEPT":
+            db.clear_lock(claimed)
+        else:
+            db.record_failure(claimed, LOCKOUT_WINDOW, LOCKOUT_FAILURES,
+                              LOCKOUT_BASE, LOCKOUT_MAX)
 
     # Say which factor(s) fell short, in plain terms. The gate has three
     # bars and the person deserves to know which one they missed - and it

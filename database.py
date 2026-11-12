@@ -72,6 +72,105 @@ def init_db() -> None:
         if "phase" not in cols:
             conn.execute("ALTER TABLE keystroke_samples "
                          "ADD COLUMN phase TEXT NOT NULL DEFAULT 'A'")
+        # migration: the lockout table arrived with the brute-force work.
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS lockouts ("
+            " username TEXT PRIMARY KEY,"
+            " failures INTEGER NOT NULL DEFAULT 0,"
+            " locked_until REAL NOT NULL DEFAULT 0,"
+            " updated REAL NOT NULL DEFAULT 0)")
+
+
+# ---------------------------------------------------------------------------
+# Account lockout
+#
+# The lock is a stored object with an expiry, not a count that happens to look
+# like one: it has to expire exactly when it says it will, it has to be able
+# to grow while somebody keeps hammering it, and it has to be clearable by
+# the lab console when a real person gets locked out of their own account.
+# ---------------------------------------------------------------------------
+def lock_state(username: str) -> dict:
+    """The lockout state for one account."""
+    with connect() as conn:
+        row = conn.execute(
+            "SELECT failures, locked_until, updated FROM lockouts WHERE username = ?",
+            (username,)).fetchone()
+    if row is None:
+        return {"locked": False, "failures": 0, "locked_until": 0.0,
+                "retry_after": 0}
+    now = time.time()
+    locked = row["locked_until"] > now
+    return {
+        "locked": locked,
+        "failures": row["failures"],
+        "locked_until": row["locked_until"],
+        "retry_after": max(0, int(round(row["locked_until"] - now))) if locked else 0,
+    }
+
+
+def record_failure(username: str, window: float, failures_needed: int,
+                   base_seconds: int, cap_seconds: int) -> dict:
+    """Count a rejected attempt and lock the account if it has failed enough.
+
+    `window` is how long a failure keeps counting. Each further failure
+    while the account is locked doubles the lock, so hammering the door
+    makes waiting longer, not shorter.
+    """
+    now = time.time()
+    with connect() as conn:
+        row = conn.execute(
+            "SELECT failures, locked_until, updated FROM lockouts WHERE username = ?",
+            (username,)).fetchone()
+        if row is None or (now - row["updated"]) > window:
+            failures = 1
+        else:
+            failures = row["failures"] + 1
+        locked_until = row["locked_until"] if row else 0.0
+        if failures >= failures_needed:
+            duration = min(cap_seconds,
+                           base_seconds * (2 ** (failures - failures_needed)))
+            locked_until = max(locked_until, now + duration)
+        conn.execute(
+            "INSERT INTO lockouts (username, failures, locked_until, updated) "
+            "VALUES (?, ?, ?, ?) ON CONFLICT(username) DO UPDATE SET "
+            "failures=excluded.failures, locked_until=excluded.locked_until, "
+            "updated=excluded.updated",
+            (username, failures, locked_until, now))
+    return {"failures": failures, "locked_until": locked_until}
+
+
+def clear_lock(username: str) -> bool:
+    """Release one account's lock. Returns whether there was one."""
+    with connect() as conn:
+        cur = conn.execute("DELETE FROM lockouts WHERE username = ?", (username,))
+        return cur.rowcount > 0
+
+
+def clear_all_locks() -> int:
+    """Release every lock. Returns how many were released."""
+    with connect() as conn:
+        cur = conn.execute("DELETE FROM lockouts")
+        return cur.rowcount
+
+
+def list_lockouts() -> list:
+    """Every account with a recorded lockout, newest first."""
+    with connect() as conn:
+        rows = conn.execute(
+            "SELECT username, failures, locked_until, updated FROM lockouts "
+            "ORDER BY locked_until DESC, updated DESC").fetchall()
+    now = time.time()
+    out = []
+    for r in rows:
+        out.append({
+            "username": r["username"],
+            "failures": r["failures"],
+            "locked": r["locked_until"] > now,
+            "locked_until": r["locked_until"],
+            "retry_after": max(0, int(round(r["locked_until"] - now)))
+                          if r["locked_until"] > now else 0,
+        })
+    return out
 
 
 # ---------------------------------------------------------------------------

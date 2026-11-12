@@ -150,6 +150,17 @@
               the charts always match what the gate is really doing.</p>
           </article>
         </div>
+        <article class="card" id="lockout-card">
+          <h2>Locked accounts</h2>
+          <p class="hint">After three failed sign-ins an account locks, and
+            every further try makes the wait longer. Somebody who gets locked
+            out of their own account cannot fix it from the sign-in page —
+            that is the point of the lock — so you can release it from here.</p>
+          <div id="lockout-list"><p class="hint">Checking…</p></div>
+          <button class="btn ghost" id="btn-unlock-all" type="button">
+            Release every lock</button>
+          <span id="unlock-status" class="hint"></span>
+        </article>
         <article class="card danger-zone">
           <h2>Start again</h2>
           <p class="hint">Clears every recorded sign-in attempt. People and their

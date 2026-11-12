@@ -38,7 +38,7 @@
     if (tab === "overview") loadOverview();
     if (tab === "attempts") loadAttempts();
     if (tab === "users") loadUsers();
-    if (tab === "settings") loadSettings();
+    if (tab === "settings") { loadSettings(); loadLockouts(); startLockTicker(); }
   }
   $$(".sidenav-item").forEach((b) =>
     b.addEventListener("click", () => activate(b.dataset.tab)));
@@ -243,6 +243,93 @@
         `keystroke weight = (1 − ${body.settings.w_face.toFixed(2)}) = ` +
         (1 - body.settings.w_face).toFixed(2);
     } else toast(body.error || "Save failed", "bad");
+  });
+
+  /* ---------------- locked accounts ----------------
+   * A lock is a stored object with an expiry, so the lab console can list
+   * what is locked, count the wait down, and release it. */
+  let lockTimer = null;
+
+  function fmtWait(seconds) {
+    const s = Math.max(0, Math.round(seconds));
+    if (s < 60) return `${s}s`;
+    const m = Math.floor(s / 60);
+    return `${m}m ${String(s % 60).padStart(2, "0")}s`;
+  }
+
+  async function loadLockouts() {
+    let data;
+    try { data = await (await fetch("/admin/api/overview")).json(); }
+    catch (err) {
+      $("lockout-list").innerHTML =
+        `<p class="hint">Could not load the locked accounts: ${err.message}</p>`;
+      return;
+    }
+    const rows = data.lockouts || [];
+    renderLockouts(rows);
+  }
+
+  function renderLockouts(rows) {
+    const el = $("lockout-list");
+    if (!rows.length) {
+      el.innerHTML = `<p class="hint">Nobody is locked. Good.</p>`;
+      return;
+    }
+    el.innerHTML = rows.map((r) => `
+      <div class="c-row ${r.locked ? "fault" : ""}" data-lock="${esc(r.username)}"
+           data-until="${r.locked_until}">
+        <span class="c-code mono">${esc(r.username)}</span>
+        <span class="c-name">${r.failures} failed ${r.failures === 1 ? "try" : "tries"}</span>
+        <span class="c-stat mono" data-wait>${r.locked ? fmtWait(r.retry_after) : "not locked"}</span>
+        <button class="btn sm ghost" data-unlock="${esc(r.username)}" type="button">
+          Release</button>
+      </div>`).join("");
+
+    $$("[data-unlock]").forEach((btn) => btn.addEventListener("click", async () => {
+      btn.disabled = true;
+      const res = await fetch("/admin/api/unlock", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: btn.dataset.unlock }),
+      });
+      const body = await res.json().catch(() => ({}));
+      $("unlock-status").textContent = body.message || body.error || "done";
+      if (res.ok) toast(body.message || "Released", "good");
+      else toast(body.error || "Could not release that lock", "bad");
+      loadLockouts();
+    }));
+  }
+
+  /* tick the countdown once a second while the settings tab is open */
+  function startLockTicker() {
+    if (lockTimer) clearInterval(lockTimer);
+    lockTimer = setInterval(() => {
+      const now = Date.now() / 1000;
+      $$("[data-until]").forEach((row) => {
+        const until = Number(row.dataset.until) || 0;
+        const wait = $$("[data-wait]", row)[0];
+        if (!wait) return;
+        if (until > now) {
+          wait.textContent = fmtWait(until - now);
+          row.classList.add("fault");
+        } else {
+          wait.textContent = "not locked";
+          row.classList.remove("fault");
+        }
+      });
+    }, 1000);
+  }
+
+  $("btn-unlock-all").addEventListener("click", async () => {
+    if (!confirm("Release every locked account?")) return;
+    const res = await fetch("/admin/api/unlock", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ all: true }),
+    });
+    const body = await res.json().catch(() => ({}));
+    $("unlock-status").textContent = body.message || body.error || "done";
+    if (res.ok) toast(body.message || "All locks released", "good");
+    else toast(body.error || "Could not release the locks", "bad");
+    loadLockouts();
   });
 
   /* danger zone: clear the attempt log */

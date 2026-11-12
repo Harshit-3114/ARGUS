@@ -169,6 +169,27 @@
     $("verdict").scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
+  /* Count the lock down on the page, so the person knows exactly when to
+     come back instead of guessing. */
+  let lockTicker = null;
+  function startLockCountdown(el, seconds) {
+    if (lockTicker) clearInterval(lockTicker);
+    let left = Math.max(0, Math.round(seconds));
+    const paint = () => {
+      const m = Math.floor(left / 60);
+      const s = left % 60;
+      el.textContent = `This account is locked for ${m}:${String(s).padStart(2, "0")}`
+        + ` - please come back then, or ask the lab to release it.`;
+      if (left <= 0) {
+        clearInterval(lockTicker);
+        lockTicker = null;
+        el.textContent = "The lock has expired - please try again.";
+      }
+    };
+    paint();
+    lockTicker = setInterval(() => { left -= 1; paint(); }, 1000);
+  }
+
   function renderScores(data) {
     const rows = $("scores-rows");
     rows.innerHTML = "";
@@ -283,6 +304,7 @@
       $("scores-rows").appendChild(n);
       showStamp(body.locked ? "PLEASE WAIT" : "SOMETHING WENT WRONG", "denied",
         Math.round(performance.now() - t0));
+      if (body.locked && body.retry_after) startLockCountdown(n, body.retry_after);
       return;
     }
 
