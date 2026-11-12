@@ -245,6 +245,16 @@ that page, and the lab page can set it at runtime.
   keystroke template on its own is weak (AUC 0.883, EER 19.5%, and its genuine
   and impostor ranges overlap). Fusing protects against a case where one
   modality is defeated — it does not make the weak modality strong.
+- **The fusion weights are a policy choice, and the shipped one is arguable.**
+  In the simulated single-factor population, a stolen *photo* of the victim
+  passes the fused gate **62%** of the time at `w = 0.6/0.4` — the face term
+  alone contributes `0.6 × 0.99 = 0.594` of the `0.757` threshold, so the
+  attacker's own rhythm only has to supply the last 0.16. Rebalancing to
+  `w = 0.4/0.6` cuts that to **21%**, but raises the classic-impostor EER
+  from 0.00% to 1.09%. `w = 0.55/0.45` holds the classic-impostor EER at
+  0.00% while cutting the photo-attack rate further, and is the obvious next
+  experiment — but it needs the cohort regenerated to measure properly.
+  Weights are runtime-tunable on the lab page.
 - Keystroke databases assume the *exact* enrolled phrase — this design ties the
   behavioral template to the user's passphrase (as do most password-tied systems).
 
