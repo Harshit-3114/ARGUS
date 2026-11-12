@@ -59,8 +59,22 @@ ADMIN_PIN = os.environ.get("ARGUS_ADMIN_PIN", "admin123")
 # ---------------------------------------------------------------------------
 W_FACE = 0.60                    # weight of the (normalized) face score
 W_KEYSTROKE = 0.40               # weight of the (normalized) keystroke score
-DECISION_THRESHOLD = 0.55        # fusion score >= threshold => ACCEPT
-                                 # (tune with the /evaluation page sweep)
+DECISION_THRESHOLD = 0.78        # fusion score >= threshold => ACCEPT
+                                 #
+                                 # This is CALIBRATED, not a "middle of the 0-1
+                                 # scale" guess. The face score is (cosine + 1) / 2
+                                 # and Facenet512 cosines for two different people
+                                 # sit around 0.18, not 0.0 - so an impostor's
+                                 # face score floors out near 0.59 instead of near
+                                 # 0. A threshold of 0.55 therefore landed right on
+                                 # the MEDIAN impostor score and admitted 44% of
+                                 # them. The measured separation gap is
+                                 # (0.757, 0.801); 0.78 is its midpoint, keeping
+                                 # ~0.02 of margin on both sides.
+                                 #
+                                 # Re-run the sweep on /evaluation after changing
+                                 # the cohort, and update this value (or set it at
+                                 # runtime on the lab page).
 
 # ---------------------------------------------------------------------------
 # Admin dashboard

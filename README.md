@@ -164,6 +164,29 @@ biometrics alone. Suggested minimum for a report-capable dataset:
 Modify `SUGGESTED_PASSPHRASE` / `DECISION_THRESHOLD` / fusion weights in
 `config.py`. Delete users and start over right from the dashboard.
 
+### Calibrating the decision threshold
+
+`DECISION_THRESHOLD` is a **calibrated** number, not "the middle of the 0–1
+scale". The face score is `(cosine + 1) / 2`, and Facenet512 cosines between
+two *different* people sit around **0.18**, not 0.0 — so an impostor's face
+score floors out near 0.59 rather than near 0. A threshold of `0.55`
+therefore landed almost exactly on the **median impostor score**, and on the
+shipped 8-user / 416-attempt dataset it admitted **44.05%** of impostors
+while rejecting nobody genuine.
+
+The measured separation on that dataset is:
+
+| modality | genuine range | impostor range | gap |
+|---|---|---|---|
+| Face | 0.885 – 0.997 | 0.434 – 0.779 | (0.779, 0.885) |
+| Keystroke | 0.537 – 0.817 | 0.242 – 0.801 | *overlaps* |
+| **Fused** | **0.801 – 0.923** | **0.369 – 0.757** | **(0.757, 0.801)** |
+
+`DECISION_THRESHOLD = 0.78` is the midpoint of the fused gap, and gives
+**FAR 0.00% / FRR 0.00%** on that data. Re-run the sweep on `/evaluation`
+after changing the cohort and update it — the app shows the recommended θ on
+that page, and the lab page can set it at runtime.
+
 ## Design notes
 
 - **Designed for someone who has never used a biometric.** The person setting
@@ -213,7 +236,15 @@ Modify `SUGGESTED_PASSPHRASE` / `DECISION_THRESHOLD` / fusion weights in
   a screen-replay attack on the webcam is plausible. Next steps: blink/head-pose
   liveness checks, DeepFace anti-spoofing model, per-user thresholds.
 - Small-user-count FAR estimates have large confidence intervals; treat numbers
-  below ~50 impostor attempts as indicative, not definitive.
+  below ~50 impostor attempts as indicative, not definitive. The shipped
+  dataset (8 users, 416 attempts) separates **perfectly** (fused AUC 1.000),
+  but "no impostor overlapped on these 336 attempts" is a statement about
+  *these* 336 attempts — it is not a 0% false-accept *rate*, and it does not
+  cover presentation attacks (see above).
+- The fused result is carried almost entirely by the **face** modality: the
+  keystroke template on its own is weak (AUC 0.883, EER 19.5%, and its genuine
+  and impostor ranges overlap). Fusing protects against a case where one
+  modality is defeated — it does not make the weak modality strong.
 - Keystroke databases assume the *exact* enrolled phrase — this design ties the
   behavioral template to the user's passphrase (as do most password-tied systems).
 

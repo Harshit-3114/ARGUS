@@ -39,6 +39,40 @@
     if (fused && fused.ok) {
       const wrongIn = fused.far_at_thr * 100;
       const wrongOut = fused.frr_at_thr * 100;
+      const face = report.modalities.face.ok ? report.modalities.face : null;
+      const ks = report.modalities.ks.ok ? report.modalities.ks : null;
+
+      /* The "checking both is better" line has to follow the numbers.
+         On some datasets the face check alone already separates the two
+         populations perfectly, and claiming fusion "stops far more" is
+         then simply false. When the numbers tie, say so - and give the
+         real reason for keeping the second factor. */
+      let third;
+      if (face && ks) {
+        const bestSingle = Math.min(face.far_at_thr, ks.far_at_thr);
+        const both = fused.far_at_thr;
+        const detail =
+          `On its own, the face check let ${fmtP(face.far_at_thr)} of impostors ` +
+          `through; the typing check alone let ${fmtP(ks.far_at_thr)} through.`;
+        if (both < bestSingle - 1e-9) {
+          third = `<strong>Checking both is better than checking one.</strong>` +
+            `<span>${detail} Together they stop far more.</span>`;
+        } else if (both <= bestSingle + 1e-9) {
+          third = `<strong>Checking both is no worse than checking one.</strong>` +
+            `<span>${detail} Together they stop the same number - on this ` +
+            `data the face check is doing most of the work. The typing check ` +
+            `still matters, because it is a second, separate thing an attacker ` +
+            `has to fake.</span>`;
+        } else {
+          third = `<strong>The two checks are pulling in different directions.</strong>` +
+            `<span>${detail} Together they stop ${fmtP(both)}. On this data the ` +
+            `weights in config.py are worth a look.</span>`;
+        }
+      } else {
+        third = `<strong>Recording more attempts of both kinds will show whether ` +
+          `checking both really helps.</strong>`;
+      }
+
       const summary = document.createElement("ul");
       summary.className = "finding-list";
       summary.innerHTML =
@@ -53,12 +87,7 @@
         `(${fmtP(fused.eer)} of each). You can set it any time on the ` +
         `<a href="/admin">lab page</a>.</span></span></li>` +
         `<li><span class="dot" aria-hidden="true"></span><span>` +
-        `<strong>Checking both is better than checking one.</strong>` +
-        `<span>On its own, the face check let ` +
-        `${fmtP(report.modalities.face.ok ? report.modalities.face.far_at_thr : 0)} ` +
-        `of impostors through; the typing check alone let ` +
-        `${fmtP(report.modalities.ks.ok ? report.modalities.ks.far_at_thr : 0)} ` +
-        `through. Together they stop far more.</span></span></li>`;
+        third + `</span></li>`;
       out.appendChild(summary);
     }
 
@@ -105,9 +134,11 @@
     if (fused && fused.ok) {
       note = document.createElement("p");
       note.className = "hint";
-      note.innerHTML =
-        `Recommended cut-off for the combined check: <code>${fused.eer_thr}</code> ` +
-        `(θ* = the cut-off configured right now).`;
+      const isSet = Math.abs(fused.eer_thr - report.cfg_threshold) < 1e-9;
+      note.innerHTML = isSet
+        ? `The cut-off in use (${report.cfg_threshold}) is the recommended one.`
+        : `Recommended cut-off for the combined check: <code>${fused.eer_thr}</code>. ` +
+          `The system is currently using <code>${report.cfg_threshold}</code>.`;
       inner.appendChild(note);
     }
 
